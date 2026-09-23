@@ -16,7 +16,7 @@ export function ReviewModal({ b, title, onClose, onDone, tags }: any) {
         <StarInput value={rating} onChange={setRating} />
         <div className="flex flex-wrap gap-2 justify-center">
           {tags.map((x: string) => (
-            <button key={x} onClick={() => setSel(sel.includes(x) ? sel.filter((y) => y !== x) : [...sel, x])} className={`chip ${sel.includes(x) ? "bg-brand-600 text-white" : "bg-gray-100"}`}>
+            <button key={x} onClick={() => setSel(sel.includes(x) ? sel.filter((y) => y !== x) : [...sel, x])} className={`chip ${sel.includes(x) ? "bg-brand-600 text-white" : "bg-slate-100 text-slate-700"}`}>
               {x}
             </button>
           ))}
@@ -27,10 +27,10 @@ export function ReviewModal({ b, title, onClose, onDone, tags }: any) {
           onClick={async () => {
             try {
               await api(`/bookings/${b.id}/review`, { body: { rating, comment, tags: sel } });
-              toast("⭐ Thank you for the review");
+              toast("Thank you for the review", "", "success");
               onDone();
             } catch (e: any) {
-              toast("❌", e.message);
+              toast("Something went wrong", e.message, "error");
             }
           }}
         >
@@ -47,11 +47,11 @@ export function DisputeModal({ b, onClose, onDone }: any) {
   const presets = ["Work not complete", "Poor quality", "Asked for extra money", "Damaged something", "Payment not received", "Rude behaviour"];
   if (!b) return null;
   return (
-    <Modal open onClose={onClose} title={`⚖️ ${t("report_problem")}`}>
+    <Modal open onClose={onClose} title={t("report_problem")}>
       <div className="space-y-3">
         <div className="flex flex-wrap gap-2">
           {presets.map((p) => (
-            <button key={p} onClick={() => setReason(p)} className={`chip ${reason === p ? "bg-amber-500 text-white" : "bg-gray-100"}`}>
+            <button key={p} onClick={() => setReason(p)} className={`chip ${reason === p ? "bg-sun-500 text-white" : "bg-slate-100 text-slate-700"}`}>
               {p}
             </button>
           ))}
@@ -64,10 +64,10 @@ export function DisputeModal({ b, onClose, onDone }: any) {
           onClick={async () => {
             try {
               await api(`/bookings/${b.id}/dispute`, { body: { reason } });
-              toast("⚖️ Problem reported. We will contact you.");
+              toast("Problem reported", "Our team will contact you", "success");
               onDone();
             } catch (e: any) {
-              toast("❌", e.message);
+              toast("Something went wrong", e.message, "error");
             }
           }}
         >

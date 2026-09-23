@@ -92,7 +92,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     },
     [meta, lang]
   );
-  const skillIcon = useCallback((id: string) => meta?.skills.find((x) => x.id === id)?.icon || "🔹", [meta]);
+  const skillIcon = useCallback((id: string) => meta?.skills.find((x) => x.id === id)?.icon || "", [meta]);
   const catName = useCallback((c: Category | undefined) => (c ? c[lang] || c.en : ""), [lang]);
 
   const dismissToast = useCallback((id: number) => setToasts((ts) => ts.filter((x) => x.id !== id)), []);

@@ -44,7 +44,7 @@ def feed(u: m.User = Depends(get_user), db: Session = Depends(get_db)):
         j = db.get(m.Job, jid)
         if j and j.status == "open":
             d = job_public(j, u.lat, u.lng)
-            d["match"] = {"score": 99, "reasons": ["📩 Customer invited you"], "breakdown": {}, "accept_prob": 0.9}
+            d["match"] = {"score": 99, "reasons": ["Customer invited you"], "breakdown": {}, "accept_prob": 0.9}
             d["invited"] = True
             out.insert(0, d)
     out.sort(key=lambda d: (not d["invited"], not d["urgent"], -d["match"]["score"]))
@@ -206,7 +206,7 @@ def verify_skill(skill: str, body: EvidenceIn, u: m.User = Depends(get_user), db
             s["evidence"] = body.url
     wp.skills = skills
     for admin in db.query(m.User).filter(m.User.role == "admin").all():
-        notify(db, admin.id, "🎥 Skill video to review", f"{u.name}: {SKILL_MAP.get(skill, {}).get('en', skill)}", "/admin", "admin")
+        notify(db, admin.id, "Skill video to review", f"{u.name}: {SKILL_MAP.get(skill, {}).get('en', skill)}", "/admin", "admin")
     db.commit()
     return worker_public(wp)
 
@@ -248,14 +248,14 @@ def booking_status(bid: int, body: StatusIn, u: m.User = Depends(get_user), db: 
             b.start_lat, b.start_lng = body.lat, body.lng
         else:
             b.start_lat, b.start_lng = u.lat, u.lng
-        notify(db, b.customer_id, f"🛵 {u.name} is on the way", j.title, f"/customer/jobs/{j.id}", "booking")
+        notify(db, b.customer_id, f"{u.name} is on the way", j.title, f"/customer/jobs/{j.id}", "booking")
     elif body.status == "arrived":
         b.check_in_at = now
         b.check_in_lat = body.lat if body.lat is not None else j.lat
         b.check_in_lng = body.lng if body.lng is not None else j.lng
         if j.date >= Date.today().isoformat():
             u.worker.on_time_count += 1
-        notify(db, b.customer_id, f"📍 {u.name} has arrived", "Work is starting", f"/customer/jobs/{j.id}", "booking")
+        notify(db, b.customer_id, f"{u.name} has arrived", "Work is starting", f"/customer/jobs/{j.id}", "booking")
     elif body.status == "completed":
         b.check_out_at = now
         u.worker.jobs_completed += 1
@@ -263,7 +263,7 @@ def booking_status(bid: int, body: StatusIn, u: m.User = Depends(get_user), db: 
                                           m.Booking.id != b.id, m.Booking.status.in_(["completed", "paid"])).count()
         if prev == 1:
             u.worker.repeat_customers += 1
-        notify(db, b.customer_id, f"✅ {u.name} finished the work", "Please check, confirm and pay", f"/customer/jobs/{j.id}", "booking")
+        notify(db, b.customer_id, f"{u.name} finished the work", "Please check, confirm and pay", f"/customer/jobs/{j.id}", "booking")
     b.status = body.status
     refresh_job_status(db, j)
     db.commit()
@@ -299,7 +299,7 @@ def confirm_done(bid: int, u: m.User = Depends(get_user), db: Session = Depends(
         held.status = "paid"
         b.status = "paid"
         u.payments_completed += 1
-        notify(db, b.worker_id, f"💰 ₹{held.worker_amount} released to you", "Payment from escrow", f"/worker/jobs/{b.job_id}", "payment")
+        notify(db, b.worker_id, f"₹{held.worker_amount} released to you", "Payment from escrow", f"/worker/jobs/{b.job_id}", "payment")
     refresh_job_status(db, db.get(m.Job, b.job_id))
     db.commit()
     return booking_public(db, b)
@@ -325,13 +325,13 @@ def pay(bid: int, body: PayIn, u: m.User = Depends(get_user), db: Session = Depe
     b.customer_confirmed = True
     if body.method == "cash":
         p = m.Payment(booking_id=b.id, amount=amount + fee, platform_fee=fee, worker_amount=amount, method="cash", status="pending")
-        notify(db, b.worker_id, "💵 Customer will pay cash", f"Collect ₹{amount} and tap 'Cash received'", f"/worker/jobs/{j.id}", "payment")
+        notify(db, b.worker_id, "Customer will pay cash", f"Collect ₹{amount} and tap 'Cash received'", f"/worker/jobs/{j.id}", "payment")
     else:
         p = m.Payment(booking_id=b.id, amount=amount + fee, platform_fee=fee, worker_amount=amount, method=body.method, status="paid",
                       reference=("UPI" if body.method == "upi" else "PG") + secrets.token_hex(5).upper())
         b.status = "paid"
         u.payments_completed += 1
-        notify(db, b.worker_id, f"💰 ₹{amount} received via {body.method.upper()}", j.title, f"/worker/jobs/{j.id}", "payment")
+        notify(db, b.worker_id, f"₹{amount} received via {body.method.upper()}", j.title, f"/worker/jobs/{j.id}", "payment")
     b.amount = amount
     db.add(p)
     refresh_job_status(db, j)
@@ -395,7 +395,7 @@ def review(bid: int, body: ReviewIn, u: m.User = Depends(get_user), db: Session 
     else:
         raise HTTPException(403, "Not allowed")
     db.add(m.Review(booking_id=b.id, reviewer_id=u.id, reviewee_id=reviewee, rating=rating, comment=body.comment, tags=body.tags))
-    notify(db, reviewee, f"⭐ You got {rating} stars from {u.name}", body.comment[:80], "", "review")
+    notify(db, reviewee, f"You got {rating} stars from {u.name}", body.comment[:80], "", "review")
     db.commit()
     return booking_public(db, b)
 
@@ -415,7 +415,7 @@ def no_show(bid: int, u: m.User = Depends(get_user), db: Session = Depends(get_d
     for p in db.query(m.Payment).filter(m.Payment.booking_id == b.id, m.Payment.status == "held").all():
         p.status = "refunded"
     refresh_job_status(db, j)
-    notify(db, w.id, "⚠️ Marked as no-show", f"Customer reported you did not come for {j.title}", f"/worker/jobs/{j.id}")
+    notify(db, w.id, "Marked as no-show", f"Customer reported you did not come for {j.title}", f"/worker/jobs/{j.id}")
     ranked = [r for r in rank_workers(db, j, limit=10) if r["worker_id"] != w.id][:5]
     for r in ranked:
         mt = db.query(m.Match).filter(m.Match.job_id == j.id, m.Match.worker_id == r["worker_id"]).first()
@@ -426,7 +426,7 @@ def no_show(bid: int, u: m.User = Depends(get_user), db: Session = Depends(get_d
                            breakdown={"parts": r["breakdown"], "reasons": r["reasons"]}))
         else:
             mt.status = "notified"
-        notify(db, r["worker_id"], f"🚨 Replacement needed: {j.title}", f"📍 {r['distance_km']} km • ₹{j.budget} • Today", f"/worker/jobs/{j.id}", "job_alert")
+        notify(db, r["worker_id"], f"Replacement needed: {j.title}", f"{r['distance_km']} km • ₹{j.budget} • Today", f"/worker/jobs/{j.id}", "job_alert")
     db.commit()
     return {"ok": True, "replacements_notified": len(ranked)}
 
@@ -440,14 +440,14 @@ def cancel_booking(bid: int, u: m.User = Depends(get_user), db: Session = Depend
     j = db.get(m.Job, b.job_id)
     if u.id == b.worker_id:
         u.worker.cancellations += 1
-        notify(db, b.customer_id, f"⚠️ {u.name} cancelled", "We are finding another worker for you", f"/customer/jobs/{j.id}")
+        notify(db, b.customer_id, f"{u.name} cancelled", "We are finding another worker for you", f"/customer/jobs/{j.id}")
         from .matching import run_matching
         refresh_job_status(db, j)
         db.commit()
         run_matching(db, j, notify=True)
     else:
         u.cancellations += 1
-        notify(db, b.worker_id, "❌ Customer cancelled your booking", j.title, f"/worker/jobs/{j.id}")
+        notify(db, b.worker_id, "Customer cancelled your booking", j.title, f"/worker/jobs/{j.id}")
     for p in db.query(m.Payment).filter(m.Payment.booking_id == b.id, m.Payment.status == "held").all():
         p.status = "refunded"
     refresh_job_status(db, j)
@@ -464,9 +464,9 @@ def dispute(bid: int, body: DisputeIn, u: m.User = Depends(get_user), db: Sessio
     b = _booking(db, bid, u)
     db.add(m.Dispute(booking_id=b.id, raised_by=u.id, reason=body.reason))
     other = b.worker_id if u.id == b.customer_id else b.customer_id
-    notify(db, other, "⚖️ A problem was reported", body.reason[:80], "", "dispute")
+    notify(db, other, "A problem was reported", body.reason[:80], "", "dispute")
     for admin in db.query(m.User).filter(m.User.role == "admin").all():
-        notify(db, admin.id, "⚖️ New dispute", body.reason[:80], "/admin", "admin")
+        notify(db, admin.id, "New dispute", body.reason[:80], "/admin", "admin")
     db.commit()
     return booking_public(db, b)
 

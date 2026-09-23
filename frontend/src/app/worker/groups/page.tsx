@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
+import { UsersRound, Plus, MapPin, Check } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { api } from "@/lib/api";
+import { SkillBadge } from "@/lib/icons";
 import { useRequireUser, Loading, PageTitle, Avatar, Modal } from "@/components/ui";
 
 export default function Groups() {
@@ -22,74 +24,105 @@ export default function Groups() {
 
   async function join(id: number) {
     const g = await api(`/groups/${id}/join`, { body: {} });
-    toast(g.is_member ? `👥 Joined ${g.name}` : `Left ${g.name}`);
+    toast(g.is_member ? `Joined ${g.name}` : `Left ${g.name}`, "", "success");
     load();
   }
 
   return (
-    <div className="space-y-4">
+    <div>
       <PageTitle
-        title={`👥 ${t("groups")}`}
-        sub="Get team jobs – harvesting, events, construction"
+        icon={UsersRound}
+        title={t("groups")}
+        sub="Get team jobs — harvesting, events, construction"
         right={
-          <button className="btn-primary !py-2 text-sm" onClick={() => setCreating(true)}>
-            + New
+          <button className="btn-primary !py-2" onClick={() => setCreating(true)}>
+            <Plus size={16} /> New group
           </button>
         }
       />
-      {groups.map((g) => (
-        <div key={g.id} className={`card p-4 ${g.is_member ? "ring-2 ring-brand-400" : ""}`}>
-          <div className="flex items-center gap-3">
-            <span className="h-14 w-14 rounded-2xl bg-sun-100 grid place-items-center text-3xl">{g.icon}</span>
-            <button className="flex-1 text-left" onClick={() => setOpen(g)}>
-              <div className="font-extrabold text-lg">{g.name}</div>
-              <div className="text-sm text-muted font-semibold">
-                📍 {g.area} • {g.distance_km} km • {g.size} workers • 🟢 {g.available_now} free now
+      <div className="grid md:grid-cols-2 2xl:grid-cols-3 gap-4">
+        {groups.map((g) => (
+          <div key={g.id} className={`card p-5 flex flex-col ${g.is_member ? "border-brand-300" : ""}`}>
+            <div className="flex items-start gap-3">
+              <SkillBadge skill={g.skill} size={46} tone={g.is_member ? "brand" : "slate"} />
+              <button className="flex-1 text-left min-w-0" onClick={() => setOpen(g)}>
+                <div className="font-semibold hover:text-brand-700">{g.name}</div>
+                <div className="text-sm text-muted flex items-center gap-1">
+                  <MapPin size={13} /> {g.area} · {g.distance_km} km
+                </div>
+              </button>
+            </div>
+            <div className="grid grid-cols-3 gap-2 my-4 text-center">
+              <div className="rounded-lg bg-slate-50 py-2">
+                <div className="font-semibold">{g.size}</div>
+                <div className="text-xs text-muted">Members</div>
               </div>
-            </button>
-            <button className={g.is_member ? "btn-ghost !py-2" : "btn-primary !py-2"} onClick={() => join(g.id)}>
-              {g.is_member ? "✓ Joined" : "Join"}
-            </button>
+              <div className="rounded-lg bg-slate-50 py-2">
+                <div className="font-semibold text-emerald-700">{g.available_now}</div>
+                <div className="text-xs text-muted">Free now</div>
+              </div>
+              <div className="rounded-lg bg-slate-50 py-2">
+                <div className="font-semibold text-sm truncate px-1">{g.skill_name}</div>
+                <div className="text-xs text-muted">Main skill</div>
+              </div>
+            </div>
+            <div className="flex items-center mt-auto">
+              <div className="flex -space-x-2 flex-1">
+                {g.members.slice(0, 6).map((m: any) => (
+                  <span key={m.id} className="ring-2 ring-white rounded-full">
+                    <Avatar name={m.name} size={30} />
+                  </span>
+                ))}
+                {g.size > 6 && <span className="h-[30px] px-2 rounded-full bg-slate-100 text-xs font-medium grid place-items-center ring-2 ring-white">+{g.size - 6}</span>}
+              </div>
+              <button className={g.is_member ? "btn-ghost !py-2" : "btn-primary !py-2"} onClick={() => join(g.id)}>
+                {g.is_member ? (
+                  <>
+                    <Check size={15} /> Joined
+                  </>
+                ) : (
+                  "Join"
+                )}
+              </button>
+            </div>
           </div>
-          <div className="flex -space-x-2 mt-3">
-            {g.members.slice(0, 8).map((m: any) => (
-              <span key={m.id} className="ring-2 ring-white rounded-full">
-                <Avatar name={m.name} size={32} />
-              </span>
-            ))}
-            {g.size > 8 && <span className="h-8 px-2 rounded-full bg-gray-100 text-xs font-bold grid place-items-center ring-2 ring-white">+{g.size - 8}</span>}
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
       <Modal open={!!open} onClose={() => setOpen(null)} title={open?.name}>
-        <div className="divide-y">
+        <div className="divide-y divide-line">
           {open?.members.map((m: any) => (
-            <a key={m.id} href={`/workers/${m.id}`} className="flex items-center gap-3 py-2">
-              <Avatar name={m.name} size={40} online={m.available} />
-              <span className="flex-1 font-bold">{m.name}</span>
-              <span className="font-bold">⭐ {m.rating || "–"}</span>
+            <a key={m.id} href={`/workers/${m.id}`} className="flex items-center gap-3 py-2.5 hover:bg-slate-50 px-1 rounded">
+              <Avatar name={m.name} size={38} online={m.available} />
+              <span className="flex-1 font-medium">{m.name}</span>
+              <span className="text-sm text-muted">★ {m.rating || "–"}</span>
             </a>
           ))}
         </div>
       </Modal>
       <Modal open={creating} onClose={() => setCreating(false)} title="Create a worker group">
         <div className="space-y-3">
-          <input className="input" placeholder="e.g. Kemmannu Painters" value={name} onChange={(e) => setName(e.target.value)} />
-          <select className="input" value={skill} onChange={(e) => setSkill(e.target.value)}>
-            <option value="">Main skill…</option>
-            {meta.skills.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.icon} {s[lang] || s.en}
-              </option>
-            ))}
-          </select>
+          <div>
+            <div className="label">Group name</div>
+            <input className="input" placeholder="e.g. Kemmannu Painters" value={name} onChange={(e) => setName(e.target.value)} />
+          </div>
+          <div>
+            <div className="label">Main skill</div>
+            <select className="input" value={skill} onChange={(e) => setSkill(e.target.value)}>
+              <option value="">Select…</option>
+              {meta.skills.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s[lang] || s.en}
+                </option>
+              ))}
+            </select>
+          </div>
           <button
             className="btn-primary btn-lg w-full"
             disabled={!name || !skill}
             onClick={async () => {
               await api("/groups", { body: { name, skill } });
               setCreating(false);
-              toast("👥 Group created");
+              toast("Group created", "", "success");
               load();
             }}
           >

@@ -239,8 +239,8 @@ def create_job_record(db: Session, u: m.User, body: JobIn) -> tuple[m.Job, dict,
         if mt:
             mt.status = "invited"
         else:
-            db.add(m.Match(job_id=j.id, worker_id=j.preferred_worker_id, score=95, status="invited", breakdown={"reasons": ["❤️ Your saved worker"], "parts": {}}))
-        notify(db, j.preferred_worker_id, f"❤️ {u.name} wants to book you again", f"{j.title} • {j.date} • ₹{j.budget}", f"/worker/jobs/{j.id}", "job_alert")
+            db.add(m.Match(job_id=j.id, worker_id=j.preferred_worker_id, score=95, status="invited", breakdown={"reasons": ["Your saved worker"], "parts": {}}))
+        notify(db, j.preferred_worker_id, f"{u.name} wants to book you again", f"{j.title} • {j.date} • ₹{j.budget}", f"/worker/jobs/{j.id}", "job_alert")
         db.commit()
     return j, risk, ranked
 
@@ -330,7 +330,7 @@ def invite(job_id: int, body: WorkerRef, u: m.User = Depends(get_user), db: Sess
         mt = m.Match(job_id=j.id, worker_id=body.worker_id, score=0, breakdown={})
         db.add(mt)
     mt.status = "invited"
-    notify(db, body.worker_id, f"📩 {u.name} invited you: {j.title}", f"📅 {j.date} • 💰 ₹{j.budget}", f"/worker/jobs/{j.id}", "job_alert")
+    notify(db, body.worker_id, f"{u.name} invited you: {j.title}", f"{j.date} • ₹{j.budget}", f"/worker/jobs/{j.id}", "job_alert")
     db.commit()
     return {"ok": True}
 
@@ -352,7 +352,7 @@ def cancel_job(job_id: int, u: m.User = Depends(get_user), db: Session = Depends
     active = db.query(m.Booking).filter(m.Booking.job_id == j.id, m.Booking.status.in_(["confirmed", "on_the_way", "arrived"])).all()
     for b in active:
         b.status = "cancelled"
-        notify(db, b.worker_id, f"❌ Job cancelled: {j.title}", "The customer cancelled this job", f"/worker/jobs/{j.id}")
+        notify(db, b.worker_id, f"Job cancelled: {j.title}", "The customer cancelled this job", f"/worker/jobs/{j.id}")
         for p in db.query(m.Payment).filter(m.Payment.booking_id == b.id, m.Payment.status == "held").all():
             p.status = "refunded"
     if active:
@@ -374,8 +374,8 @@ def notify_group(job_id: int, body: GroupRef, u: m.User = Depends(get_user), db:
         raise HTTPException(404, "Group not found")
     for wid in g.members:
         if not db.query(m.Match).filter(m.Match.job_id == j.id, m.Match.worker_id == wid).first():
-            db.add(m.Match(job_id=j.id, worker_id=wid, score=60, status="notified", breakdown={"reasons": [f"👥 Member of {g.name}"], "parts": {}}))
-        notify(db, wid, f"👥 Group work: {j.title}", f"{j.workers_required} workers needed • ₹{j.budget}/person • {j.date}", f"/worker/jobs/{j.id}", "job_alert")
+            db.add(m.Match(job_id=j.id, worker_id=wid, score=60, status="notified", breakdown={"reasons": [f"Member of {g.name}"], "parts": {}}))
+        notify(db, wid, f"Group work: {j.title}", f"{j.workers_required} workers needed • ₹{j.budget}/person • {j.date}", f"/worker/jobs/{j.id}", "job_alert")
     db.commit()
     return {"notified": len(g.members)}
 
@@ -434,6 +434,6 @@ def send_message(job_id: int, body: MsgIn, u: m.User = Depends(get_user), db: Se
     msg = m.Message(job_id=job_id, sender_id=u.id, receiver_id=body.to, kind=body.kind, text=body.text, payload=body.payload)
     db.add(msg)
     link = f"/customer/jobs/{job_id}" if body.to == j.customer_id else f"/worker/jobs/{job_id}"
-    notify(db, body.to, f"💬 {u.name}", body.text[:80] or ("📷 Photo" if body.kind == "image" else "📍 Location"), link, "chat")
+    notify(db, body.to, f"{u.name}", body.text[:80] or ("Photo" if body.kind == "image" else "Location"), link, "chat")
     db.commit()
     return {"ok": True, "warnings": warns}

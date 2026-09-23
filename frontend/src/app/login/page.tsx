@@ -2,7 +2,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Delete } from "lucide-react";
+import { Delete, Smartphone, KeyRound, BriefcaseBusiness, HardHat, Globe, ShieldCheck, Languages, Mic, MapPin } from "lucide-react";
+import { IconBadge } from "@/lib/icons";
+import { Logo } from "@/components/Shell";
 import { useApp } from "@/lib/store";
 import { api } from "@/lib/api";
 import { LANGS } from "@/lib/i18n";
@@ -15,7 +17,7 @@ function Keypad({ onKey }: { onKey: (k: string) => void }) {
         k === "" ? (
           <span key={i} />
         ) : (
-          <button key={i} onClick={() => onKey(k)} className="h-14 rounded-2xl bg-white border border-black/10 text-2xl font-black active:bg-brand-50 grid place-items-center">
+          <button key={i} onClick={() => onKey(k)} className="h-14 rounded-xl bg-white border border-line text-2xl font-semibold hover:bg-slate-50 active:bg-brand-50 grid place-items-center">
             {k === "del" ? <Delete /> : k}
           </button>
         )
@@ -53,9 +55,9 @@ export default function Login() {
       setExists(r.exists);
       if (r.name) setName(r.name);
       setStep("otp");
-      toast("📩 OTP sent", `Demo OTP: ${r.demo_otp}`);
+      toast("OTP sent", `Demo OTP: ${r.demo_otp}`, "success");
     } catch (e: any) {
-      toast("❌", e.message);
+      toast("Something went wrong", e.message, "error");
     } finally {
       setBusy(false);
     }
@@ -91,7 +93,7 @@ export default function Login() {
       const target = next || (r.user.role === "admin" ? "/admin" : r.user.role === "worker" ? (r.is_new ? "/worker/profile?onboard=1" : "/worker") : "/customer");
       router.replace(target);
     } catch (e: any) {
-      toast("❌", e.message);
+      toast("Something went wrong", e.message, "error");
       setOtp("");
     } finally {
       setBusy(false);
@@ -99,13 +101,34 @@ export default function Login() {
   }
 
   return (
-    <div className="max-w-md mx-auto space-y-5">
+    <div className="grid lg:grid-cols-2 gap-8 min-h-[calc(100vh-9rem)] items-stretch">
+      <div className="hidden lg:flex flex-col justify-between rounded-2xl bg-brand-700 text-white p-10">
+        <Logo light />
+        <div>
+          <h2 className="text-3xl font-bold leading-tight">{t("hero_title")}</h2>
+          <div className="mt-8 space-y-4">
+            {[
+              [ShieldCheck, "Verified workers and customers, ratings on both sides"],
+              [MapPin, "Work within your area — no long travel"],
+              [Languages, "Use it in Kannada, Hindi or English"],
+              [Mic, "Speak instead of typing, hear every screen read aloud"],
+            ].map(([Icon, text]: any) => (
+              <div key={text} className="flex items-center gap-3">
+                <IconBadge icon={Icon} tone="white" size={40} />
+                <span className="text-white/90">{text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="text-sm text-white/60">Udupi · Manipal · Malpe · Brahmavar</div>
+      </div>
+      <div className="w-full max-w-md mx-auto space-y-5 self-center">
       <div className="card p-4">
-        <div className="label">🌐 {t("language")}</div>
+        <div className="label flex items-center gap-1.5"><Globe size={15} /> {t("language")}</div>
         <div className="grid grid-cols-3 gap-2">
           {LANGS.map((l) => (
             <button key={l.id} onClick={() => setLang(l.id)} className={`tile py-3 ${lang === l.id ? "tile-on" : ""}`}>
-              <span className="text-lg">{l.label}</span>
+              <span className="text-base">{l.label}</span>
             </button>
           ))}
         </div>
@@ -114,12 +137,12 @@ export default function Login() {
       {step === "phone" && (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="card p-5 space-y-4">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-black flex-1">📱 {t("your_phone")}</h1>
+            <h1 className="text-xl font-semibold flex-1 flex items-center gap-2"><Smartphone size={20} className="text-brand-600" /> {t("your_phone")}</h1>
             <SpeakButton text={t("your_phone")} />
           </div>
-          <div className="input !text-3xl font-black tracking-widest text-center h-16 flex items-center justify-center">
+          <div className="input !text-2xl font-semibold tracking-widest text-center h-16 flex items-center justify-center">
             <span className="text-muted mr-2">+91</span>
-            {phone || <span className="text-gray-300">98765 43210</span>}
+            {phone || <span className="text-slate-300">98765 43210</span>}
           </div>
           <Keypad onKey={(k) => setPhone((p) => (k === "del" ? p.slice(0, -1) : p.length < 10 ? p + k : p))} />
           <button className="btn-primary btn-lg w-full" disabled={phone.length !== 10 || busy} onClick={sendOtp}>
@@ -131,15 +154,15 @@ export default function Login() {
       {step === "otp" && (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="card p-5 space-y-4">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-black flex-1">🔐 {t("enter_otp")}</h1>
+            <h1 className="text-xl font-semibold flex-1 flex items-center gap-2"><KeyRound size={20} className="text-brand-600" /> {t("enter_otp")}</h1>
             <SpeakButton text={t("enter_otp")} />
           </div>
           <p className="text-muted font-semibold">
-            +91 {phone} • <span className="text-brand-700 font-black">Demo OTP: 1234</span>
+            +91 {phone} • <span className="text-brand-700 font-semibold">Demo OTP: 1234</span>
           </p>
           <div className="flex justify-center gap-3">
             {[0, 1, 2, 3].map((i) => (
-              <span key={i} className={`h-16 w-14 rounded-2xl border-2 grid place-items-center text-3xl font-black ${otp[i] ? "border-brand-500 bg-brand-50" : "border-black/10 bg-white"}`}>
+              <span key={i} className={`h-16 w-14 rounded-xl border-2 grid place-items-center text-2xl font-semibold ${otp[i] ? "border-brand-500 bg-brand-50" : "border-line bg-white"}`}>
                 {otp[i] || ""}
               </span>
             ))}
@@ -163,11 +186,11 @@ export default function Login() {
           <div className="label">{t("i_am")}</div>
           <div className="grid grid-cols-2 gap-3">
             <button onClick={() => setRole("customer")} className={`tile py-6 ${role === "customer" ? "tile-on" : ""}`}>
-              <span className="text-5xl">🙋</span>
+              <IconBadge icon={BriefcaseBusiness} size={52} />
               <span>{t("need_worker")}</span>
             </button>
             <button onClick={() => setRole("worker")} className={`tile py-6 ${role === "worker" ? "tile-on" : ""}`}>
-              <span className="text-5xl">👷</span>
+              <IconBadge icon={HardHat} size={52} tone="amber" />
               <span>{t("need_work")}</span>
             </button>
           </div>
@@ -176,6 +199,7 @@ export default function Login() {
           </button>
         </motion.div>
       )}
+      </div>
     </div>
   );
 }

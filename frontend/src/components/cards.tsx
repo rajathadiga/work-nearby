@@ -1,34 +1,39 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Users, Repeat, Zap } from "lucide-react";
+import { MapPin, Clock, Users, Repeat, Zap, Hourglass, Mail, BadgeCheck, CircleCheck } from "lucide-react";
 import { useApp } from "@/lib/store";
-import { Avatar, Stars, LevelBadge, SpeakButton, ScoreRing, money, prettyDate, durLabel, JobStatusPill } from "./ui";
+import { SkillBadge, skillIconFor } from "@/lib/icons";
+import { Avatar, Stars, LevelBadge, SpeakButton, ScoreRing, money, prettyDate, durLabel, JobStatusPill, clean } from "./ui";
 
 export function JobCard({ job, href, showStatus, children }: { job: any; href: string; showStatus?: boolean; children?: React.ReactNode }) {
   const { t, skillName } = useApp();
-  const speakText = `${job.title}. ${job.distance_km !== undefined ? job.distance_km + " " + t("km_away") + "." : ""} ${money(job.budget)}. ${prettyDate(job.date, t)}.`;
+  const speakText = `${job.title}. ${job.distance_km !== undefined ? job.distance_km + " " + t("km_away") + "." : ""} ${job.budget} rupees. ${prettyDate(job.date, t)}.`;
   return (
-    <motion.div layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`card p-4 ${job.urgent ? "ring-2 ring-red-400" : ""} ${job.invited ? "ring-2 ring-sun-400" : ""}`}>
-      <Link href={href} className="flex gap-3">
-        <span className="h-14 w-14 shrink-0 rounded-2xl bg-brand-50 grid place-items-center text-3xl">{job.icon}</span>
+    <motion.div layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={`card p-4 flex flex-col ${job.urgent ? "border-rose-300" : job.invited ? "border-sun-400" : ""}`}>
+      <Link href={href} className="flex gap-3.5">
+        <SkillBadge skill={job.skills[0]} size={48} tone={job.urgent ? "rose" : "brand"} />
         <div className="flex-1 min-w-0">
-          <div className="flex flex-wrap gap-1 mb-1">
+          <div className="flex flex-wrap gap-1.5 mb-1">
             {job.urgent && (
-              <span className="chip !text-xs bg-red-600 text-white">
+              <span className="chip !text-xs bg-rose-600 text-white">
                 <Zap size={12} /> {t("urgent")}
               </span>
             )}
-            {job.invited && <span className="chip !text-xs bg-sun-500 text-white">📩 Invited</span>}
+            {job.invited && (
+              <span className="chip !text-xs bg-sun-100 text-sun-600">
+                <Mail size={12} /> Invited
+              </span>
+            )}
             {job.recurring?.freq && (
-              <span className="chip !text-xs bg-violet-100 text-violet-700">
+              <span className="chip !text-xs bg-violet-50 text-violet-700">
                 <Repeat size={12} /> {job.recurring.freq === "weekly" ? `Every ${job.recurring.day}` : "Daily"}
               </span>
             )}
             {showStatus && <JobStatusPill status={job.status} />}
           </div>
-          <div className="font-extrabold text-lg leading-snug">{job.title}</div>
-          <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-muted font-semibold mt-1">
+          <div className="font-semibold text-[17px] leading-snug">{job.title}</div>
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted mt-1.5">
             {job.distance_km !== undefined && (
               <span className="flex items-center gap-1">
                 <MapPin size={14} />
@@ -37,32 +42,40 @@ export function JobCard({ job, href, showStatus, children }: { job: any; href: s
             )}
             <span className="flex items-center gap-1">
               <Clock size={14} />
-              {prettyDate(job.date, t)} • {t(job.time_slot === "asap" ? "asap" : job.time_slot)}
+              {prettyDate(job.date, t)} · {t(job.time_slot === "asap" ? "asap" : job.time_slot)}
+            </span>
+            <span className="flex items-center gap-1">
+              <Hourglass size={14} />
+              {durLabel(job.duration)}
             </span>
             {job.workers_required > 1 && (
               <span className="flex items-center gap-1">
                 <Users size={14} />
-                {job.workers_required}
+                {job.workers_required} {t("workers")}
               </span>
             )}
           </div>
-          <div className="flex flex-wrap gap-1 mt-2">
-            {job.skills.slice(0, 3).map((s: string) => (
-              <span key={s} className="chip !text-xs bg-gray-100 text-gray-700">
-                {skillName(s)}
-              </span>
-            ))}
-          </div>
         </div>
-        <div className="flex flex-col items-end justify-between gap-2">
-          <span className="text-xl font-black text-brand-700">{money(job.budget)}</span>
-          {job.workers_required > 1 && <span className="text-[11px] text-muted font-bold -mt-2">/person</span>}
-          {job.match && <ScoreRing score={job.match.score} size={46} />}
+        <div className="flex flex-col items-end justify-between gap-2 shrink-0">
+          <div className="text-right">
+            <div className="text-lg font-bold text-ink">{money(job.budget)}</div>
+            {job.workers_required > 1 && <div className="text-[11px] text-muted -mt-0.5">per person</div>}
+          </div>
+          {job.match && <ScoreRing score={job.match.score} size={44} />}
         </div>
       </Link>
-      <div className="flex items-center gap-2 mt-3">
-        <span className="text-xs text-muted font-semibold flex-1 truncate">📍 {job.address} • ⏳ {durLabel(job.duration)}</span>
-        <SpeakButton text={speakText} className="!h-9 !w-9" />
+      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-line">
+        <div className="flex-1 flex flex-wrap gap-1.5 min-w-0">
+          {job.skills.slice(0, 3).map((s: string) => {
+            const I = skillIconFor(s);
+            return (
+              <span key={s} className="chip !text-xs bg-slate-100 text-slate-700">
+                <I size={12} /> {skillName(s)}
+              </span>
+            );
+          })}
+        </div>
+        <SpeakButton text={speakText} className="!h-8 !w-8" />
       </div>
       {children}
     </motion.div>
@@ -71,55 +84,71 @@ export function JobCard({ job, href, showStatus, children }: { job: any; href: s
 
 export function WorkerCard({ w, score, reasons, children, compact }: { w: any; score?: number; reasons?: string[]; children?: React.ReactNode; compact?: boolean }) {
   const { t, skillName } = useApp();
-  const speakText = `${w.name}. ${w.rating || ""} stars. ${w.jobs_completed} ${t("jobs_done")}. ${w.distance_km ?? ""} ${t("km_away")}. ${money(w.daily_rate)} per day.`;
+  const speakText = `${w.name}. ${w.rating || ""} stars. ${w.jobs_completed} ${t("jobs_done")}. ${w.distance_km ?? ""} ${t("km_away")}. ${w.daily_rate} rupees per day.`;
   return (
-    <motion.div layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="card p-4">
+    <motion.div layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="card p-4 flex flex-col">
       <div className="flex gap-3 items-start">
         <Link href={`/workers/${w.id}`}>
-          <Avatar name={w.name} size={60} online={w.available} />
+          <Avatar name={w.name} size={52} online={w.available} />
         </Link>
         <div className="flex-1 min-w-0">
-          <Link href={`/workers/${w.id}`} className="font-extrabold text-lg hover:underline flex items-center gap-2">
-            {w.name} {w.subscription === "pro" && <span className="chip !text-[10px] !px-2 bg-amber-100 text-amber-700">PRO</span>}
+          <Link href={`/workers/${w.id}`} className="font-semibold text-[17px] hover:text-brand-700 flex items-center gap-2">
+            <span className="truncate">{w.name}</span>
+            {w.subscription === "pro" && <span className="chip !text-[10px] !px-1.5 !py-0 bg-sun-100 text-sun-600 font-semibold">PRO</span>}
           </Link>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted font-semibold">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
             <Stars value={w.rating} count={w.rating_count} />
             <span>
               {w.jobs_completed} {t("jobs_done")}
             </span>
-            {w.distance_km !== undefined && <span>📍 {w.distance_km} km</span>}
+            {w.distance_km !== undefined && (
+              <span className="flex items-center gap-1">
+                <MapPin size={13} />
+                {w.distance_km} km
+              </span>
+            )}
           </div>
-          <div className="mt-1 flex flex-wrap gap-1">
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
             <LevelBadge level={w.level} />
-            {w.available && <span className="chip !text-xs bg-green-100 text-green-700">🟢 {t("available_now")}</span>}
+            {w.available && (
+              <span className="chip !text-xs bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-100">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> {t("available_now")}
+              </span>
+            )}
           </div>
         </div>
-        <div className="flex flex-col items-end gap-1">
+        <div className="flex flex-col items-end gap-1 shrink-0">
           {score !== undefined ? <ScoreRing score={score} /> : null}
-          <span className="font-black text-brand-700">
+          <span className="font-semibold text-sm">
             {money(w.daily_rate)}
-            <span className="text-xs text-muted">/day</span>
+            <span className="text-xs text-muted font-normal">/day</span>
           </span>
         </div>
       </div>
       {!compact && (
-        <div className="flex flex-wrap gap-1 mt-3">
-          {w.skills.slice(0, 4).map((s: any) => (
-            <span key={s.skill} className={`chip !text-xs ${s.verified ? "bg-brand-50 text-brand-800" : "bg-gray-100 text-gray-700"}`}>
-              {s.icon} {skillName(s.skill)} {s.verified && "✓"}
-            </span>
-          ))}
+        <div className="flex flex-wrap gap-1.5 mt-3">
+          {w.skills.slice(0, 4).map((s: any) => {
+            const I = skillIconFor(s.skill);
+            return (
+              <span key={s.skill} className={`chip !text-xs ${s.verified ? "bg-brand-50 text-brand-800" : "bg-slate-100 text-slate-700"}`}>
+                <I size={12} /> {skillName(s.skill)} {s.verified && <BadgeCheck size={12} />}
+              </span>
+            );
+          })}
         </div>
       )}
       {reasons && reasons.length > 0 && (
-        <div className="mt-3 rounded-2xl bg-brand-50/60 p-3 text-sm font-semibold text-brand-900 space-y-0.5">
-          <div className="text-xs font-black text-brand-700 uppercase tracking-wide">Why this worker</div>
+        <div className="mt-3 rounded-lg bg-slate-50 border border-line p-3 text-sm space-y-1">
+          <div className="text-[11px] font-semibold text-muted uppercase tracking-wider">Why this worker</div>
           {reasons.slice(0, 4).map((r, i) => (
-            <div key={i}>• {r}</div>
+            <div key={i} className="flex gap-2 items-start">
+              <CircleCheck size={14} className="text-brand-600 mt-0.5 shrink-0" />
+              <span>{clean(r)}</span>
+            </div>
           ))}
         </div>
       )}
-      <div className="flex items-center gap-2 mt-3">
+      <div className="flex items-center gap-2 mt-auto pt-3">
         <div className="flex-1 flex gap-2">{children}</div>
         <SpeakButton text={speakText} />
       </div>

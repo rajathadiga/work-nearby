@@ -1,9 +1,23 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Bell, BellOff, Briefcase, CalendarCheck, MessageSquare, Wallet, Star, Scale, Siren, Info, ShieldCheck, ChevronRight } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { api } from "@/lib/api";
-import { useRequireUser, Loading, PageTitle, Empty, timeAgo, SpeakButton } from "@/components/ui";
+import { IconBadge } from "@/lib/icons";
+import { useRequireUser, Loading, PageTitle, Empty, timeAgo, SpeakButton, clean } from "@/components/ui";
+
+const KIND: Record<string, [any, string]> = {
+  job_alert: [Briefcase, "brand"],
+  booking: [CalendarCheck, "sky"],
+  chat: [MessageSquare, "slate"],
+  payment: [Wallet, "brand"],
+  review: [Star, "amber"],
+  dispute: [Scale, "amber"],
+  sos: [Siren, "rose"],
+  admin: [ShieldCheck, "violet"],
+  info: [Info, "slate"],
+};
 
 export default function Notifications() {
   const user = useRequireUser();
@@ -24,28 +38,39 @@ export default function Notifications() {
 
   if (!user || !items) return <Loading />;
   return (
-    <div className="space-y-3 max-w-2xl mx-auto">
-      <PageTitle title={`🔔 ${t("notifications")}`} speakText={items.slice(0, 3).map((n) => n.title).join(". ")} />
-      {items.length === 0 && <Empty icon="🔕" text={t("empty")} />}
-      {items.map((n) => {
-        const body = (
-          <div className={`card p-4 flex gap-3 items-start ${!n.read ? "border-l-4 border-l-sun-500" : ""}`}>
-            <div className="flex-1 min-w-0">
-              <div className="font-extrabold">{n.title}</div>
-              {n.body && <div className="text-sm text-muted font-semibold">{n.body}</div>}
-              <div className="text-xs text-muted mt-1">{timeAgo(n.created_at)}</div>
-            </div>
-            <SpeakButton text={`${n.title}. ${n.body}`} />
-          </div>
-        );
-        return n.link ? (
-          <Link key={n.id} href={n.link} className="block">
-            {body}
-          </Link>
-        ) : (
-          <div key={n.id}>{body}</div>
-        );
-      })}
+    <div className="max-w-4xl">
+      <PageTitle icon={Bell} title={t("notifications")} speakText={items.slice(0, 3).map((n) => clean(n.title)).join(". ")} />
+      {items.length === 0 ? (
+        <Empty icon={BellOff} text={t("empty")} />
+      ) : (
+        <div className="card divide-y divide-line overflow-hidden">
+          {items.map((n) => {
+            const [Icon, tone] = KIND[n.kind] || KIND.info;
+            const body = (
+              <div className={`px-5 py-4 flex gap-4 items-start ${!n.read ? "bg-brand-50/40" : ""} ${n.link ? "hover:bg-slate-50" : ""}`}>
+                <IconBadge icon={Icon} size={38} tone={tone} />
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium flex items-center gap-2">
+                    {!n.read && <span className="h-2 w-2 rounded-full bg-brand-600 shrink-0" />}
+                    {clean(n.title)}
+                  </div>
+                  {n.body && <div className="text-sm text-muted">{clean(n.body)}</div>}
+                  <div className="text-xs text-muted mt-1">{timeAgo(n.created_at)}</div>
+                </div>
+                <SpeakButton text={`${clean(n.title)}. ${clean(n.body)}`} />
+                {n.link && <ChevronRight size={18} className="text-muted self-center" />}
+              </div>
+            );
+            return n.link ? (
+              <Link key={n.id} href={n.link} className="block">
+                {body}
+              </Link>
+            ) : (
+              <div key={n.id}>{body}</div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

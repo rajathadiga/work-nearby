@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { ArrowRight, ArrowUpDown } from "lucide-react";
+import { ArrowRight, ArrowLeftRight, Route as RouteIcon, CornerDownRight } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { api } from "@/lib/api";
 import { useRequireUser, Loading, PageTitle, Empty } from "@/components/ui";
@@ -19,36 +19,40 @@ export default function RouteJobs() {
     if (!user?.worker) return;
     api(`/worker/route?from_place=${from}&to_place=${to}&buffer_km=${buffer}`)
       .then(setRes)
-      .catch((e) => toast("❌", e.message));
+      .catch((e) => toast("Could not load route", e.message, "error"));
   }, [from, to, buffer, user?.id]);
 
   if (!user || !meta) return <Loading />;
-  const opts = [{ name: "me", label: "📍 My location" }, ...meta.places.map((p) => ({ name: p.name, label: p.name }))];
+  const opts = [{ name: "me", label: "My location" }, ...meta.places.map((p) => ({ name: p.name, label: p.name }))];
 
   return (
-    <div className="space-y-4">
-      <PageTitle title={`🛣️ ${t("route_jobs")}`} sub="Earn on your way home" speakText={`${res?.jobs.length || 0} jobs on your way from ${from === "me" ? "your location" : from} to ${to}`} />
-      <div className="card p-4 space-y-3">
-        <div className="flex items-center gap-2">
-          <select className="input !py-2" value={from} onChange={(e) => setFrom(e.target.value)}>
+    <div>
+      <PageTitle icon={RouteIcon} title={t("route_jobs")} sub="Pick up work on your way home" speakText={`${res?.jobs.length || 0} jobs on your way from ${from === "me" ? "your location" : from} to ${to}`} />
+      <div className="card p-4 mb-5 flex flex-col lg:flex-row gap-3 lg:items-end">
+        <div className="flex-1">
+          <div className="label">From</div>
+          <select className="input" value={from} onChange={(e) => setFrom(e.target.value)}>
             {opts.map((o) => (
               <option key={o.name} value={o.name}>
                 {o.label}
               </option>
             ))}
           </select>
-          <button
-            className="h-11 w-11 shrink-0 rounded-full bg-gray-100 grid place-items-center"
-            onClick={() => {
-              if (from === "me") return;
-              setFrom(to);
-              setTo(from);
-            }}
-            aria-label="swap"
-          >
-            <ArrowUpDown size={18} />
-          </button>
-          <select className="input !py-2" value={to} onChange={(e) => setTo(e.target.value)}>
+        </div>
+        <button
+          className="h-11 w-11 shrink-0 rounded-lg border border-line bg-white grid place-items-center self-center lg:self-end hover:bg-slate-50"
+          onClick={() => {
+            if (from === "me") return;
+            setFrom(to);
+            setTo(from);
+          }}
+          aria-label="swap"
+        >
+          <ArrowLeftRight size={17} />
+        </button>
+        <div className="flex-1">
+          <div className="label">To</div>
+          <select className="input" value={to} onChange={(e) => setTo(e.target.value)}>
             {opts
               .filter((o) => o.name !== "me")
               .map((o) => (
@@ -58,46 +62,54 @@ export default function RouteJobs() {
               ))}
           </select>
         </div>
-        <div className="flex gap-2 items-center text-sm font-bold">
-          How far from the road:
-          {[1, 2, 3, 5].map((b) => (
-            <button key={b} onClick={() => setBuffer(b)} className={`chip ${buffer === b ? "bg-brand-600 text-white" : "bg-gray-100"}`}>
-              {b} km
-            </button>
-          ))}
+        <div>
+          <div className="label">Max distance from road</div>
+          <div className="flex gap-1.5">
+            {[1, 2, 3, 5].map((b) => (
+              <button key={b} onClick={() => setBuffer(b)} className={`chip border !py-2 ${buffer === b ? "bg-brand-600 text-white border-brand-600" : "bg-white border-line"}`}>
+                {b} km
+              </button>
+            ))}
+          </div>
         </div>
       </div>
       {!res ? (
         <Loading />
       ) : (
-        <>
-          <MapView
-            center={[res.from.lat, res.from.lng]}
-            height={300}
-            fit
-            line={[
-              [res.from.lat, res.from.lng],
-              [res.to.lat, res.to.lng],
-            ]}
-            markers={[
-              { lat: res.from.lat, lng: res.from.lng, emoji: "🟢", popup: res.from.name, size: 22 },
-              { lat: res.to.lat, lng: res.to.lng, emoji: "🏁", popup: res.to.name, size: 30 },
-              ...res.jobs.map((j: any) => ({ lat: j.lat, lng: j.lng, emoji: j.icon, popup: `<b>${j.title}</b><br/>₹${j.budget} • ${j.off_route_km} km off route` })),
-            ]}
-          />
-          <div className="font-extrabold flex items-center gap-2">
-            {res.from.name} <ArrowRight size={16} /> {res.to.name} • {res.route_km} km • {res.jobs.length} jobs on the way
+        <div className="grid xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-6 items-start">
+          <div className="space-y-4 min-w-0">
+            <div className="font-medium flex items-center gap-2 text-sm">
+              {res.from.name} <ArrowRight size={15} /> {res.to.name} · {res.route_km} km · <span className="text-brand-700">{res.jobs.length} jobs on the way</span>
+            </div>
+            {res.jobs.length === 0 ? (
+              <Empty icon={RouteIcon} text="No jobs along this route right now" />
+            ) : (
+              res.jobs.map((j: any) => (
+                <JobCard key={j.id} job={{ ...j, distance_km: j.off_route_km, match: j.match_score ? { score: j.match_score } : undefined }} href={`/worker/jobs/${j.id}`}>
+                  <div className="text-xs text-muted mt-2 flex items-center gap-1.5">
+                    <CornerDownRight size={13} /> {j.off_route_km} km off your route · {Math.round(j.route_position * 100)}% along the way
+                  </div>
+                </JobCard>
+              ))
+            )}
           </div>
-          {res.jobs.length === 0 ? (
-            <Empty icon="🛣️" text="No jobs along this route right now" />
-          ) : (
-            res.jobs.map((j: any) => (
-              <JobCard key={j.id} job={{ ...j, distance_km: j.off_route_km, match: j.match_score ? { score: j.match_score } : undefined }} href={`/worker/jobs/${j.id}`}>
-                <div className="text-xs font-bold text-sun-600 mt-2">↪ {j.off_route_km} km off your route • {Math.round(j.route_position * 100)}% along the way</div>
-              </JobCard>
-            ))
-          )}
-        </>
+          <div className="card p-3 xl:sticky xl:top-24">
+            <MapView
+              center={[res.from.lat, res.from.lng]}
+              height={560}
+              fit
+              line={[
+                [res.from.lat, res.from.lng],
+                [res.to.lat, res.to.lng],
+              ]}
+              markers={[
+                { lat: res.from.lat, lng: res.from.lng, kind: "start", popup: res.from.name, size: 26 },
+                { lat: res.to.lat, lng: res.to.lng, kind: "flag", popup: res.to.name, size: 32 },
+                ...res.jobs.map((j: any) => ({ lat: j.lat, lng: j.lng, kind: (j.urgent ? "urgent" : "job") as any, popup: `<b>${j.title}</b><br/>₹${j.budget} · ${j.off_route_km} km off route` })),
+              ]}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

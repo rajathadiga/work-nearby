@@ -2,7 +2,11 @@
 import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Mic, MicOff, Volume2, Star, X, Loader2, ShieldCheck, BadgeCheck } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import {
+  Mic, Square, Volume2, Star, X, Loader2, ShieldCheck, BadgeCheck, Smartphone, Inbox, Wrench, MapPin, CircleCheck, GraduationCap, IndianRupee,
+  ThumbsUp, Clock, Sunrise, Sun, Sunset, CalendarDays, Hourglass, Timer,
+} from "lucide-react";
 import { useApp } from "@/lib/store";
 import { useVoiceInput } from "@/lib/speech";
 
@@ -28,39 +32,38 @@ export function Avatar({ name, size = 48, online }: { name: string; size?: numbe
   const hue = [...(name || "x")].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
   return (
     <span className="relative inline-block shrink-0" style={{ width: size, height: size }}>
-      <span
-        className="grid place-items-center rounded-full text-white font-black w-full h-full"
-        style={{ background: `linear-gradient(135deg, hsl(${hue} 60% 50%), hsl(${(hue + 40) % 360} 60% 38%))`, fontSize: size * 0.38 }}
-      >
+      <span className="grid place-items-center rounded-full font-semibold w-full h-full" style={{ background: `hsl(${hue} 30% 90%)`, color: `hsl(${hue} 35% 30%)`, fontSize: size * 0.36 }}>
         {initials}
       </span>
       {online !== undefined && (
-        <span className={`absolute bottom-0 right-0 rounded-full border-2 border-white ${online ? "bg-green-500" : "bg-gray-300"}`} style={{ width: size * 0.28, height: size * 0.28 }} />
+        <span className={`absolute bottom-0 right-0 rounded-full border-2 border-white ${online ? "bg-emerald-500" : "bg-slate-300"}`} style={{ width: size * 0.28, height: size * 0.28 }} />
       )}
     </span>
   );
 }
 
-export function Stars({ value, count, size = 16 }: { value: number; count?: number; size?: number }) {
+export function Stars({ value, count, size = 15 }: { value: number; count?: number; size?: number }) {
   return (
-    <span className="inline-flex items-center gap-1 font-bold">
+    <span className="inline-flex items-center gap-1 font-semibold text-ink">
       <Star size={size} className="fill-amber-400 text-amber-400" />
       {value ? value.toFixed(1) : "New"}
-      {count !== undefined && count > 0 && <span className="text-muted font-semibold text-sm">({count})</span>}
+      {count !== undefined && count > 0 && <span className="text-muted font-normal text-sm">({count})</span>}
     </span>
   );
 }
 
 export function StarInput({ value, onChange }: { value: number; onChange: (v: number) => void }) {
-  const faces = ["😞", "😕", "😐", "🙂", "😍"];
+  const words = ["Poor", "Not good", "Okay", "Good", "Excellent"];
   return (
-    <div className="flex justify-center gap-2">
-      {[1, 2, 3, 4, 5].map((i) => (
-        <button key={i} onClick={() => onChange(i)} className={`flex flex-col items-center p-2 rounded-2xl transition ${value >= i ? "scale-110" : "opacity-50"}`}>
-          <Star size={36} className={value >= i ? "fill-amber-400 text-amber-400" : "text-gray-300"} />
-          <span className="text-xl">{value === i ? faces[i - 1] : ""}</span>
-        </button>
-      ))}
+    <div className="text-center">
+      <div className="flex justify-center gap-1">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <button key={i} onClick={() => onChange(i)} className="p-1.5 rounded-lg hover:bg-slate-50" aria-label={`${i} stars`}>
+            <Star size={36} className={value >= i ? "fill-amber-400 text-amber-400" : "text-slate-300"} />
+          </button>
+        ))}
+      </div>
+      <div className="text-sm font-semibold text-muted mt-1">{words[value - 1]}</div>
     </div>
   );
 }
@@ -68,57 +71,63 @@ export function StarInput({ value, onChange }: { value: number; onChange: (v: nu
 export function LevelBadge({ level }: { level: string }) {
   if (level === "trusted")
     return (
-      <span className="chip bg-brand-600 text-white !text-xs">
-        <ShieldCheck size={14} /> Trusted
+      <span className="chip !text-xs bg-brand-600 text-white">
+        <ShieldCheck size={13} /> Trusted
       </span>
     );
   if (level === "verified")
     return (
-      <span className="chip bg-sky-100 text-sky-700 !text-xs">
-        <BadgeCheck size={14} /> ID Verified
+      <span className="chip !text-xs bg-sky-50 text-sky-700 ring-1 ring-inset ring-sky-100">
+        <BadgeCheck size={13} /> ID verified
       </span>
     );
-  return <span className="chip bg-gray-100 text-gray-600 !text-xs">📱 Phone verified</span>;
+  return (
+    <span className="chip !text-xs bg-slate-100 text-slate-600">
+      <Smartphone size={13} /> Phone verified
+    </span>
+  );
 }
 
-export function ScoreRing({ score, size = 56 }: { score: number; size?: number }) {
-  const r = size / 2 - 5;
+export function ScoreRing({ score, size = 52 }: { score: number; size?: number }) {
+  const r = size / 2 - 4;
   const c = 2 * Math.PI * r;
-  const color = score >= 80 ? "#059669" : score >= 60 ? "#f59e0b" : "#ef4444";
+  const color = score >= 80 ? "#1f6b65" : score >= 60 ? "#c2842b" : "#be123c";
   return (
-    <span className="relative inline-grid place-items-center shrink-0" style={{ width: size, height: size }}>
+    <span className="relative inline-grid place-items-center shrink-0" style={{ width: size, height: size }} title="Match score">
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} stroke="#eee" strokeWidth="5" fill="none" />
-        <circle cx={size / 2} cy={size / 2} r={r} stroke={color} strokeWidth="5" fill="none" strokeDasharray={c} strokeDashoffset={c * (1 - Math.min(score, 100) / 100)} strokeLinecap="round" />
+        <circle cx={size / 2} cy={size / 2} r={r} stroke="#e8ecef" strokeWidth="4" fill="none" />
+        <circle cx={size / 2} cy={size / 2} r={r} stroke={color} strokeWidth="4" fill="none" strokeDasharray={c} strokeDashoffset={c * (1 - Math.min(score, 100) / 100)} strokeLinecap="round" />
       </svg>
-      <span className="absolute text-sm font-black" style={{ color }}>
+      <span className="absolute text-[13px] font-bold" style={{ color }}>
         {Math.round(score)}
       </span>
     </span>
   );
 }
 
+const PARTS: Record<string, [LucideIcon, string, string]> = {
+  skill: [Wrench, "Skill", "35%"],
+  distance: [MapPin, "Distance", "20%"],
+  availability: [CircleCheck, "Available", "15%"],
+  experience: [GraduationCap, "Experience", "10%"],
+  rating: [Star, "Rating", "10%"],
+  price: [IndianRupee, "Price fit", "5%"],
+  reliability: [ThumbsUp, "Reliability", "5%"],
+};
+
 export function Breakdown({ parts }: { parts: Record<string, number> }) {
-  const labels: Record<string, [string, string]> = {
-    skill: ["🛠️ Skill", "35%"],
-    distance: ["📍 Distance", "20%"],
-    availability: ["🟢 Available", "15%"],
-    experience: ["🎓 Experience", "10%"],
-    rating: ["⭐ Rating", "10%"],
-    price: ["💰 Price fit", "5%"],
-    reliability: ["✅ Reliability", "5%"],
-  };
   if (!parts || !Object.keys(parts).length) return null;
   return (
-    <div className="grid grid-cols-1 gap-1.5">
-      {Object.entries(labels).map(([k, [label, w]]) =>
+    <div className="grid grid-cols-1 gap-2">
+      {Object.entries(PARTS).map(([k, [Icon, label, w]]) =>
         parts[k] === undefined ? null : (
           <div key={k} className="flex items-center gap-2 text-sm">
-            <span className="w-28 shrink-0 font-semibold">{label}</span>
-            <span className="flex-1 h-2.5 rounded-full bg-gray-100 overflow-hidden">
-              <motion.span initial={{ width: 0 }} animate={{ width: `${parts[k]}%` }} className="block h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600" />
+            <Icon size={15} className="text-muted shrink-0" />
+            <span className="w-24 shrink-0 font-medium">{label}</span>
+            <span className="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
+              <motion.span initial={{ width: 0 }} animate={{ width: `${parts[k]}%` }} className="block h-full rounded-full bg-brand-500" />
             </span>
-            <span className="w-9 text-right font-bold">{parts[k]}</span>
+            <span className="w-8 text-right font-semibold">{parts[k]}</span>
             <span className="w-9 text-right text-xs text-muted">{w}</span>
           </div>
         )
@@ -136,21 +145,26 @@ export function SpeakButton({ text, className = "" }: { text: string; className?
         e.preventDefault();
         say(text);
       }}
-      className={`h-10 w-10 shrink-0 grid place-items-center rounded-full bg-sun-100 text-sun-600 hover:bg-sun-200 ${className}`}
+      className={`h-9 w-9 shrink-0 grid place-items-center rounded-lg border border-line bg-white text-muted hover:text-brand-700 hover:border-brand-300 ${className}`}
       aria-label={t("read_aloud")}
       title={t("read_aloud")}
     >
-      <Volume2 size={20} />
+      <Volume2 size={17} />
     </button>
   );
 }
 
-export function PageTitle({ title, sub, speakText, right }: { title: string; sub?: string; speakText?: string; right?: ReactNode }) {
+export function PageTitle({ title, sub, speakText, right, icon: Icon }: { title: string; sub?: string; speakText?: string; right?: ReactNode; icon?: LucideIcon }) {
   return (
-    <div className="flex items-center gap-3 mb-4">
+    <div className="flex flex-wrap items-center gap-3 mb-6">
+      {Icon && (
+        <span className="h-11 w-11 rounded-xl bg-brand-50 text-brand-700 grid place-items-center ring-1 ring-inset ring-brand-100">
+          <Icon size={22} />
+        </span>
+      )}
       <div className="flex-1 min-w-0">
-        <h1 className="text-2xl sm:text-3xl font-black leading-tight">{title}</h1>
-        {sub && <p className="text-muted font-semibold">{sub}</p>}
+        <h1 className="text-xl sm:text-2xl font-bold leading-tight tracking-tight">{title}</h1>
+        {sub && <p className="text-muted text-sm sm:text-base">{sub}</p>}
       </div>
       {right}
       <SpeakButton text={speakText || `${title}. ${sub || ""}`} />
@@ -170,40 +184,36 @@ export function VoiceBox({ value, onChange, onFinal, placeholder, rows = 3 }: { 
       <button
         type="button"
         onClick={v.listening ? v.stop : v.start}
-        className={`w-full flex items-center gap-4 rounded-3xl p-4 text-left transition border-2 ${
-          v.listening ? "bg-red-50 border-red-400" : "bg-gradient-to-r from-sun-50 to-brand-50 border-transparent hover:border-sun-400"
-        }`}
+        className={`w-full flex items-center gap-4 rounded-xl p-3.5 text-left transition border ${v.listening ? "bg-rose-50 border-rose-300" : "bg-brand-50/60 border-brand-100 hover:border-brand-300"}`}
       >
-        <span className={`h-16 w-16 rounded-full grid place-items-center text-white shrink-0 ${v.listening ? "bg-red-500 pulse-dot text-red-500" : "bg-sun-500"}`}>
-          {v.listening ? <MicOff size={30} className="text-white" /> : <Mic size={30} />}
+        <span className={`h-12 w-12 rounded-full grid place-items-center text-white shrink-0 ${v.listening ? "bg-rose-500 pulse-dot text-rose-500" : "bg-brand-600"}`}>
+          {v.listening ? <Square size={18} className="text-white fill-white" /> : <Mic size={22} />}
         </span>
-        <span className="flex-1">
-          <span className="block font-black text-lg">{v.listening ? t("listening") : t("speak_work")}</span>
-          <span className="block text-sm text-muted font-semibold">
-            {v.interim || (v.supported ? "ಕನ್ನಡ • हिन्दी • English" : "Voice needs Chrome / Edge browser")}
-          </span>
+        <span className="flex-1 min-w-0">
+          <span className="block font-semibold">{v.listening ? t("listening") : t("speak_work")}</span>
+          <span className="block text-sm text-muted truncate">{v.interim || (v.supported ? "ಕನ್ನಡ · हिन्दी · English" : "Voice input needs Chrome or Edge")}</span>
         </span>
       </button>
-      <textarea className="input !text-base" rows={rows} value={value} placeholder={placeholder || t("or_type")} onChange={(e) => onChange(e.target.value)} onBlur={() => onFinal?.(value)} />
+      <textarea className="input" rows={rows} value={value} placeholder={placeholder || t("or_type")} onChange={(e) => onChange(e.target.value)} onBlur={() => onFinal?.(value)} />
     </div>
   );
 }
 
-export function Modal({ open, onClose, title, children }: { open: boolean; onClose: () => void; title?: string; children: ReactNode }) {
+export function Modal({ open, onClose, title, children, wide }: { open: boolean; onClose: () => void; title?: string; children: ReactNode; wide?: boolean }) {
   return (
     <AnimatePresence>
       {open && (
-        <motion.div className="fixed inset-0 z-[60] bg-black/40 flex items-end sm:items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
+        <motion.div className="fixed inset-0 z-[60] bg-slate-900/40 flex items-end sm:items-center justify-center p-0 sm:p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
           <motion.div
-            initial={{ y: 60 }}
-            animate={{ y: 0 }}
-            exit={{ y: 60 }}
-            className="bg-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl p-5 max-h-[90vh] overflow-y-auto"
+            initial={{ y: 40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 40, opacity: 0 }}
+            className={`bg-white w-full ${wide ? "sm:max-w-3xl" : "sm:max-w-lg"} rounded-t-2xl sm:rounded-2xl p-5 max-h-[90vh] overflow-y-auto shadow-xl`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center mb-3">
-              <h3 className="text-xl font-black flex-1">{title}</h3>
-              <button onClick={onClose} className="h-9 w-9 grid place-items-center rounded-full bg-gray-100" aria-label="close">
+            <div className="flex items-center mb-4">
+              <h3 className="text-lg font-semibold flex-1">{title}</h3>
+              <button onClick={onClose} className="h-8 w-8 grid place-items-center rounded-lg hover:bg-slate-100" aria-label="close">
                 <X size={18} />
               </button>
             </div>
@@ -217,53 +227,74 @@ export function Modal({ open, onClose, title, children }: { open: boolean; onClo
 
 export function Loading({ label }: { label?: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-muted gap-3">
-      <Loader2 className="animate-spin text-brand-600" size={36} />
-      {label && <span className="font-bold">{label}</span>}
+    <div className="flex flex-col items-center justify-center py-20 text-muted gap-3">
+      <Loader2 className="animate-spin text-brand-600" size={30} />
+      {label && <span className="font-medium">{label}</span>}
     </div>
   );
 }
 
-export function Empty({ icon = "🌱", text }: { icon?: string; text: string }) {
+export function Empty({ icon: Icon = Inbox, text, action }: { icon?: LucideIcon; text: string; action?: ReactNode }) {
   return (
-    <div className="card p-8 text-center text-muted">
-      <div className="text-5xl mb-2">{icon}</div>
-      <div className="font-bold">{text}</div>
+    <div className="card p-10 text-center text-muted flex flex-col items-center gap-3">
+      <span className="h-12 w-12 rounded-full bg-slate-100 grid place-items-center">
+        <Icon size={22} />
+      </span>
+      <div className="font-medium">{text}</div>
+      {action}
+    </div>
+  );
+}
+
+export function Stat({ label, value, sub, icon: Icon, tone = "text-ink" }: { label: string; value: ReactNode; sub?: ReactNode; icon?: LucideIcon; tone?: string }) {
+  return (
+    <div className="card p-4">
+      <div className="flex items-center gap-2 text-sm font-medium text-muted">
+        {Icon && <Icon size={16} />}
+        {label}
+      </div>
+      <div className={`text-2xl font-bold mt-1 ${tone}`}>{value}</div>
+      {sub && <div className="text-xs text-muted mt-0.5">{sub}</div>}
     </div>
   );
 }
 
 export const money = (n: number) => "₹" + (n || 0).toLocaleString("en-IN");
 
+const JOB_TONE: Record<string, string> = {
+  open: "bg-amber-50 text-amber-700 ring-amber-200",
+  assigned: "bg-sky-50 text-sky-700 ring-sky-200",
+  in_progress: "bg-violet-50 text-violet-700 ring-violet-200",
+  completed: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+  cancelled: "bg-slate-100 text-slate-600 ring-slate-200",
+};
+
 export function JobStatusPill({ status }: { status: string }) {
   const { t } = useApp();
-  const map: Record<string, string> = {
-    open: "bg-amber-100 text-amber-800",
-    assigned: "bg-sky-100 text-sky-800",
-    in_progress: "bg-violet-100 text-violet-800",
-    completed: "bg-green-100 text-green-800",
-    cancelled: "bg-gray-100 text-gray-600",
-  };
-  const dot: Record<string, string> = { open: "🟡", assigned: "🔵", in_progress: "🟣", completed: "🟢", cancelled: "⚪" };
   return (
-    <span className={`chip !text-xs ${map[status] || "bg-gray-100"}`}>
-      {dot[status]} {t("status_" + status)}
+    <span className={`chip !text-xs ring-1 ring-inset ${JOB_TONE[status] || "bg-slate-100"}`}>
+      <span className="h-1.5 w-1.5 rounded-full bg-current" /> {t("status_" + status)}
     </span>
   );
 }
 
+const BOOK_TONE: Record<string, string> = {
+  confirmed: "bg-sky-50 text-sky-700 ring-sky-200",
+  on_the_way: "bg-amber-50 text-amber-700 ring-amber-200",
+  arrived: "bg-violet-50 text-violet-700 ring-violet-200",
+  completed: "bg-orange-50 text-orange-700 ring-orange-200",
+  paid: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+  cancelled: "bg-slate-100 text-slate-600 ring-slate-200",
+  no_show: "bg-rose-50 text-rose-700 ring-rose-200",
+};
+
 export function BookingStatusPill({ status }: { status: string }) {
   const { t } = useApp();
-  const map: Record<string, string> = {
-    confirmed: "bg-sky-100 text-sky-800",
-    on_the_way: "bg-amber-100 text-amber-800",
-    arrived: "bg-violet-100 text-violet-800",
-    completed: "bg-orange-100 text-orange-800",
-    paid: "bg-green-100 text-green-800",
-    cancelled: "bg-gray-100 text-gray-600",
-    no_show: "bg-red-100 text-red-700",
-  };
-  return <span className={`chip !text-xs ${map[status] || "bg-gray-100"}`}>{t("b_" + status)}</span>;
+  return (
+    <span className={`chip !text-xs ring-1 ring-inset ${BOOK_TONE[status] || "bg-slate-100"}`}>
+      <span className="h-1.5 w-1.5 rounded-full bg-current" /> {t("b_" + status)}
+    </span>
+  );
 }
 
 export function timeAgo(iso: string) {
@@ -286,12 +317,17 @@ export function prettyDate(d: string, t: (k: string) => string) {
   return new Date(d + "T00:00:00").toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
 }
 
-export const DURATIONS: { id: string; en: string; icon: string }[] = [
-  { id: "1h", en: "1 hour", icon: "⏱️" },
-  { id: "2h", en: "2 hours", icon: "⏱️" },
-  { id: "3h", en: "3 hours", icon: "⏱️" },
-  { id: "half_day", en: "Half day", icon: "🌤️" },
-  { id: "full_day", en: "Full day", icon: "☀️" },
-  { id: "multi_day", en: "Few days", icon: "📅" },
+export const SLOT_ICONS: Record<string, LucideIcon> = { morning: Sunrise, afternoon: Sun, evening: Sunset, flexible: Clock, asap: Timer };
+
+export const DURATIONS: { id: string; en: string; icon: LucideIcon }[] = [
+  { id: "1h", en: "1 hour", icon: Timer },
+  { id: "2h", en: "2 hours", icon: Timer },
+  { id: "3h", en: "3 hours", icon: Timer },
+  { id: "half_day", en: "Half day", icon: Hourglass },
+  { id: "full_day", en: "Full day", icon: Sun },
+  { id: "multi_day", en: "Few days", icon: CalendarDays },
 ];
 export const durLabel = (id: string) => DURATIONS.find((d) => d.id === id)?.en || id;
+
+/** strip any emoji the backend may still send (old data) */
+export const clean = (s: string) => (s || "").replace(/[\p{Extended_Pictographic}️‍]/gu, "").replace(/\s{2,}/g, " ").trim();

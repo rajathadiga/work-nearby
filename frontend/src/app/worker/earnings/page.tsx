@@ -1,10 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { Wallet, CalendarDays, Clock, ClipboardCheck, Hourglass, TrendingUp } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { api } from "@/lib/api";
+import { SkillBadge } from "@/lib/icons";
 import { ChartTip } from "@/components/ChartTip";
-import { useRequireUser, Loading, PageTitle, money, BookingStatusPill, prettyDate } from "@/components/ui";
+import { useRequireUser, Loading, PageTitle, money, BookingStatusPill, prettyDate, Stat } from "@/components/ui";
 
 export default function Earnings() {
   const user = useRequireUser("worker");
@@ -19,89 +21,93 @@ export default function Earnings() {
   }, [user?.id]);
 
   if (!user || !e) return <Loading />;
+  const maxSkill = e.by_skill[0]?.amount || 1;
 
   return (
-    <div className="space-y-5">
-      <PageTitle title={`💰 ${t("earnings")}`} speakText={`This month you earned ${e.month} rupees from ${e.month_jobs} jobs. This week ${e.week} rupees.`} />
-      <div className="rounded-[2rem] p-6 bg-gradient-to-br from-brand-600 to-emerald-500 text-white">
-        <div className="font-bold text-white/80">This month</div>
-        <div className="text-5xl font-black">{money(e.month)}</div>
-        <div className="grid grid-cols-3 gap-3 mt-5">
-          <div>
-            <div className="text-2xl font-black">{e.month_jobs}</div>
-            <div className="text-xs font-bold text-white/80">Jobs completed</div>
-          </div>
-          <div>
-            <div className="text-2xl font-black">{money(e.avg_per_day)}</div>
-            <div className="text-xs font-bold text-white/80">Average / day</div>
-          </div>
-          <div>
-            <div className="text-2xl font-black">{e.hours_month}</div>
-            <div className="text-xs font-bold text-white/80">Hours worked</div>
-          </div>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <div className="card p-4">
-          <div className="text-sm font-bold text-muted">{t("earned_week")}</div>
-          <div className="text-2xl font-black">{money(e.week)}</div>
-        </div>
-        <div className="card p-4">
-          <div className="text-sm font-bold text-muted">⏳ Pending payments</div>
-          <div className="text-2xl font-black text-amber-600">{money(e.pending_amount)}</div>
-        </div>
+    <div className="space-y-6">
+      <PageTitle icon={Wallet} title={t("earnings")} sub="Your income from KaamNear" speakText={`This month you earned ${e.month} rupees from ${e.month_jobs} jobs. This week ${e.week} rupees.`} />
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <Stat icon={Wallet} label="This month" value={money(e.month)} tone="text-brand-700" />
+        <Stat icon={CalendarDays} label={t("earned_week")} value={money(e.week)} />
+        <Stat icon={ClipboardCheck} label="Jobs this month" value={e.month_jobs} />
+        <Stat icon={TrendingUp} label="Average per day" value={money(e.avg_per_day)} />
+        <Stat icon={Clock} label="Hours worked" value={e.hours_month} sub={e.pending_amount > 0 ? `${money(e.pending_amount)} payment pending` : undefined} />
       </div>
 
-      <div className="card p-4">
-        <h2 className="section-title mb-2">📊 Daily earnings – last 30 days</h2>
-        <div className="h-60">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={e.series} margin={{ top: 8, right: 4, left: -16, bottom: 0 }}>
-              <CartesianGrid vertical={false} stroke="#eee" />
-              <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#66706c" }} interval={4} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: "#66706c" }} axisLine={false} tickLine={false} />
-              <Tooltip content={<ChartTip />} cursor={{ fill: "rgba(16,185,129,.08)" }} />
-              <Bar dataKey="amount" fill="#059669" radius={[4, 4, 0, 0]} maxBarSize={14} />
-            </BarChart>
-          </ResponsiveContainer>
+      <div className="grid xl:grid-cols-3 gap-6">
+        <div className="card p-5 xl:col-span-2">
+          <div className="section-title mb-4">Daily earnings — last 30 days</div>
+          <div className="h-72">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={e.series} margin={{ top: 8, right: 4, left: -12, bottom: 0 }}>
+                <CartesianGrid vertical={false} stroke="#edf0f3" />
+                <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#5f6b7a" }} interval={3} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: "#5f6b7a" }} axisLine={false} tickLine={false} />
+                <Tooltip content={<ChartTip />} cursor={{ fill: "rgba(31,107,101,.06)" }} />
+                <Bar dataKey="amount" fill="#1f6b65" radius={[4, 4, 0, 0]} maxBarSize={18} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-      </div>
-
-      {e.by_skill.length > 0 && (
-        <div className="card p-4">
-          <h2 className="section-title mb-3">🛠️ Earnings by skill</h2>
-          <div className="space-y-2">
+        <div className="card p-5">
+          <div className="section-title mb-4">Earnings by skill</div>
+          <div className="space-y-3.5">
             {e.by_skill.map((s: any) => (
-              <div key={s.skill} className="flex items-center gap-2 text-sm">
-                <span className="w-40 font-bold truncate">{s.skill}</span>
-                <span className="flex-1 h-3 rounded-full bg-gray-100 overflow-hidden">
-                  <span className="block h-full rounded-full bg-brand-600" style={{ width: `${(s.amount / e.by_skill[0].amount) * 100}%` }} />
-                </span>
-                <span className="w-20 text-right font-black">{money(s.amount)}</span>
+              <div key={s.skill}>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="font-medium">{s.skill}</span>
+                  <span className="font-semibold">{money(s.amount)}</span>
+                </div>
+                <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                  <div className="h-full rounded-full bg-brand-600" style={{ width: `${(s.amount / maxSkill) * 100}%` }} />
+                </div>
               </div>
             ))}
+            {e.by_skill.length === 0 && <div className="text-sm text-muted">No completed work yet.</div>}
+          </div>
+          <div className="mt-6 pt-4 border-t border-line flex justify-between text-sm">
+            <span className="text-muted">All-time earnings</span>
+            <span className="font-semibold">
+              {money(e.total)} · {e.total_jobs} jobs
+            </span>
           </div>
         </div>
-      )}
+      </div>
 
-      <div className="card p-4">
-        <h2 className="section-title mb-3">🧾 Work history</h2>
-        <div className="divide-y divide-black/5">
-          {bookings.slice(0, 25).map((b) => (
-            <a key={b.id} href={`/worker/jobs/${b.job_id}`} className="flex items-center gap-3 py-2">
-              <span className="text-2xl">{b.job.icon}</span>
-              <span className="flex-1 min-w-0">
-                <span className="block font-bold truncate">{b.job.title}</span>
-                <span className="text-xs text-muted font-semibold">
-                  {prettyDate(b.job.date, t)} • {b.customer?.name}
-                </span>
-              </span>
-              <span className="text-right">
-                <span className="block font-black">{money(b.amount)}</span>
-                <BookingStatusPill status={b.status} />
-              </span>
-            </a>
-          ))}
+      <div className="card overflow-hidden">
+        <div className="px-5 py-4 border-b border-line section-title">
+          <Hourglass size={18} className="text-brand-600" /> Work history
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-muted text-left">
+              <tr>
+                <th className="px-5 py-2.5 font-medium">Job</th>
+                <th className="px-5 py-2.5 font-medium hidden md:table-cell">Date</th>
+                <th className="px-5 py-2.5 font-medium hidden md:table-cell">Customer</th>
+                <th className="px-5 py-2.5 font-medium">Status</th>
+                <th className="px-5 py-2.5 font-medium text-right">Amount</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-line">
+              {bookings.slice(0, 30).map((b) => (
+                <tr key={b.id} className="hover:bg-slate-50 cursor-pointer" onClick={() => (window.location.href = `/worker/jobs/${b.job_id}`)}>
+                  <td className="px-5 py-3">
+                    <div className="flex items-center gap-3">
+                      <SkillBadge skill={b.job.skills[0]} size={32} tone="slate" />
+                      <span className="font-medium truncate max-w-[220px]">{b.job.title}</span>
+                    </div>
+                  </td>
+                  <td className="px-5 py-3 hidden md:table-cell text-muted">{prettyDate(b.job.date, t)}</td>
+                  <td className="px-5 py-3 hidden md:table-cell text-muted">{b.customer?.name}</td>
+                  <td className="px-5 py-3">
+                    <BookingStatusPill status={b.status} />
+                  </td>
+                  <td className="px-5 py-3 text-right font-semibold">{money(b.amount)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

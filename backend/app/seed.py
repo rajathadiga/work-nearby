@@ -45,7 +45,7 @@ BUNDLES = [
     ["tree_trimming", "coconut_climbing", "garden_cleaning"],
 ]
 LEVELS = ["expert", "advanced", "intermediate", "beginner"]
-REVIEW_TEXT = ["Very good work, came on time 👍", "Hard working and honest", "Neat job, will call again", "Good work but came a bit late",
+REVIEW_TEXT = ["Very good work, came on time ", "Hard working and honest", "Neat job, will call again", "Good work but came a bit late",
                "Excellent! Cleaned everything properly", "Polite and skilled", "Did the work quickly", "Very reliable person", "Okay work", "Super, highly recommended"]
 REVIEW_TAGS = ["On time", "Skilled", "Polite", "Clean work", "Good value", "Honest"]
 
@@ -270,8 +270,8 @@ def seed_live(db: Session):
     b.travel_started_at = datetime.utcnow() - timedelta(minutes=4)
     b.start_lat, b.start_lng = ramesh.lat, ramesh.lng
     track_job.status = "in_progress"
-    db.add(m.Message(job_id=track_job.id, sender_id=priya.id, receiver_id=ramesh.id, text="Please bring the safety belt. Gate is open 🙂"))
-    db.add(m.Message(job_id=track_job.id, sender_id=ramesh.id, receiver_id=priya.id, text="Sari madam, coming in 15 minutes 🛵"))
+    db.add(m.Message(job_id=track_job.id, sender_id=priya.id, receiver_id=ramesh.id, text="Please bring the safety belt. Gate is open "))
+    db.add(m.Message(job_id=track_job.id, sender_id=ramesh.id, receiver_id=priya.id, text="Sari madam, coming in 15 minutes "))
 
     # Priya: completed job waiting for payment + review
     pj = m.Job(customer_id=priya.id, title="Bathroom & kitchen cleaning", description="", category="cleaning", skills=["bathroom_cleaning", "house_cleaning"],

@@ -67,7 +67,7 @@ def worker_public(wp: m.WorkerProfile, lat: float | None = None, lng: float | No
         "bio": wp.bio, "experience_years": wp.experience_years, "daily_rate": wp.daily_rate, "hourly_rate": wp.hourly_rate,
         "radius_km": wp.radius_km, "available": wp.available, "available_from": wp.available_from, "available_to": wp.available_to,
         "available_days": wp.available_days, "upi_id": wp.upi_id,
-        "skills": [{**s, "name": SKILL_MAP.get(s["skill"], {}).get("en", s["skill"]), "icon": SKILL_MAP.get(s["skill"], {}).get("icon", "🔹")} for s in wp.skills],
+        "skills": [{**s, "name": SKILL_MAP.get(s["skill"], {}).get("en", s["skill"]), "icon": SKILL_MAP.get(s["skill"], {}).get("icon", "")} for s in wp.skills],
         "rating": round(wp.rating, 1), "rating_count": wp.rating_count, "jobs_completed": wp.jobs_completed,
         "repeat_customers": wp.repeat_customers, "avg_response_min": wp.avg_response_min,
         "reliability": rel, "verification": {"phone": u.phone_verified, "id": u.id_status, "face": u.face_status, "address": u.address_status},
@@ -82,7 +82,7 @@ def job_public(j: m.Job, lat: float | None = None, lng: float | None = None) -> 
     d = {c.name: getattr(j, c.name) for c in j.__table__.columns}
     d["created_at"] = j.created_at.isoformat()
     d["skill_names"] = [SKILL_MAP.get(s, {}).get("en", s) for s in j.skills]
-    d["icon"] = SKILL_MAP[j.skills[0]]["icon"] if j.skills and j.skills[0] in SKILL_MAP else "✨"
+    d["icon"] = SKILL_MAP[j.skills[0]]["icon"] if j.skills and j.skills[0] in SKILL_MAP else ""
     if lat is not None:
         d["distance_km"] = round(haversine_km(lat, lng, j.lat, j.lng), 2)
     return d
@@ -157,9 +157,9 @@ def spawn_recurring(db: Session, j: m.Job, worker_id: int):
     db.add(nj)
     db.flush()
     db.add(m.Match(job_id=nj.id, worker_id=worker_id, score=99, accept_prob=0.9, status="invited",
-                   breakdown={"reasons": ["🔁 Your regular customer"], "parts": {}}))
-    notify(db, worker_id, f"🔁 Repeat work: {nj.title}", f"Your regular customer booked you again for {nj.date}", f"/worker/jobs/{nj.id}", "job_alert")
-    notify(db, j.customer_id, f"🔁 Next {nj.title} scheduled", f"{nj.date} — same worker invited", f"/customer/jobs/{nj.id}")
+                   breakdown={"reasons": ["Your regular customer"], "parts": {}}))
+    notify(db, worker_id, f"Repeat work: {nj.title}", f"Your regular customer booked you again for {nj.date}", f"/worker/jobs/{nj.id}", "job_alert")
+    notify(db, j.customer_id, f"Next {nj.title} scheduled", f"{nj.date} — same worker invited", f"/customer/jobs/{nj.id}")
 
 
 def create_booking(db: Session, j: m.Job, worker: m.User, by: str) -> m.Booking:
@@ -187,8 +187,8 @@ def create_booking(db: Session, j: m.Job, worker: m.User, by: str) -> m.Booking:
         db.add(m.Payment(booking_id=b.id, amount=b.amount + fee, platform_fee=fee, worker_amount=b.amount, method="online",
                          status="held", reference="ESC" + secrets.token_hex(4).upper()))
     if by == "worker":
-        notify(db, j.customer_id, f"✅ {worker.name} accepted your job", j.title, f"/customer/jobs/{j.id}", "booking")
+        notify(db, j.customer_id, f"{worker.name} accepted your job", j.title, f"/customer/jobs/{j.id}", "booking")
     else:
-        notify(db, worker.id, f"🎉 You are hired: {j.title}", f"📅 {j.date} • 💰 ₹{j.budget}", f"/worker/jobs/{j.id}", "booking")
+        notify(db, worker.id, f"You are hired: {j.title}", f"{j.date} • ₹{j.budget}", f"/worker/jobs/{j.id}", "booking")
     refresh_job_status(db, j)
     return b

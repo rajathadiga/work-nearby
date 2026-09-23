@@ -109,7 +109,7 @@ def customer_bookings(u: m.User = Depends(get_user), db: Session = Depends(get_d
 def _group_public(db, g: m.WorkerGroup, u: m.User):
     members = [db.get(m.User, wid) for wid in g.members]
     return {"id": g.id, "name": g.name, "area": g.area, "skill": g.skill, "skill_name": SKILL_MAP.get(g.skill, {}).get("en", g.skill),
-            "icon": SKILL_MAP.get(g.skill, {}).get("icon", "👥"), "lat": g.lat, "lng": g.lng, "size": len(g.members),
+            "icon": SKILL_MAP.get(g.skill, {}).get("icon", ""), "lat": g.lat, "lng": g.lng, "size": len(g.members),
             "available_now": sum(1 for x in members if x and x.worker and x.worker.available),
             "is_member": u.id in g.members, "distance_km": round(haversine_km(u.lat, u.lng, g.lat, g.lng), 1),
             "members": [{"id": x.id, "name": x.name, "rating": round(x.worker.rating, 1) if x.worker else 0,
@@ -182,7 +182,7 @@ def submit_verification(kind: str, body: DocIn, u: m.User = Depends(get_user), d
     else:
         raise HTTPException(400, "Unknown verification")
     for admin in db.query(m.User).filter(m.User.role == "admin").all():
-        notify(db, admin.id, f"🪪 {kind.upper()} verification request", u.name, "/admin", "admin")
+        notify(db, admin.id, f"{kind.upper()} verification request", u.name, "/admin", "admin")
     db.commit()
     return user_public(u)
 
@@ -196,7 +196,7 @@ def subscribe(body: PlanIn, u: m.User = Depends(get_user), db: Session = Depends
     if body.plan not in ("free", "pro", "homecare"):
         raise HTTPException(400, "Unknown plan")
     u.subscription = body.plan
-    notify(db, u.id, "⭐ Plan updated", f"You are now on {body.plan.upper()}", "", "info")
+    notify(db, u.id, "Plan updated", f"You are now on {body.plan.upper()}", "", "info")
     db.commit()
     return user_public(u)
 
@@ -215,7 +215,7 @@ def business_request(body: BizIn, db: Session = Depends(get_db)):
     r = m.BusinessRequest(**body.model_dump())
     db.add(r)
     for admin in db.query(m.User).filter(m.User.role == "admin").all():
-        notify(db, admin.id, f"🏢 Business enquiry: {body.business_name}", body.need[:80], "/admin", "admin")
+        notify(db, admin.id, f"Business enquiry: {body.business_name}", body.need[:80], "/admin", "admin")
     db.commit()
     return {"ok": True, "id": r.id}
 
@@ -532,7 +532,7 @@ def admin_verify(user_id: int, body: DecisionIn, a: m.User = Depends(get_admin),
         u.face_status = val
     else:
         u.address_status = val
-    notify(db, u.id, f"🪪 {body.kind.upper()} {val}", "", "", "info")
+    notify(db, u.id, f"{body.kind.upper()} {val}", "", "", "info")
     db.commit()
     return {"ok": True}
 
@@ -546,7 +546,7 @@ def admin_skill_verify(worker_id: int, skill: str, body: DecisionIn, a: m.User =
             s["status"] = "verified" if body.approve else "rejected"
             s["verified"] = body.approve
     wp.skills = skills
-    notify(db, worker_id, f"🎥 Skill {'verified ✓' if body.approve else 'not approved'}: {SKILL_MAP.get(skill, {}).get('en', skill)}", "", "/worker/profile")
+    notify(db, worker_id, f"Skill {'verified ' if body.approve else 'not approved'}: {SKILL_MAP.get(skill, {}).get('en', skill)}", "", "/worker/profile")
     db.commit()
     return {"ok": True}
 
@@ -568,7 +568,7 @@ def resolve(did: int, body: ResolveIn, a: m.User = Depends(get_admin), db: Sessi
             p.status = "paid"
             b.status = "paid"
     for uid in (b.worker_id, b.customer_id):
-        notify(db, uid, "⚖️ Dispute resolved", body.resolution[:100], "", "dispute")
+        notify(db, uid, "Dispute resolved", body.resolution[:100], "", "dispute")
     db.commit()
     return {"ok": True}
 

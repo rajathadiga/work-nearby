@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { UsersRound, Heart, Search, Repeat } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { api } from "@/lib/api";
+import { catIconFor } from "@/lib/icons";
 import { useRequireUser, Loading, PageTitle, Empty } from "@/components/ui";
 import { WorkerCard } from "@/components/cards";
 import MapView from "@/components/MapView";
@@ -13,6 +15,7 @@ export default function BrowseWorkers() {
   const [tab, setTab] = useState<"all" | "fav">("all");
   const [cat, setCat] = useState("");
   const [onlyAvail, setOnlyAvail] = useState(false);
+  const [q, setQ] = useState("");
   const [list, setList] = useState<any[] | null>(null);
   const [favs, setFavs] = useState<any[]>([]);
 
@@ -26,66 +29,91 @@ export default function BrowseWorkers() {
   }, [user?.id]);
 
   if (!user || !meta) return <Loading />;
-  const shown = tab === "fav" ? favs : list;
+  const base = tab === "fav" ? favs : list;
+  const shown = base?.filter((w) => !q || w.name.toLowerCase().includes(q.toLowerCase()) || w.skills.some((s: any) => s.name.toLowerCase().includes(q.toLowerCase())));
 
   return (
-    <div className="space-y-4">
-      <PageTitle title={`👷 ${t("find_workers")}`} sub={`📍 ${user.area}`} />
-      <div className="flex rounded-full bg-white border border-black/10 p-1 font-bold">
-        <button onClick={() => setTab("all")} className={`flex-1 py-2 rounded-full ${tab === "all" ? "bg-brand-600 text-white" : ""}`}>
-          🔎 Nearby
-        </button>
-        <button onClick={() => setTab("fav")} className={`flex-1 py-2 rounded-full ${tab === "fav" ? "bg-brand-600 text-white" : ""}`}>
-          ❤️ {t("favorites")} ({favs.length})
-        </button>
+    <div>
+      <PageTitle icon={UsersRound} title={t("find_workers")} sub={`Near ${user.area}`} />
+      <div className="card p-3 mb-5 flex flex-col lg:flex-row gap-3 lg:items-center">
+        <div className="grid grid-cols-2 rounded-lg bg-slate-100 p-0.5 text-sm font-medium shrink-0">
+          <button onClick={() => setTab("all")} className={`px-4 py-1.5 rounded-md ${tab === "all" ? "bg-white shadow-sm" : "text-muted"}`}>
+            Nearby
+          </button>
+          <button onClick={() => setTab("fav")} className={`px-4 py-1.5 rounded-md flex items-center gap-1.5 ${tab === "fav" ? "bg-white shadow-sm" : "text-muted"}`}>
+            <Heart size={14} /> {t("favorites")} ({favs.length})
+          </button>
+        </div>
+        <div className="relative lg:w-72">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+          <input className="input !py-2 !pl-9 !text-sm" placeholder="Search name or skill" value={q} onChange={(e) => setQ(e.target.value)} />
+        </div>
+        {tab === "all" && (
+          <>
+            <div className="flex gap-1.5 overflow-x-auto no-scrollbar flex-1">
+              <button onClick={() => setCat("")} className={`chip shrink-0 border ${!cat ? "bg-brand-600 text-white border-brand-600" : "bg-white border-line"}`}>
+                All
+              </button>
+              {meta.categories
+                .filter((c) => c.id !== "other")
+                .map((c) => {
+                  const I = catIconFor(c.id);
+                  return (
+                    <button key={c.id} onClick={() => setCat(c.id)} className={`chip shrink-0 border ${cat === c.id ? "bg-brand-600 text-white border-brand-600" : "bg-white border-line hover:border-brand-300"}`}>
+                      <I size={14} /> {catName(c)}
+                    </button>
+                  );
+                })}
+            </div>
+            <label className="flex items-center gap-2 text-sm font-medium shrink-0">
+              <input type="checkbox" className="h-4 w-4 accent-[#1f6b65]" checked={onlyAvail} onChange={(e) => setOnlyAvail(e.target.checked)} />
+              {t("available_now")}
+            </label>
+          </>
+        )}
       </div>
-      {tab === "all" && (
-        <>
-          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-            <button onClick={() => setCat("")} className={`chip shrink-0 ${!cat ? "bg-brand-600 text-white" : "bg-white border border-black/10"}`}>
-              All
-            </button>
-            {meta.categories
-              .filter((c) => c.id !== "other")
-              .map((c) => (
-                <button key={c.id} onClick={() => setCat(c.id)} className={`chip shrink-0 ${cat === c.id ? "bg-brand-600 text-white" : "bg-white border border-black/10"}`}>
-                  {c.icon} {catName(c)}
-                </button>
+
+      <div className="grid xl:grid-cols-[minmax(0,1fr)_400px] gap-6 items-start">
+        <div className="min-w-0">
+          {shown === null || shown === undefined ? (
+            <Loading />
+          ) : shown.length === 0 ? (
+            <Empty icon={UsersRound} text={t("empty")} />
+          ) : (
+            <div className="grid md:grid-cols-2 2xl:grid-cols-3 gap-4">
+              {shown.map((w) => (
+                <WorkerCard key={w.id} w={w}>
+                  <Link href={`/customer/post?rebook=${w.id}${w.last_job ? `&from=${w.last_job.id}` : ""}`} className="btn-primary !py-2 flex-1">
+                    {tab === "fav" ? (
+                      <>
+                        <Repeat size={15} /> {t("book_again")}
+                      </>
+                    ) : (
+                      t("hire")
+                    )}
+                  </Link>
+                  <Link href={`/workers/${w.id}`} className="btn-ghost !py-2">
+                    {t("view")}
+                  </Link>
+                </WorkerCard>
               ))}
-          </div>
-          <label className="flex items-center gap-2 font-bold">
-            <input type="checkbox" className="h-5 w-5 accent-emerald-600" checked={onlyAvail} onChange={(e) => setOnlyAvail(e.target.checked)} />
-            🟢 {t("available_now")}
-          </label>
-          {list && list.length > 0 && (
+            </div>
+          )}
+        </div>
+        <aside className="hidden xl:block sticky top-24">
+          <div className="card p-3">
             <MapView
               center={[user.lat, user.lng]}
-              height={220}
+              height={560}
               zoom={12}
               markers={[
-                { lat: user.lat, lng: user.lng, emoji: "🏠", size: 28, popup: "You" },
-                ...list.slice(0, 40).map((w) => ({ lat: w.lat, lng: w.lng, emoji: w.available ? "👷" : "🧑", popup: `<a href="/workers/${w.id}"><b>${w.name}</b></a><br/>⭐ ${w.rating} • ₹${w.daily_rate}/day` })),
+                { lat: user.lat, lng: user.lng, kind: "home", size: 32, popup: "You" },
+                ...(shown || []).slice(0, 60).map((w) => ({ lat: w.lat, lng: w.lng, kind: (w.available ? "worker" : "worker_off") as any, size: 24, popup: `<a href="/workers/${w.id}"><b>${w.name}</b></a><br/>★ ${w.rating} · ₹${w.daily_rate}/day` })),
               ]}
             />
-          )}
-        </>
-      )}
-      {shown === null ? (
-        <Loading />
-      ) : shown.length === 0 ? (
-        <Empty icon="👷" text={t("empty")} />
-      ) : (
-        shown.map((w) => (
-          <WorkerCard key={w.id} w={w}>
-            <Link href={`/customer/post?rebook=${w.id}${w.last_job ? `&from=${w.last_job.id}` : ""}`} className="btn-primary !py-2 flex-1">
-              {tab === "fav" ? `🔁 ${t("book_again")}` : t("hire")}
-            </Link>
-            <Link href={`/workers/${w.id}`} className="btn-ghost !py-2">
-              {t("view")}
-            </Link>
-          </WorkerCard>
-        ))
-      )}
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }

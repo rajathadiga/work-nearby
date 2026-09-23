@@ -72,7 +72,7 @@ def skill_match(job: m.Job, wp: m.WorkerProfile) -> tuple[float, list[str]]:
             v = LEVEL.get(ws.get("level", "intermediate"), 0.75) + (0.05 if ws.get("verified") else 0)
             total += min(1.0, v)
             label = f"{ws.get('level', '').capitalize()} in {SKILL_MAP[sid]['en'].lower()}" if sid in SKILL_MAP else sid
-            reasons.append(label + (" ✓ verified" if ws.get("verified") else ""))
+            reasons.append(label + (" (verified)" if ws.get("verified") else ""))
         else:
             related = set(SKILL_MAP.get(sid, {}).get("related", []))
             if related & set(wskills):
@@ -114,7 +114,7 @@ def availability_score(db: Session, wp: m.WorkerProfile, job: m.Job) -> tuple[fl
         return 0.25, "Already has work that day"
     if job.date == today or job.urgent:
         if wp.available:
-            return 1.0, "🟢 Available now"
+            return 1.0, "Available now"
         return (0.0, "Not available now") if job.urgent else (0.3, "Not marked available today")
     try:
         wd = Date.fromisoformat(job.date).strftime("%a")
@@ -151,10 +151,10 @@ def score_pair(db: Session, job: m.Job, wp: m.WorkerProfile) -> dict | None:
     final = 0.85 * rule + 0.15 * p_accept * 100
     if job.preferred_worker_id == wp.user_id:
         final += 5
-    reasons = sk_reasons[:2] + [f"📍 {dist:.1f} km away", av_reason]
+    reasons = sk_reasons[:2] + [f"{dist:.1f} km away", av_reason]
     if wp.rating_count:
-        reasons.append(f"⭐ {wp.rating:.1f} from {wp.rating_count} reviews")
-    reasons.append("💰 Rate fits budget" if pr >= 1 else f"💰 Usually charges ₹{exp_rate}")
+        reasons.append(f"Rated {wp.rating:.1f} from {wp.rating_count} reviews")
+    reasons.append("Rate fits budget" if pr >= 1 else f"Usually charges ₹{exp_rate}")
     return {
         "worker_id": wp.user_id, "score": round(min(final, 100), 1), "rule_score": round(rule, 1),
         "accept_prob": round(p_accept, 2), "distance_km": round(dist, 2), "expected_rate": exp_rate,
@@ -186,10 +186,9 @@ def run_matching(db: Session, job: m.Job, notify=True) -> list[dict]:
                        breakdown={"parts": r["breakdown"], "reasons": r["reasons"], "distance_km": r["distance_km"], "expected_rate": r["expected_rate"]},
                        status=status))
         if status == "notified":
-            icon = "🚨" if job.urgent else "🔔"
             db.add(m.Notification(user_id=r["worker_id"], kind="job_alert", link=f"/worker/jobs/{job.id}",
-                                  title=f"{icon} {'Urgent' if job.urgent else 'New'} work near you: {job.title}",
-                                  body=f"📍 {r['distance_km']} km • 💰 ₹{job.budget} • 📅 {job.date} • Match {int(r['score'])}%"))
+                                  title=f"{'Urgent' if job.urgent else 'New'} work near you: {job.title}",
+                                  body=f"{r['distance_km']} km • ₹{job.budget} • {job.date} • Match {int(r['score'])}%"))
     db.commit()
     return ranked
 
