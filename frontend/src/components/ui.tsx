@@ -32,11 +32,11 @@ export function Avatar({ name, size = 48, online }: { name: string; size?: numbe
   const hue = [...(name || "x")].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
   return (
     <span className="relative inline-block shrink-0" style={{ width: size, height: size }}>
-      <span className="grid place-items-center rounded-full font-semibold w-full h-full" style={{ background: `hsl(${hue} 30% 90%)`, color: `hsl(${hue} 35% 30%)`, fontSize: size * 0.36 }}>
+      <span className="grid place-items-center rounded-full font-semibold w-full h-full" style={{ background: `linear-gradient(145deg, hsl(${hue} 32% 24%), hsl(${hue} 30% 14%))`, color: `hsl(${hue} 70% 82%)`, boxShadow: "inset 0 0 0 1px rgba(255,255,255,.08)", fontSize: size * 0.36 }}>
         {initials}
       </span>
       {online !== undefined && (
-        <span className={`absolute bottom-0 right-0 rounded-full border-2 border-white ${online ? "bg-emerald-500" : "bg-slate-300"}`} style={{ width: size * 0.28, height: size * 0.28 }} />
+        <span className={`absolute bottom-0 right-0 rounded-full border-2 border-paper ${online ? "bg-emerald-500" : "bg-[#34343c]"}`} style={{ width: size * 0.28, height: size * 0.28 }} />
       )}
     </span>
   );
@@ -58,8 +58,8 @@ export function StarInput({ value, onChange }: { value: number; onChange: (v: nu
     <div className="text-center">
       <div className="flex justify-center gap-1">
         {[1, 2, 3, 4, 5].map((i) => (
-          <button key={i} onClick={() => onChange(i)} className="p-1.5 rounded-lg hover:bg-slate-50" aria-label={`${i} stars`}>
-            <Star size={36} className={value >= i ? "fill-amber-400 text-amber-400" : "text-slate-300"} />
+          <button key={i} onClick={() => onChange(i)} className="p-1.5 rounded-lg hover:bg-surface-2" aria-label={`${i} stars`}>
+            <Star size={36} className={value >= i ? "fill-amber-400 text-amber-400" : "text-[#3a3a44]"} />
           </button>
         ))}
       </div>
@@ -77,12 +77,12 @@ export function LevelBadge({ level }: { level: string }) {
     );
   if (level === "verified")
     return (
-      <span className="chip !text-xs bg-sky-50 text-sky-700 ring-1 ring-inset ring-sky-100">
+      <span className="chip !text-xs bg-sky-500/10 text-sky-300 ring-1 ring-inset ring-sky-500/25">
         <BadgeCheck size={13} /> ID verified
       </span>
     );
   return (
-    <span className="chip !text-xs bg-slate-100 text-slate-600">
+    <span className="chip !text-xs bg-surface-3 text-slate-300">
       <Smartphone size={13} /> Phone verified
     </span>
   );
@@ -91,11 +91,11 @@ export function LevelBadge({ level }: { level: string }) {
 export function ScoreRing({ score, size = 52 }: { score: number; size?: number }) {
   const r = size / 2 - 4;
   const c = 2 * Math.PI * r;
-  const color = score >= 80 ? "#1f6b65" : score >= 60 ? "#c2842b" : "#be123c";
+  const color = score >= 80 ? "#34d399" : score >= 60 ? "#fbbf24" : "#fb7185";
   return (
     <span className="relative inline-grid place-items-center shrink-0" style={{ width: size, height: size }} title="Match score">
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} stroke="#e8ecef" strokeWidth="4" fill="none" />
+        <circle cx={size / 2} cy={size / 2} r={r} stroke="#26262d" strokeWidth="4" fill="none" />
         <circle cx={size / 2} cy={size / 2} r={r} stroke={color} strokeWidth="4" fill="none" strokeDasharray={c} strokeDashoffset={c * (1 - Math.min(score, 100) / 100)} strokeLinecap="round" />
       </svg>
       <span className="absolute text-[13px] font-bold" style={{ color }}>
@@ -124,7 +124,7 @@ export function Breakdown({ parts }: { parts: Record<string, number> }) {
           <div key={k} className="flex items-center gap-2 text-sm">
             <Icon size={15} className="text-muted shrink-0" />
             <span className="w-24 shrink-0 font-medium">{label}</span>
-            <span className="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
+            <span className="flex-1 h-2 rounded-full bg-surface-3 overflow-hidden">
               <motion.span initial={{ width: 0 }} animate={{ width: `${parts[k]}%` }} className="block h-full rounded-full bg-brand-500" />
             </span>
             <span className="w-8 text-right font-semibold">{parts[k]}</span>
@@ -145,7 +145,7 @@ export function SpeakButton({ text, className = "" }: { text: string; className?
         e.preventDefault();
         say(text);
       }}
-      className={`h-9 w-9 shrink-0 grid place-items-center rounded-lg border border-line bg-white text-muted hover:text-brand-700 hover:border-brand-300 ${className}`}
+      className={`h-9 w-9 shrink-0 grid place-items-center rounded-lg border border-line bg-surface text-muted hover:text-brand-300 hover:border-brand-500/40 ${className}`}
       aria-label={t("read_aloud")}
       title={t("read_aloud")}
     >
@@ -158,7 +158,7 @@ export function PageTitle({ title, sub, speakText, right, icon: Icon }: { title:
   return (
     <div className="flex flex-wrap items-center gap-3 mb-6">
       {Icon && (
-        <span className="h-11 w-11 rounded-xl bg-brand-50 text-brand-700 grid place-items-center ring-1 ring-inset ring-brand-100">
+        <span className="h-11 w-11 rounded-xl bg-brand-500/10 text-brand-300 grid place-items-center ring-1 ring-inset ring-brand-500/20">
           <Icon size={22} />
         </span>
       )}
@@ -184,9 +184,9 @@ export function VoiceBox({ value, onChange, onFinal, placeholder, rows = 3 }: { 
       <button
         type="button"
         onClick={v.listening ? v.stop : v.start}
-        className={`w-full flex items-center gap-4 rounded-xl p-3.5 text-left transition border ${v.listening ? "bg-rose-50 border-rose-300" : "bg-brand-50/60 border-brand-100 hover:border-brand-300"}`}
+        className={`w-full flex items-center gap-4 rounded-xl p-3.5 text-left transition border ${v.listening ? "bg-rose-500/10 border-rose-500/30" : "bg-brand-500/10 border-brand-500/25 hover:border-brand-500/40"}`}
       >
-        <span className={`h-12 w-12 rounded-full grid place-items-center text-white shrink-0 ${v.listening ? "bg-rose-500 pulse-dot text-rose-500" : "bg-brand-600"}`}>
+        <span className={`h-12 w-12 rounded-full grid place-items-center text-white shrink-0 ${v.listening ? "bg-rose-500 pulse-dot text-rose-400" : "bg-brand-600"}`}>
           {v.listening ? <Square size={18} className="text-white fill-white" /> : <Mic size={22} />}
         </span>
         <span className="flex-1 min-w-0">
@@ -203,17 +203,17 @@ export function Modal({ open, onClose, title, children, wide }: { open: boolean;
   return (
     <AnimatePresence>
       {open && (
-        <motion.div className="fixed inset-0 z-[60] bg-slate-900/40 flex items-end sm:items-center justify-center p-0 sm:p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
+        <motion.div className="fixed inset-0 z-[60] bg-black/60 flex items-end sm:items-center justify-center p-0 sm:p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
           <motion.div
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 40, opacity: 0 }}
-            className={`bg-white w-full ${wide ? "sm:max-w-3xl" : "sm:max-w-lg"} rounded-t-2xl sm:rounded-2xl p-5 max-h-[90vh] overflow-y-auto shadow-xl`}
+            className={`bg-surface w-full ${wide ? "sm:max-w-3xl" : "sm:max-w-lg"} rounded-t-2xl sm:rounded-2xl p-5 max-h-[90vh] overflow-y-auto shadow-xl`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center mb-4">
               <h3 className="text-lg font-semibold flex-1">{title}</h3>
-              <button onClick={onClose} className="h-8 w-8 grid place-items-center rounded-lg hover:bg-slate-100" aria-label="close">
+              <button onClick={onClose} className="h-8 w-8 grid place-items-center rounded-lg hover:bg-surface-3" aria-label="close">
                 <X size={18} />
               </button>
             </div>
@@ -228,7 +228,7 @@ export function Modal({ open, onClose, title, children, wide }: { open: boolean;
 export function Loading({ label }: { label?: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-20 text-muted gap-3">
-      <Loader2 className="animate-spin text-brand-600" size={30} />
+      <Loader2 className="animate-spin text-brand-400" size={30} />
       {label && <span className="font-medium">{label}</span>}
     </div>
   );
@@ -237,7 +237,7 @@ export function Loading({ label }: { label?: string }) {
 export function Empty({ icon: Icon = Inbox, text, action }: { icon?: LucideIcon; text: string; action?: ReactNode }) {
   return (
     <div className="card p-10 text-center text-muted flex flex-col items-center gap-3">
-      <span className="h-12 w-12 rounded-full bg-slate-100 grid place-items-center">
+      <span className="h-12 w-12 rounded-full bg-surface-3 grid place-items-center">
         <Icon size={22} />
       </span>
       <div className="font-medium">{text}</div>
@@ -262,36 +262,36 @@ export function Stat({ label, value, sub, icon: Icon, tone = "text-ink" }: { lab
 export const money = (n: number) => "₹" + (n || 0).toLocaleString("en-IN");
 
 const JOB_TONE: Record<string, string> = {
-  open: "bg-amber-50 text-amber-700 ring-amber-200",
-  assigned: "bg-sky-50 text-sky-700 ring-sky-200",
-  in_progress: "bg-violet-50 text-violet-700 ring-violet-200",
-  completed: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-  cancelled: "bg-slate-100 text-slate-600 ring-slate-200",
+  open: "bg-amber-500/10 text-amber-300 ring-amber-500/25",
+  assigned: "bg-sky-500/10 text-sky-300 ring-sky-500/25",
+  in_progress: "bg-violet-500/10 text-violet-300 ring-violet-500/25",
+  completed: "bg-emerald-500/10 text-emerald-300 ring-emerald-500/25",
+  cancelled: "bg-surface-3 text-slate-300 ring-white/10",
 };
 
 export function JobStatusPill({ status }: { status: string }) {
   const { t } = useApp();
   return (
-    <span className={`chip !text-xs ring-1 ring-inset ${JOB_TONE[status] || "bg-slate-100"}`}>
+    <span className={`chip !text-xs ring-1 ring-inset ${JOB_TONE[status] || "bg-surface-3"}`}>
       <span className="h-1.5 w-1.5 rounded-full bg-current" /> {t("status_" + status)}
     </span>
   );
 }
 
 const BOOK_TONE: Record<string, string> = {
-  confirmed: "bg-sky-50 text-sky-700 ring-sky-200",
-  on_the_way: "bg-amber-50 text-amber-700 ring-amber-200",
-  arrived: "bg-violet-50 text-violet-700 ring-violet-200",
-  completed: "bg-orange-50 text-orange-700 ring-orange-200",
-  paid: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-  cancelled: "bg-slate-100 text-slate-600 ring-slate-200",
-  no_show: "bg-rose-50 text-rose-700 ring-rose-200",
+  confirmed: "bg-sky-500/10 text-sky-300 ring-sky-500/25",
+  on_the_way: "bg-amber-500/10 text-amber-300 ring-amber-500/25",
+  arrived: "bg-violet-500/10 text-violet-300 ring-violet-500/25",
+  completed: "bg-orange-500/10 text-orange-300 ring-orange-500/25",
+  paid: "bg-emerald-500/10 text-emerald-300 ring-emerald-500/25",
+  cancelled: "bg-surface-3 text-slate-300 ring-white/10",
+  no_show: "bg-rose-500/10 text-rose-300 ring-rose-500/25",
 };
 
 export function BookingStatusPill({ status }: { status: string }) {
   const { t } = useApp();
   return (
-    <span className={`chip !text-xs ring-1 ring-inset ${BOOK_TONE[status] || "bg-slate-100"}`}>
+    <span className={`chip !text-xs ring-1 ring-inset ${BOOK_TONE[status] || "bg-surface-3"}`}>
       <span className="h-1.5 w-1.5 rounded-full bg-current" /> {t("b_" + status)}
     </span>
   );

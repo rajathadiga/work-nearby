@@ -18,7 +18,7 @@ const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 function Stepper({ value, onChange, min = 0, max = 50 }: { value: number; onChange: (v: number) => void; min?: number; max?: number }) {
   return (
     <div className="flex items-center gap-2">
-      <button className="h-10 w-10 rounded-lg border border-line bg-white grid place-items-center hover:bg-slate-50" onClick={() => onChange(Math.max(min, value - 1))} aria-label="decrease">
+      <button className="h-10 w-10 rounded-lg border border-line bg-surface grid place-items-center hover:bg-surface-2" onClick={() => onChange(Math.max(min, value - 1))} aria-label="decrease">
         <Minus size={18} />
       </button>
       <span className="text-xl font-semibold w-10 text-center">{value}</span>
@@ -203,8 +203,8 @@ export default function PostJob() {
           <div className="grid grid-cols-5 gap-2">
             {steps.map((s, i) => (
               <button key={s} onClick={() => i < step && setStep(i)} className="text-left">
-                <div className={`h-1.5 rounded-full ${i <= step ? "bg-brand-600" : "bg-slate-200"}`} />
-                <div className={`text-xs mt-1.5 font-medium truncate ${i === step ? "text-brand-700" : "text-muted"}`}>
+                <div className={`h-1.5 rounded-full ${i <= step ? "bg-brand-600" : "bg-surface-3"}`} />
+                <div className={`text-xs mt-1.5 font-medium truncate ${i === step ? "text-brand-300" : "text-muted"}`}>
                   <span className="hidden sm:inline">{i + 1}. </span>
                   {s}
                 </div>
@@ -213,8 +213,8 @@ export default function PostJob() {
           </div>
         </div>
         {preferred > 0 && (
-          <div className="card p-3 mb-4 bg-sun-50 border-sun-200 flex items-center gap-2 text-sm font-medium">
-            <Heart size={16} className="text-sun-600" /> Booking again: {preferredName || "your saved worker"} will be invited first
+          <div className="card p-3 mb-4 bg-sun-500/10 border-sun-500/30 flex items-center gap-2 text-sm font-medium">
+            <Heart size={16} className="text-sun-400" /> Booking again: {preferredName || "your saved worker"} will be invited first
           </div>
         )}
 
@@ -225,27 +225,27 @@ export default function PostJob() {
                 {heading(t("describe"), `${t("describe")}. ${t("speak_work")}`)}
                 <VoiceBox value={text} onChange={setText} onFinal={parse} placeholder="Example: Need someone to clean my garden and pluck coconuts from 3 trees tomorrow morning" />
                 {parsing && (
-                  <div className="rounded-lg border border-brand-100 bg-brand-50/60 p-3 flex items-center gap-2 text-brand-700 text-sm font-medium">
+                  <div className="rounded-lg border border-brand-500/25 bg-brand-500/10 p-3 flex items-center gap-2 text-brand-300 text-sm font-medium">
                     <Sparkles size={16} className="animate-pulse" /> Understanding your request…
                   </div>
                 )}
                 {ai && !parsing && (
-                  <div className="rounded-xl border border-brand-200 bg-brand-50/50 p-4">
+                  <div className="rounded-xl border border-brand-500/25 bg-brand-500/10 p-4">
                     <div className="flex items-center gap-2 mb-2 text-sm">
-                      <Sparkles className="text-brand-600" size={16} />
-                      <span className="font-semibold text-brand-800 flex-1">Understood by AI ({ai.engine === "claude" ? "Claude" : "smart rules"})</span>
+                      <Sparkles className="text-brand-400" size={16} />
+                      <span className="font-semibold text-brand-300 flex-1">Understood by AI ({ai.engine === "claude" ? "Claude" : "smart rules"})</span>
                       <span className="text-xs text-muted">{Math.round(ai.confidence * 100)}% confidence</span>
                     </div>
                     <div className="font-semibold text-lg">{title}</div>
                     <div className="flex flex-wrap gap-2 mt-2 text-sm">
-                      <span className="chip bg-white border border-line"><Users size={13} /> {workers}</span>
-                      <span className="chip bg-white border border-line"><Hourglass size={13} /> {durLabel(duration)}</span>
-                      {ai.date && <span className="chip bg-white border border-line"><CalendarDays size={13} /> {prettyDate(ai.date, t)}</span>}
-                      {ai.time_slot !== "flexible" && <span className="chip bg-white border border-line"><Clock size={13} /> {t(ai.time_slot)}</span>}
-                      {quantity > 0 && <span className="chip bg-white border border-line"><TreePalm size={13} /> {quantity}</span>}
+                      <span className="chip bg-surface border border-line"><Users size={13} /> {workers}</span>
+                      <span className="chip bg-surface border border-line"><Hourglass size={13} /> {durLabel(duration)}</span>
+                      {ai.date && <span className="chip bg-surface border border-line"><CalendarDays size={13} /> {prettyDate(ai.date, t)}</span>}
+                      {ai.time_slot !== "flexible" && <span className="chip bg-surface border border-line"><Clock size={13} /> {t(ai.time_slot)}</span>}
+                      {quantity > 0 && <span className="chip bg-surface border border-line"><TreePalm size={13} /> {quantity}</span>}
                       {ai.urgent && <span className="chip bg-rose-600 text-white"><Zap size={13} /> {t("urgent")}</span>}
-                      {ai.recurring?.freq && <span className="chip bg-violet-50 text-violet-700"><Repeat size={13} /> {ai.recurring.day || "daily"}</span>}
-                      {ai.place && <span className="chip bg-white border border-line"><MapPin size={13} /> {ai.place}</span>}
+                      {ai.recurring?.freq && <span className="chip bg-violet-500/10 text-violet-300"><Repeat size={13} /> {ai.recurring.day || "daily"}</span>}
+                      {ai.place && <span className="chip bg-surface border border-line"><MapPin size={13} /> {ai.place}</span>}
                     </div>
                   </div>
                 )}
@@ -271,7 +271,7 @@ export default function PostJob() {
                         </button>
                       );
                     })}
-                    <button onClick={() => setSkillPicker(true)} className="chip bg-white border border-dashed border-brand-400 text-brand-700 hover:bg-brand-50">
+                    <button onClick={() => setSkillPicker(true)} className="chip bg-surface border border-dashed border-brand-500/60 text-brand-300 hover:bg-brand-500/10">
                       <Plus size={14} /> {t("add_skill")}
                     </button>
                   </div>
@@ -307,7 +307,7 @@ export default function PostJob() {
                     <button
                       key={p.name}
                       onClick={() => setLoc({ lat: p.lat, lng: p.lng, address: p.name })}
-                      className={`chip shrink-0 border ${loc?.address === p.name ? "bg-brand-600 text-white border-brand-600" : "bg-white border-line hover:border-brand-300"}`}
+                      className={`chip shrink-0 border ${loc?.address === p.name ? "bg-brand-600 text-white border-brand-600" : "bg-surface border-line hover:border-brand-500/40"}`}
                     >
                       {p.name}
                     </button>
@@ -342,14 +342,14 @@ export default function PostJob() {
                       ["date", CalendarClock, t("pick_date")],
                     ] as const
                   ).map(([id, Icon, label]) => (
-                    <button key={id} onClick={() => setWhenMode(id)} className={`tile py-4 ${whenMode === id ? (id === "asap" ? "!border-rose-500 !bg-rose-50 ring-2 ring-rose-500" : "tile-on") : ""}`}>
-                      <Icon size={24} className={id === "asap" ? "text-rose-600" : "text-brand-600"} />
+                    <button key={id} onClick={() => setWhenMode(id)} className={`tile py-4 ${whenMode === id ? (id === "asap" ? "!border-rose-500 !bg-rose-500/10 ring-2 ring-rose-500" : "tile-on") : ""}`}>
+                      <Icon size={24} className={id === "asap" ? "text-rose-400" : "text-brand-400"} />
                       <span className="text-sm">{label}</span>
                     </button>
                   ))}
                 </div>
                 {whenMode === "asap" && (
-                  <div className="rounded-lg bg-rose-50 border border-rose-200 p-3 text-sm text-rose-800 flex gap-2 items-center">
+                  <div className="rounded-lg bg-rose-500/10 border border-rose-500/30 p-3 text-sm text-rose-300 flex gap-2 items-center">
                     <Zap size={16} /> Only workers who are available right now and nearby get the urgent alert.
                   </div>
                 )}
@@ -362,7 +362,7 @@ export default function PostJob() {
                         const Icon = SLOT_ICONS[id];
                         return (
                           <button key={id} onClick={() => setSlot(id)} className={`tile py-3 !flex-row ${slot === id ? "tile-on" : ""}`}>
-                            <Icon size={18} className="text-brand-600" />
+                            <Icon size={18} className="text-brand-400" />
                             <span className="text-sm">{t(id)}</span>
                           </button>
                         );
@@ -375,7 +375,7 @@ export default function PostJob() {
                   <div className="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
                     {DURATIONS.map((d) => (
                       <button key={d.id} onClick={() => setDuration(d.id)} className={`tile py-3 ${duration === d.id ? "tile-on" : ""}`}>
-                        <d.icon size={18} className="text-brand-600" />
+                        <d.icon size={18} className="text-brand-400" />
                         <span className="text-sm">{d.en}</span>
                       </button>
                     ))}
@@ -383,26 +383,26 @@ export default function PostJob() {
                 </div>
                 <div className="grid sm:grid-cols-2 gap-3">
                   <div className="rounded-xl border border-line p-4 flex items-center gap-3">
-                    <Users size={22} className="text-brand-600" />
+                    <Users size={22} className="text-brand-400" />
                     <span className="flex-1 font-medium">{t("how_many")}</span>
                     <Stepper value={workers} onChange={setWorkers} min={1} />
                   </div>
                   {hasTrees && (
                     <div className="rounded-xl border border-line p-4 flex items-center gap-3">
-                      <TreePalm size={22} className="text-brand-600" />
+                      <TreePalm size={22} className="text-brand-400" />
                       <span className="flex-1 font-medium">How many trees?</span>
                       <Stepper value={quantity} onChange={setQuantity} max={500} />
                     </div>
                   )}
                 </div>
-                <button onClick={() => setRecurring(!recurring)} className={`w-full rounded-xl border p-4 flex items-center gap-3 text-left transition ${recurring ? "border-violet-400 bg-violet-50" : "border-line hover:border-violet-300"}`}>
-                  <Repeat className="text-violet-600" size={22} />
+                <button onClick={() => setRecurring(!recurring)} className={`w-full rounded-xl border p-4 flex items-center gap-3 text-left transition ${recurring ? "border-violet-500/50 bg-violet-500/10" : "border-line hover:border-violet-500/30"}`}>
+                  <Repeat className="text-violet-400" size={22} />
                   <span className="flex-1">
                     <span className="block font-medium">{t("repeat_weekly")}</span>
                     <span className="text-sm text-muted">Every {weekday} — the same worker is invited automatically</span>
                   </span>
-                  <span className={`h-6 w-11 rounded-full p-0.5 transition ${recurring ? "bg-violet-600" : "bg-slate-300"}`}>
-                    <span className={`block h-5 w-5 rounded-full bg-white shadow transition ${recurring ? "translate-x-5" : ""}`} />
+                  <span className={`h-6 w-11 rounded-full p-0.5 transition ${recurring ? "bg-violet-600" : "bg-[#34343c]"}`}>
+                    <span className={`block h-5 w-5 rounded-full bg-[#fff] shadow transition ${recurring ? "translate-x-5" : ""}`} />
                   </span>
                 </button>
               </>
@@ -412,8 +412,8 @@ export default function PostJob() {
               <>
                 {heading(t("budget"), price ? `${t("suggested_price")} ${price.low} to ${price.high} rupees` : t("budget"))}
                 {price && (
-                  <div className="rounded-xl border border-brand-200 bg-brand-50/50 p-4">
-                    <div className="text-sm font-medium text-brand-700 flex items-center gap-1.5">
+                  <div className="rounded-xl border border-brand-500/25 bg-brand-500/10 p-4">
+                    <div className="text-sm font-medium text-brand-300 flex items-center gap-1.5">
                       <Sparkles size={15} /> {t("suggested_price")}
                     </div>
                     <div className="text-3xl font-bold mt-1">
@@ -423,7 +423,7 @@ export default function PostJob() {
                     <ul className="mt-3 text-sm text-muted space-y-1">
                       {price.reasons.map((r: string) => (
                         <li key={r} className="flex gap-2">
-                          <Check size={15} className="text-brand-600 mt-0.5 shrink-0" /> {r}
+                          <Check size={15} className="text-brand-400 mt-0.5 shrink-0" /> {r}
                         </li>
                       ))}
                     </ul>
@@ -435,7 +435,7 @@ export default function PostJob() {
                 <div>
                   <div className="label">Your offer {workers > 1 && `(${t("per_worker")})`}</div>
                   <div className="flex items-center gap-3 max-w-md">
-                    <button className="h-12 w-12 rounded-lg border border-line bg-white grid place-items-center hover:bg-slate-50" onClick={() => setBudget(Math.max(50, budget - 50))} aria-label="minus 50">
+                    <button className="h-12 w-12 rounded-lg border border-line bg-surface grid place-items-center hover:bg-surface-2" onClick={() => setBudget(Math.max(50, budget - 50))} aria-label="minus 50">
                       <Minus />
                     </button>
                     <div className="flex-1 relative">
@@ -447,7 +447,7 @@ export default function PostJob() {
                     </button>
                   </div>
                   {price && budget < price.low * 0.8 && (
-                    <div className="mt-2 text-sm text-amber-700 flex items-center gap-1.5">
+                    <div className="mt-2 text-sm text-amber-300 flex items-center gap-1.5">
                       <TriangleAlert size={15} /> Lower than usual — fewer workers may accept.
                     </div>
                   )}
@@ -462,14 +462,14 @@ export default function PostJob() {
                       ["online", ShieldCheck, t("online")],
                     ].map(([id, Icon, label]: any) => (
                       <button key={id} onClick={() => setPayMethod(id)} className={`tile py-4 ${payMethod === id ? "tile-on" : ""}`}>
-                        <Icon size={24} className="text-brand-600" />
+                        <Icon size={24} className="text-brand-400" />
                         <span className="text-sm">{label}</span>
                       </button>
                     ))}
                   </div>
                   {payMethod === "online" && (
                     <div className="text-sm text-muted mt-2 flex gap-2">
-                      <ShieldCheck className="text-brand-600 shrink-0" size={17} /> Money is held safely and released to the worker only after you confirm the work is done.
+                      <ShieldCheck className="text-brand-400 shrink-0" size={17} /> Money is held safely and released to the worker only after you confirm the work is done.
                     </div>
                   )}
                 </div>
@@ -490,8 +490,8 @@ export default function PostJob() {
                   <ul className="rounded-xl border border-line divide-y divide-line">
                     {tasks.map((tk) => (
                       <li key={tk}>
-                        <button onClick={() => setTasks(tasks.filter((x) => x !== tk))} className="w-full text-left px-4 py-2.5 flex items-center gap-2.5 hover:bg-slate-50">
-                          <Check size={16} className="text-brand-600" /> {tk}
+                        <button onClick={() => setTasks(tasks.filter((x) => x !== tk))} className="w-full text-left px-4 py-2.5 flex items-center gap-2.5 hover:bg-surface-2">
+                          <Check size={16} className="text-brand-400" /> {tk}
                         </button>
                       </li>
                     ))}
@@ -541,19 +541,19 @@ export default function PostJob() {
         {skills.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {skills.map((s) => (
-              <span key={s} className="chip !text-xs bg-slate-100 text-slate-700">
+              <span key={s} className="chip !text-xs bg-surface-3 text-slate-300">
                 {skillName(s)}
               </span>
             ))}
           </div>
         )}
         {recurring && (
-          <div className="chip bg-violet-50 text-violet-700">
+          <div className="chip bg-violet-500/10 text-violet-300">
             <Repeat size={13} /> Every {weekday}
           </div>
         )}
         {price && (
-          <div className="rounded-lg bg-slate-50 p-3 text-sm">
+          <div className="rounded-lg bg-surface-2 p-3 text-sm">
             <span className="text-muted">Usual price here: </span>
             <span className="font-semibold">
               {money(price.low)} – {money(price.high)}

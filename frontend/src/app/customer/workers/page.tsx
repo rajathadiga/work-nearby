@@ -36,11 +36,11 @@ export default function BrowseWorkers() {
     <div>
       <PageTitle icon={UsersRound} title={t("find_workers")} sub={`Near ${user.area}`} />
       <div className="card p-3 mb-5 flex flex-col lg:flex-row gap-3 lg:items-center">
-        <div className="grid grid-cols-2 rounded-lg bg-slate-100 p-0.5 text-sm font-medium shrink-0">
-          <button onClick={() => setTab("all")} className={`px-4 py-1.5 rounded-md ${tab === "all" ? "bg-white shadow-sm" : "text-muted"}`}>
+        <div className="grid grid-cols-2 rounded-lg bg-surface-3 p-0.5 text-sm font-medium shrink-0">
+          <button onClick={() => setTab("all")} className={`px-4 py-1.5 rounded-md ${tab === "all" ? "bg-surface-3 shadow-sm" : "text-muted"}`}>
             Nearby
           </button>
-          <button onClick={() => setTab("fav")} className={`px-4 py-1.5 rounded-md flex items-center gap-1.5 ${tab === "fav" ? "bg-white shadow-sm" : "text-muted"}`}>
+          <button onClick={() => setTab("fav")} className={`px-4 py-1.5 rounded-md flex items-center gap-1.5 ${tab === "fav" ? "bg-surface-3 shadow-sm" : "text-muted"}`}>
             <Heart size={14} /> {t("favorites")} ({favs.length})
           </button>
         </div>
@@ -51,7 +51,7 @@ export default function BrowseWorkers() {
         {tab === "all" && (
           <>
             <div className="flex gap-1.5 overflow-x-auto no-scrollbar flex-1">
-              <button onClick={() => setCat("")} className={`chip shrink-0 border ${!cat ? "bg-brand-600 text-white border-brand-600" : "bg-white border-line"}`}>
+              <button onClick={() => setCat("")} className={`chip shrink-0 border ${!cat ? "bg-brand-600 text-white border-brand-600" : "bg-surface border-line"}`}>
                 All
               </button>
               {meta.categories
@@ -59,14 +59,14 @@ export default function BrowseWorkers() {
                 .map((c) => {
                   const I = catIconFor(c.id);
                   return (
-                    <button key={c.id} onClick={() => setCat(c.id)} className={`chip shrink-0 border ${cat === c.id ? "bg-brand-600 text-white border-brand-600" : "bg-white border-line hover:border-brand-300"}`}>
+                    <button key={c.id} onClick={() => setCat(c.id)} className={`chip shrink-0 border ${cat === c.id ? "bg-brand-600 text-white border-brand-600" : "bg-surface border-line hover:border-brand-500/40"}`}>
                       <I size={14} /> {catName(c)}
                     </button>
                   );
                 })}
             </div>
             <label className="flex items-center gap-2 text-sm font-medium shrink-0">
-              <input type="checkbox" className="h-4 w-4 accent-[#1f6b65]" checked={onlyAvail} onChange={(e) => setOnlyAvail(e.target.checked)} />
+              <input type="checkbox" className="h-4 w-4 accent-[#f97a2e]" checked={onlyAvail} onChange={(e) => setOnlyAvail(e.target.checked)} />
               {t("available_now")}
             </label>
           </>

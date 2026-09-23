@@ -10,7 +10,7 @@ export function JobCard({ job, href, showStatus, children }: { job: any; href: s
   const { t, skillName } = useApp();
   const speakText = `${job.title}. ${job.distance_km !== undefined ? job.distance_km + " " + t("km_away") + "." : ""} ${job.budget} rupees. ${prettyDate(job.date, t)}.`;
   return (
-    <motion.div layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={`card p-4 flex flex-col ${job.urgent ? "border-rose-300" : job.invited ? "border-sun-400" : ""}`}>
+    <motion.div layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={`card p-4 flex flex-col ${job.urgent ? "border-rose-500/30" : job.invited ? "border-sun-500/50" : ""}`}>
       <Link href={href} className="flex gap-3.5">
         <SkillBadge skill={job.skills[0]} size={48} tone={job.urgent ? "rose" : "brand"} />
         <div className="flex-1 min-w-0">
@@ -21,12 +21,12 @@ export function JobCard({ job, href, showStatus, children }: { job: any; href: s
               </span>
             )}
             {job.invited && (
-              <span className="chip !text-xs bg-sun-100 text-sun-600">
+              <span className="chip !text-xs bg-sun-500/15 text-sun-400">
                 <Mail size={12} /> Invited
               </span>
             )}
             {job.recurring?.freq && (
-              <span className="chip !text-xs bg-violet-50 text-violet-700">
+              <span className="chip !text-xs bg-violet-500/10 text-violet-300">
                 <Repeat size={12} /> {job.recurring.freq === "weekly" ? `Every ${job.recurring.day}` : "Daily"}
               </span>
             )}
@@ -69,7 +69,7 @@ export function JobCard({ job, href, showStatus, children }: { job: any; href: s
           {job.skills.slice(0, 3).map((s: string) => {
             const I = skillIconFor(s);
             return (
-              <span key={s} className="chip !text-xs bg-slate-100 text-slate-700">
+              <span key={s} className="chip !text-xs bg-surface-3 text-slate-300">
                 <I size={12} /> {skillName(s)}
               </span>
             );
@@ -92,9 +92,9 @@ export function WorkerCard({ w, score, reasons, children, compact }: { w: any; s
           <Avatar name={w.name} size={52} online={w.available} />
         </Link>
         <div className="flex-1 min-w-0">
-          <Link href={`/workers/${w.id}`} className="font-semibold text-[17px] hover:text-brand-700 flex items-center gap-2">
+          <Link href={`/workers/${w.id}`} className="font-semibold text-[17px] hover:text-brand-300 flex items-center gap-2">
             <span className="truncate">{w.name}</span>
-            {w.subscription === "pro" && <span className="chip !text-[10px] !px-1.5 !py-0 bg-sun-100 text-sun-600 font-semibold">PRO</span>}
+            {w.subscription === "pro" && <span className="chip !text-[10px] !px-1.5 !py-0 bg-sun-500/15 text-sun-400 font-semibold">PRO</span>}
           </Link>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
             <Stars value={w.rating} count={w.rating_count} />
@@ -111,7 +111,7 @@ export function WorkerCard({ w, score, reasons, children, compact }: { w: any; s
           <div className="mt-1.5 flex flex-wrap gap-1.5">
             <LevelBadge level={w.level} />
             {w.available && (
-              <span className="chip !text-xs bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-100">
+              <span className="chip !text-xs bg-emerald-500/10 text-emerald-300 ring-1 ring-inset ring-emerald-500/25">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> {t("available_now")}
               </span>
             )}
@@ -130,7 +130,7 @@ export function WorkerCard({ w, score, reasons, children, compact }: { w: any; s
           {w.skills.slice(0, 4).map((s: any) => {
             const I = skillIconFor(s.skill);
             return (
-              <span key={s.skill} className={`chip !text-xs ${s.verified ? "bg-brand-50 text-brand-800" : "bg-slate-100 text-slate-700"}`}>
+              <span key={s.skill} className={`chip !text-xs ${s.verified ? "bg-brand-500/10 text-brand-300" : "bg-surface-3 text-slate-300"}`}>
                 <I size={12} /> {skillName(s.skill)} {s.verified && <BadgeCheck size={12} />}
               </span>
             );
@@ -138,11 +138,11 @@ export function WorkerCard({ w, score, reasons, children, compact }: { w: any; s
         </div>
       )}
       {reasons && reasons.length > 0 && (
-        <div className="mt-3 rounded-lg bg-slate-50 border border-line p-3 text-sm space-y-1">
+        <div className="mt-3 rounded-lg bg-surface-2 border border-line p-3 text-sm space-y-1">
           <div className="text-[11px] font-semibold text-muted uppercase tracking-wider">Why this worker</div>
           {reasons.slice(0, 4).map((r, i) => (
             <div key={i} className="flex gap-2 items-start">
-              <CircleCheck size={14} className="text-brand-600 mt-0.5 shrink-0" />
+              <CircleCheck size={14} className="text-brand-400 mt-0.5 shrink-0" />
               <span>{clean(r)}</span>
             </div>
           ))}

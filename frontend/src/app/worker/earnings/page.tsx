@@ -27,7 +27,7 @@ export default function Earnings() {
     <div className="space-y-6">
       <PageTitle icon={Wallet} title={t("earnings")} sub="Your income from KaamNear" speakText={`This month you earned ${e.month} rupees from ${e.month_jobs} jobs. This week ${e.week} rupees.`} />
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <Stat icon={Wallet} label="This month" value={money(e.month)} tone="text-brand-700" />
+        <Stat icon={Wallet} label="This month" value={money(e.month)} tone="text-brand-300" />
         <Stat icon={CalendarDays} label={t("earned_week")} value={money(e.week)} />
         <Stat icon={ClipboardCheck} label="Jobs this month" value={e.month_jobs} />
         <Stat icon={TrendingUp} label="Average per day" value={money(e.avg_per_day)} />
@@ -40,11 +40,11 @@ export default function Earnings() {
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={e.series} margin={{ top: 8, right: 4, left: -12, bottom: 0 }}>
-                <CartesianGrid vertical={false} stroke="#edf0f3" />
-                <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#5f6b7a" }} interval={3} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: "#5f6b7a" }} axisLine={false} tickLine={false} />
-                <Tooltip content={<ChartTip />} cursor={{ fill: "rgba(31,107,101,.06)" }} />
-                <Bar dataKey="amount" fill="#1f6b65" radius={[4, 4, 0, 0]} maxBarSize={18} />
+                <CartesianGrid vertical={false} stroke="#222228" />
+                <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#8d8d99" }} interval={3} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: "#8d8d99" }} axisLine={false} tickLine={false} />
+                <Tooltip content={<ChartTip />} cursor={{ fill: "rgba(249,122,46,.08)" }} />
+                <Bar dataKey="amount" fill="#f97a2e" radius={[4, 4, 0, 0]} maxBarSize={18} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -58,7 +58,7 @@ export default function Earnings() {
                   <span className="font-medium">{s.skill}</span>
                   <span className="font-semibold">{money(s.amount)}</span>
                 </div>
-                <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                <div className="h-2 rounded-full bg-surface-3 overflow-hidden">
                   <div className="h-full rounded-full bg-brand-600" style={{ width: `${(s.amount / maxSkill) * 100}%` }} />
                 </div>
               </div>
@@ -76,11 +76,11 @@ export default function Earnings() {
 
       <div className="card overflow-hidden">
         <div className="px-5 py-4 border-b border-line section-title">
-          <Hourglass size={18} className="text-brand-600" /> Work history
+          <Hourglass size={18} className="text-brand-400" /> Work history
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-muted text-left">
+            <thead className="bg-surface-2 text-muted text-left">
               <tr>
                 <th className="px-5 py-2.5 font-medium">Job</th>
                 <th className="px-5 py-2.5 font-medium hidden md:table-cell">Date</th>
@@ -91,7 +91,7 @@ export default function Earnings() {
             </thead>
             <tbody className="divide-y divide-line">
               {bookings.slice(0, 30).map((b) => (
-                <tr key={b.id} className="hover:bg-slate-50 cursor-pointer" onClick={() => (window.location.href = `/worker/jobs/${b.job_id}`)}>
+                <tr key={b.id} className="hover:bg-surface-2 cursor-pointer" onClick={() => (window.location.href = `/worker/jobs/${b.job_id}`)}>
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-3">
                       <SkillBadge skill={b.job.skills[0]} size={32} tone="slate" />

@@ -42,7 +42,7 @@ export default function Settings() {
         <div className="space-y-6 xl:col-span-2">
           <div className="card p-5 space-y-4">
             <div className="section-title">
-              <UserRound size={18} className="text-brand-600" /> Profile
+              <UserRound size={18} className="text-brand-400" /> Profile
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
@@ -81,7 +81,7 @@ export default function Settings() {
 
           <div className="card p-5 space-y-4">
             <div className="section-title">
-              <Globe size={18} className="text-brand-600" /> {t("language")} and accessibility
+              <Globe size={18} className="text-brand-400" /> {t("language")} and accessibility
             </div>
             <div className="grid grid-cols-3 gap-3 max-w-lg">
               {LANGS.map((l) => (
@@ -90,18 +90,18 @@ export default function Settings() {
                 </button>
               ))}
             </div>
-            <button onClick={() => setVoiceOn(!voiceOn)} className="w-full max-w-lg flex items-center gap-3 rounded-xl border border-line p-3.5 hover:bg-slate-50">
-              <Volume2 size={20} className="text-brand-600" />
+            <button onClick={() => setVoiceOn(!voiceOn)} className="w-full max-w-lg flex items-center gap-3 rounded-xl border border-line p-3.5 hover:bg-surface-2">
+              <Volume2 size={20} className="text-brand-400" />
               <span className="flex-1 text-left font-medium">Read new alerts aloud automatically</span>
-              <span className={`h-6 w-11 rounded-full p-0.5 transition ${voiceOn ? "bg-brand-600" : "bg-slate-300"}`}>
-                <span className={`block h-5 w-5 rounded-full bg-white shadow transition ${voiceOn ? "translate-x-5" : ""}`} />
+              <span className={`h-6 w-11 rounded-full p-0.5 transition ${voiceOn ? "bg-brand-600" : "bg-[#34343c]"}`}>
+                <span className={`block h-5 w-5 rounded-full bg-[#fff] shadow transition ${voiceOn ? "translate-x-5" : ""}`} />
               </span>
             </button>
           </div>
 
           <div className="card p-5 space-y-3">
             <div className="section-title">
-              <IdCard size={18} className="text-brand-600" /> {t("verification")}
+              <IdCard size={18} className="text-brand-400" /> {t("verification")}
             </div>
             {[
               ["id", IdCard, "Government ID card", user.verification.id],
@@ -111,9 +111,9 @@ export default function Settings() {
                 <Icon size={18} className="text-muted" />
                 <span className="flex-1 font-medium text-sm">{label}</span>
                 {st === "verified" ? (
-                  <span className="chip !text-xs bg-emerald-50 text-emerald-700"><Check size={13} /> Verified</span>
+                  <span className="chip !text-xs bg-emerald-500/10 text-emerald-300"><Check size={13} /> Verified</span>
                 ) : st === "pending" ? (
-                  <span className="chip !text-xs bg-amber-50 text-amber-700"><Clock size={13} /> Under review</span>
+                  <span className="chip !text-xs bg-amber-500/10 text-amber-300"><Clock size={13} /> Under review</span>
                 ) : (
                   <label className="btn-ghost !py-1.5 text-sm cursor-pointer">
                     Upload
@@ -155,8 +155,8 @@ export default function Settings() {
               ["/whatsapp", MessageCircle, t("whatsapp"), "Use KaamNear by message"],
               ["/worker", HardHat, t("need_work"), "Switch to worker mode"],
             ].map(([href, Icon, label, sub]: any) => (
-              <Link key={href} href={href} className="flex items-center gap-3 px-5 py-3.5 hover:bg-slate-50">
-                <Icon size={18} className="text-brand-600" />
+              <Link key={href} href={href} className="flex items-center gap-3 px-5 py-3.5 hover:bg-surface-2">
+                <Icon size={18} className="text-brand-400" />
                 <span className="flex-1">
                   <span className="block font-medium">{label}</span>
                   <span className="text-xs text-muted capitalize">{sub}</span>
@@ -166,7 +166,7 @@ export default function Settings() {
             ))}
           </div>
           <button
-            className="btn-ghost w-full text-rose-600"
+            className="btn-ghost w-full text-rose-400"
             onClick={() => {
               logout();
               window.location.href = "/";

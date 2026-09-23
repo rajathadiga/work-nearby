@@ -17,7 +17,7 @@ function Keypad({ onKey }: { onKey: (k: string) => void }) {
         k === "" ? (
           <span key={i} />
         ) : (
-          <button key={i} onClick={() => onKey(k)} className="h-14 rounded-xl bg-white border border-line text-2xl font-semibold hover:bg-slate-50 active:bg-brand-50 grid place-items-center">
+          <button key={i} onClick={() => onKey(k)} className="h-14 rounded-xl bg-surface border border-line text-2xl font-semibold hover:bg-surface-2 active:bg-brand-500/10 grid place-items-center">
             {k === "del" ? <Delete /> : k}
           </button>
         )
@@ -102,7 +102,7 @@ export default function Login() {
 
   return (
     <div className="grid lg:grid-cols-2 gap-8 min-h-[calc(100vh-9rem)] items-stretch">
-      <div className="hidden lg:flex flex-col justify-between rounded-2xl bg-brand-700 text-white p-10">
+      <div className="hidden lg:flex flex-col justify-between rounded-3xl glow-panel text-white p-10">
         <Logo light />
         <div>
           <h2 className="text-3xl font-bold leading-tight">{t("hero_title")}</h2>
@@ -137,12 +137,12 @@ export default function Login() {
       {step === "phone" && (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="card p-5 space-y-4">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-semibold flex-1 flex items-center gap-2"><Smartphone size={20} className="text-brand-600" /> {t("your_phone")}</h1>
+            <h1 className="text-xl font-semibold flex-1 flex items-center gap-2"><Smartphone size={20} className="text-brand-400" /> {t("your_phone")}</h1>
             <SpeakButton text={t("your_phone")} />
           </div>
           <div className="input !text-2xl font-semibold tracking-widest text-center h-16 flex items-center justify-center">
             <span className="text-muted mr-2">+91</span>
-            {phone || <span className="text-slate-300">98765 43210</span>}
+            {phone || <span className="text-[#3a3a44]">98765 43210</span>}
           </div>
           <Keypad onKey={(k) => setPhone((p) => (k === "del" ? p.slice(0, -1) : p.length < 10 ? p + k : p))} />
           <button className="btn-primary btn-lg w-full" disabled={phone.length !== 10 || busy} onClick={sendOtp}>
@@ -154,15 +154,15 @@ export default function Login() {
       {step === "otp" && (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="card p-5 space-y-4">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-semibold flex-1 flex items-center gap-2"><KeyRound size={20} className="text-brand-600" /> {t("enter_otp")}</h1>
+            <h1 className="text-xl font-semibold flex-1 flex items-center gap-2"><KeyRound size={20} className="text-brand-400" /> {t("enter_otp")}</h1>
             <SpeakButton text={t("enter_otp")} />
           </div>
           <p className="text-muted font-semibold">
-            +91 {phone} • <span className="text-brand-700 font-semibold">Demo OTP: 1234</span>
+            +91 {phone} • <span className="text-brand-300 font-semibold">Demo OTP: 1234</span>
           </p>
           <div className="flex justify-center gap-3">
             {[0, 1, 2, 3].map((i) => (
-              <span key={i} className={`h-16 w-14 rounded-xl border-2 grid place-items-center text-2xl font-semibold ${otp[i] ? "border-brand-500 bg-brand-50" : "border-line bg-white"}`}>
+              <span key={i} className={`h-16 w-14 rounded-xl border-2 grid place-items-center text-2xl font-semibold ${otp[i] ? "border-brand-500 bg-brand-500/10" : "border-line bg-surface"}`}>
                 {otp[i] || ""}
               </span>
             ))}

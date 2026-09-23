@@ -40,7 +40,7 @@ export default function RouteJobs() {
           </select>
         </div>
         <button
-          className="h-11 w-11 shrink-0 rounded-lg border border-line bg-white grid place-items-center self-center lg:self-end hover:bg-slate-50"
+          className="h-11 w-11 shrink-0 rounded-lg border border-line bg-surface grid place-items-center self-center lg:self-end hover:bg-surface-2"
           onClick={() => {
             if (from === "me") return;
             setFrom(to);
@@ -66,7 +66,7 @@ export default function RouteJobs() {
           <div className="label">Max distance from road</div>
           <div className="flex gap-1.5">
             {[1, 2, 3, 5].map((b) => (
-              <button key={b} onClick={() => setBuffer(b)} className={`chip border !py-2 ${buffer === b ? "bg-brand-600 text-white border-brand-600" : "bg-white border-line"}`}>
+              <button key={b} onClick={() => setBuffer(b)} className={`chip border !py-2 ${buffer === b ? "bg-brand-600 text-white border-brand-600" : "bg-surface border-line"}`}>
                 {b} km
               </button>
             ))}
@@ -79,7 +79,7 @@ export default function RouteJobs() {
         <div className="grid xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-6 items-start">
           <div className="space-y-4 min-w-0">
             <div className="font-medium flex items-center gap-2 text-sm">
-              {res.from.name} <ArrowRight size={15} /> {res.to.name} · {res.route_km} km · <span className="text-brand-700">{res.jobs.length} jobs on the way</span>
+              {res.from.name} <ArrowRight size={15} /> {res.to.name} · {res.route_km} km · <span className="text-brand-300">{res.jobs.length} jobs on the way</span>
             </div>
             {res.jobs.length === 0 ? (
               <Empty icon={RouteIcon} text="No jobs along this route right now" />

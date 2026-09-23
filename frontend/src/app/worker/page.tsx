@@ -118,12 +118,12 @@ export default function WorkerHome() {
       <div className="grid xl:grid-cols-[380px_minmax(0,1fr)] gap-6 items-start">
         <aside className="space-y-5 xl:sticky xl:top-24">
           {/* availability */}
-          <div className={`card p-6 text-center transition ${available ? "border-emerald-300 bg-emerald-50/50" : ""}`}>
+          <div className={`card p-6 text-center transition ${available ? "border-emerald-500/30 bg-emerald-500/10" : ""}`}>
             <motion.button
               whileTap={{ scale: 0.94 }}
               onClick={() => toggle(!available)}
               className={`mx-auto h-28 w-28 rounded-full grid place-items-center border-4 shadow-sm transition ${
-                available ? "bg-emerald-600 text-white border-emerald-200 pulse-dot text-emerald-500" : "bg-white text-slate-400 border-slate-200 hover:border-brand-300"
+                available ? "bg-emerald-600 text-white border-emerald-500/30 pulse-dot text-emerald-400" : "bg-surface text-slate-400 border-slate-200 hover:border-brand-500/40"
               }`}
               aria-label={t("available_today")}
             >
@@ -135,13 +135,13 @@ export default function WorkerHome() {
               <div className="text-xs font-medium text-muted mb-2">{t("radius")}</div>
               <div className="flex justify-center gap-1.5 flex-wrap">
                 {[3, 5, 10, 15, 25].map((r) => (
-                  <button key={r} onClick={() => toggle(available, r)} className={`chip border ${radius === r ? "bg-brand-600 text-white border-brand-600" : "bg-white border-line hover:border-brand-300"}`}>
+                  <button key={r} onClick={() => toggle(available, r)} className={`chip border ${radius === r ? "bg-brand-600 text-white border-brand-600" : "bg-surface border-line hover:border-brand-500/40"}`}>
                     {r} km
                   </button>
                 ))}
               </div>
             </div>
-            <button onClick={voice.listening ? voice.stop : voice.start} className={`mt-4 chip border !py-1.5 ${voice.listening ? "bg-rose-50 border-rose-300 text-rose-700" : "bg-white border-line text-muted hover:text-ink"}`}>
+            <button onClick={voice.listening ? voice.stop : voice.start} className={`mt-4 chip border !py-1.5 ${voice.listening ? "bg-rose-500/10 border-rose-500/30 text-rose-300" : "bg-surface border-line text-muted hover:text-ink"}`}>
               <Mic size={14} /> {voice.listening ? voice.interim || t("listening") : "Say: “Available today, 10 km”"}
             </button>
           </div>
@@ -151,7 +151,7 @@ export default function WorkerHome() {
               <div className="px-5 py-3.5 border-b border-line section-title">{t("my_work")}</div>
               <div className="divide-y divide-line">
                 {active.map((b) => (
-                  <Link key={b.id} href={`/worker/jobs/${b.job_id}`} className="px-5 py-3.5 flex items-center gap-3 hover:bg-slate-50">
+                  <Link key={b.id} href={`/worker/jobs/${b.job_id}`} className="px-5 py-3.5 flex items-center gap-3 hover:bg-surface-2">
                     <SkillBadge skill={b.job.skills[0]} size={40} />
                     <div className="flex-1 min-w-0">
                       <div className="font-medium truncate">{b.job.title}</div>
@@ -177,14 +177,14 @@ export default function WorkerHome() {
               [`/workers/${user.id}`, IdCard, t("passport")],
             ].map(([href, Icon, label]: any) => (
               <Link key={href} href={href} className="tile py-4">
-                <Icon size={22} className="text-brand-600" />
+                <Icon size={22} className="text-brand-400" />
                 <span className="text-sm">{label}</span>
               </Link>
             ))}
           </div>
 
           {user.subscription !== "pro" && (
-            <Link href="/plans" className="card p-4 flex items-start gap-3 hover:border-sun-400 transition">
+            <Link href="/plans" className="card p-4 flex items-start gap-3 hover:border-sun-500/50 transition">
               <Crown size={20} className="text-sun-500 mt-0.5" />
               <div className="flex-1">
                 <div className="font-semibold">KaamNear Pro · ₹99/month</div>
@@ -197,17 +197,17 @@ export default function WorkerHome() {
         <section className="space-y-4 min-w-0">
           <div className="flex items-center gap-2">
             <div className="section-title flex-1">{t("work_near_you")}</div>
-            <div className="grid grid-cols-2 rounded-lg bg-slate-100 p-0.5">
-              <button onClick={() => setView("list")} className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 text-sm ${view === "list" ? "bg-white shadow-sm" : "text-muted"}`}>
+            <div className="grid grid-cols-2 rounded-lg bg-surface-3 p-0.5">
+              <button onClick={() => setView("list")} className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 text-sm ${view === "list" ? "bg-surface-3 shadow-sm" : "text-muted"}`}>
                 <List size={15} /> List
               </button>
-              <button onClick={() => setView("map")} className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 text-sm ${view === "map" ? "bg-white shadow-sm" : "text-muted"}`}>
+              <button onClick={() => setView("map")} className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 text-sm ${view === "map" ? "bg-surface-3 shadow-sm" : "text-muted"}`}>
                 <MapIcon size={15} /> Map
               </button>
             </div>
           </div>
           {!wp.skills?.length && (
-            <Link href="/worker/profile" className="card p-4 flex items-center gap-2 border-sun-200 bg-sun-50 font-medium">
+            <Link href="/worker/profile" className="card p-4 flex items-center gap-2 border-sun-500/30 bg-sun-500/10 font-medium">
               <Plus size={18} /> Add your skills to get matched with work
             </Link>
           )}
@@ -225,7 +225,7 @@ export default function WorkerHome() {
                   { lat: user.lat, lng: user.lng, kind: "home", popup: "You", size: 32 },
                   ...feed.map((j) => ({ lat: j.lat, lng: j.lng, kind: (j.urgent ? "urgent" : "job") as any, popup: `<b>${j.title}</b><br/>₹${j.budget} · ${j.distance_km} km<br/><a href="/worker/jobs/${j.id}">Open</a>` })),
                 ]}
-                circles={[{ lat: user.lat, lng: user.lng, radius: radius * 1000, color: "#2f817a", opacity: 0.06 }]}
+                circles={[{ lat: user.lat, lng: user.lng, radius: radius * 1000, color: "#f97a2e", opacity: 0.06 }]}
               />
             </div>
           ) : (

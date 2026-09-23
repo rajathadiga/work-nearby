@@ -51,14 +51,14 @@ export default function Chat({ jobId, otherId, otherName }: { jobId: number; oth
 
   return (
     <div className="card overflow-hidden flex flex-col">
-      <div className="px-4 py-3 border-b border-line font-semibold flex items-center gap-2"><MessageSquare size={17} className="text-brand-600" /> {otherName}</div>
-      <div className="h-80 overflow-y-auto p-3 space-y-2 bg-slate-50">
+      <div className="px-4 py-3 border-b border-line font-semibold flex items-center gap-2"><MessageSquare size={17} className="text-brand-400" /> {otherName}</div>
+      <div className="h-80 overflow-y-auto p-3 space-y-2 bg-surface-2">
         {msgs.length === 0 && <div className="text-center text-sm text-muted py-8">Start the conversation</div>}
         {msgs.map((m) => {
           const mine = m.sender_id === user.id;
           return (
             <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[80%] rounded-2xl px-3 py-2 text-[15px] shadow-sm ${mine ? "bg-brand-600 text-white" : "bg-white"}`}>
+              <div className={`max-w-[80%] rounded-2xl px-3 py-2 text-[15px] shadow-sm ${mine ? "bg-brand-600 text-white" : "bg-surface"}`}>
                 {m.kind === "image" && m.payload?.url && <img src={fileUrl(m.payload.url)} alt="photo" className="rounded-xl max-h-48 mb-1" />}
                 {m.kind === "location" && m.payload?.lat && (
                   <a className="underline font-semibold inline-flex items-center gap-1" target="_blank" rel="noreferrer" href={`https://www.google.com/maps?q=${m.payload.lat},${m.payload.lng}`}>
@@ -75,19 +75,19 @@ export default function Chat({ jobId, otherId, otherName }: { jobId: number; oth
       </div>
       <div className="flex gap-2 overflow-x-auto no-scrollbar px-3 pt-2">
         {QUICK.map((q) => (
-          <button key={q} onClick={() => send({ text: q })} className="chip bg-white border border-line whitespace-nowrap shrink-0 hover:border-brand-300">
+          <button key={q} onClick={() => send({ text: q })} className="chip bg-surface border border-line whitespace-nowrap shrink-0 hover:border-brand-500/40">
             {q}
           </button>
         ))}
       </div>
       <div className="flex items-center gap-2 p-3">
-        <button onClick={voice.listening ? voice.stop : voice.start} className={`h-11 w-11 shrink-0 rounded-lg grid place-items-center ${voice.listening ? "bg-rose-500 text-white" : "bg-slate-100 text-slate-600"}`} aria-label="voice">
+        <button onClick={voice.listening ? voice.stop : voice.start} className={`h-11 w-11 shrink-0 rounded-lg grid place-items-center ${voice.listening ? "bg-rose-500 text-white" : "bg-surface-3 text-slate-300"}`} aria-label="voice">
           <Mic size={20} />
         </button>
-        <button onClick={() => fileRef.current?.click()} className="h-11 w-11 shrink-0 rounded-lg grid place-items-center bg-slate-100 text-slate-600" aria-label="photo">
+        <button onClick={() => fileRef.current?.click()} className="h-11 w-11 shrink-0 rounded-lg grid place-items-center bg-surface-3 text-slate-300" aria-label="photo">
           <Camera size={20} />
         </button>
-        <button onClick={shareLocation} className="h-11 w-11 shrink-0 rounded-lg grid place-items-center bg-slate-100 text-slate-600" aria-label="location">
+        <button onClick={shareLocation} className="h-11 w-11 shrink-0 rounded-lg grid place-items-center bg-surface-3 text-slate-300" aria-label="location">
           <MapPin size={20} />
         </button>
         <input
@@ -128,7 +128,7 @@ export function PhotoPicker({ label, photos, onAdd }: { label: string; photos: s
         {photos.map((p) => (
           <img key={p} src={fileUrl(p)} alt={label} className="h-24 w-24 object-cover rounded-xl border border-line" />
         ))}
-        <button onClick={() => ref.current?.click()} className="h-24 w-24 rounded-xl border-2 border-dashed border-line grid place-items-center text-muted font-medium text-sm hover:border-brand-300">
+        <button onClick={() => ref.current?.click()} className="h-24 w-24 rounded-xl border-2 border-dashed border-line grid place-items-center text-muted font-medium text-sm hover:border-brand-500/40">
           {busy ? "…" : <span className="flex flex-col items-center">
               <Camera />+ Photo
             </span>}

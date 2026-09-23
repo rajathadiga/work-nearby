@@ -47,7 +47,7 @@ export default function Notifications() {
           {items.map((n) => {
             const [Icon, tone] = KIND[n.kind] || KIND.info;
             const body = (
-              <div className={`px-5 py-4 flex gap-4 items-start ${!n.read ? "bg-brand-50/40" : ""} ${n.link ? "hover:bg-slate-50" : ""}`}>
+              <div className={`px-5 py-4 flex gap-4 items-start ${!n.read ? "bg-brand-500/10" : ""} ${n.link ? "hover:bg-surface-2" : ""}`}>
                 <IconBadge icon={Icon} size={38} tone={tone} />
                 <div className="flex-1 min-w-0">
                   <div className="font-medium flex items-center gap-2">

@@ -30,7 +30,7 @@ export default function Passport() {
     <div className="space-y-6">
       {/* header */}
       <div className="card overflow-hidden">
-        <div className="bg-brand-700 px-6 py-6 sm:px-8 text-white flex flex-wrap items-center gap-5">
+        <div className="glow-panel !border-0 px-6 py-7 sm:px-8 text-white flex flex-wrap items-center gap-5">
           <div className="ring-4 ring-white/20 rounded-full">
             <Avatar name={w.name} size={84} online={w.available} />
           </div>
@@ -42,7 +42,7 @@ export default function Passport() {
             </div>
             <div className="mt-2 flex gap-1.5 flex-wrap">
               <LevelBadge level={w.level} />
-              {w.subscription === "pro" && <span className="chip !text-xs bg-sun-200 text-sun-600 font-semibold">PRO</span>}
+              {w.subscription === "pro" && <span className="chip !text-xs bg-sun-500/20 text-sun-400 font-semibold">PRO</span>}
             </div>
           </div>
           <div className="flex gap-2">
@@ -50,7 +50,7 @@ export default function Passport() {
             {!isMe && (
               <>
                 <button
-                  className={`h-9 px-3 rounded-lg border flex items-center gap-1.5 text-sm font-medium ${w.is_favorite ? "bg-white text-rose-600 border-white" : "border-white/30 text-white hover:bg-white/10"}`}
+                  className={`h-9 px-3 rounded-lg border flex items-center gap-1.5 text-sm font-medium ${w.is_favorite ? "bg-surface text-rose-400 border-white" : "border-white/30 text-white hover:bg-white/10"}`}
                   onClick={async () => {
                     await api(`/favorites/${w.id}`, { method: w.is_favorite ? "DELETE" : "POST", body: w.is_favorite ? undefined : {} });
                     toast(w.is_favorite ? "Removed from saved workers" : "Saved to My workers", "", "success");
@@ -62,7 +62,7 @@ export default function Passport() {
                 <a href={`tel:${w.phone}`} className="h-9 px-3 rounded-lg border border-white/30 text-white hover:bg-white/10 flex items-center gap-1.5 text-sm font-medium">
                   <Phone size={15} /> {t("call")}
                 </a>
-                <Link href={`/customer/post?rebook=${w.id}`} className="btn bg-white text-brand-700 hover:bg-brand-50 !py-2">
+                <Link href={`/customer/post?rebook=${w.id}`} className="btn bg-[#f2f2f5] text-[#0b0b0e] hover:bg-white !py-2">
                   {t("hire")} {w.name.split(" ")[0]}
                 </Link>
               </>
@@ -87,10 +87,10 @@ export default function Passport() {
 
       <div className="grid xl:grid-cols-3 gap-6 items-start">
         <div className="xl:col-span-2 space-y-6">
-          {w.bio && <div className="card p-5 text-[15px] italic text-slate-700">“{w.bio}”</div>}
+          {w.bio && <div className="card p-5 text-[15px] italic text-slate-300">“{w.bio}”</div>}
           <div className="card p-5">
             <div className="section-title mb-4">
-              <Wrench size={18} className="text-brand-600" /> Skills
+              <Wrench size={18} className="text-brand-400" /> Skills
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {w.skills.map((s: any) => (
@@ -99,7 +99,7 @@ export default function Passport() {
                     <SkillBadge skill={s.skill} size={38} />
                     <div className="flex-1 min-w-0">
                       <div className="font-medium flex items-center gap-1.5">
-                        {skillName(s.skill)} {s.verified && <BadgeCheck size={15} className="text-brand-600" />}
+                        {skillName(s.skill)} {s.verified && <BadgeCheck size={15} className="text-brand-400" />}
                       </div>
                       <div className="text-xs text-muted">
                         {LEVEL_LABEL[s.level]}
@@ -107,7 +107,7 @@ export default function Passport() {
                       </div>
                     </div>
                   </div>
-                  <div className="h-1.5 rounded-full bg-slate-100 mt-3 overflow-hidden">
+                  <div className="h-1.5 rounded-full bg-surface-3 mt-3 overflow-hidden">
                     <div className="h-full rounded-full bg-brand-600" style={{ width: `${LEVEL_W[s.level] || 50}%` }} />
                   </div>
                 </div>
@@ -117,7 +117,7 @@ export default function Passport() {
 
           <div className="card">
             <div className="px-5 py-4 border-b border-line section-title">
-              <MessageSquareQuote size={18} className="text-brand-600" /> Reviews
+              <MessageSquareQuote size={18} className="text-brand-400" /> Reviews
             </div>
             {w.reviews.length === 0 && <div className="p-5 text-muted">No reviews yet</div>}
             <div className="divide-y divide-line">
@@ -128,15 +128,15 @@ export default function Passport() {
                     <span className="font-medium flex-1">{r.by}</span>
                     <span className="flex">
                       {Array.from({ length: 5 }).map((_, k) => (
-                        <Star key={k} size={14} className={k < r.rating ? "fill-amber-400 text-amber-400" : "text-slate-200"} />
+                        <Star key={k} size={14} className={k < r.rating ? "fill-amber-400 text-amber-400" : "text-[#3a3a44]"} />
                       ))}
                     </span>
                     <span className="text-xs text-muted">{r.date}</span>
                   </div>
-                  {r.comment && <div className="text-sm text-slate-700 mt-2">{r.comment.replace(/[\p{Extended_Pictographic}]/gu, "")}</div>}
+                  {r.comment && <div className="text-sm text-slate-300 mt-2">{r.comment.replace(/[\p{Extended_Pictographic}]/gu, "")}</div>}
                   <div className="flex gap-1.5 mt-2 flex-wrap">
                     {r.tags?.map((tg: string) => (
-                      <span key={tg} className="chip !text-[11px] bg-brand-50 text-brand-700">
+                      <span key={tg} className="chip !text-[11px] bg-brand-500/10 text-brand-300">
                         {tg}
                       </span>
                     ))}
@@ -150,7 +150,7 @@ export default function Passport() {
         <aside className="space-y-6">
           <div className="card p-5">
             <div className="section-title mb-4">
-              <ShieldCheck size={18} className="text-brand-600" /> {t("reliability")}
+              <ShieldCheck size={18} className="text-brand-400" /> {t("reliability")}
             </div>
             {rel.completion_rate === null ? (
               <div className="text-muted text-sm">New worker — no history yet</div>
@@ -166,7 +166,7 @@ export default function Passport() {
                       <span className="text-muted">{k}</span>
                       <span className="font-semibold">{v}%</span>
                     </div>
-                    <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                    <div className="h-2 rounded-full bg-surface-3 overflow-hidden">
                       <div className={`h-full rounded-full ${k === "Cancellations" ? "bg-rose-500" : "bg-brand-600"}`} style={{ width: `${v}%` }} />
                     </div>
                   </div>
@@ -176,7 +176,7 @@ export default function Passport() {
           </div>
           <div className="card p-5 space-y-2.5">
             <div className="section-title mb-2">
-              <IdCard size={18} className="text-brand-600" /> {t("verification")}
+              <IdCard size={18} className="text-brand-400" /> {t("verification")}
             </div>
             {[
               [Smartphone, "Mobile number", "verified"],
@@ -186,13 +186,13 @@ export default function Passport() {
               <div key={label} className="flex items-center gap-2.5 text-sm">
                 <Icon size={16} className="text-muted" />
                 <span className="flex-1">{label}</span>
-                {st === "verified" ? <BadgeCheck size={17} className="text-brand-600" /> : <span className="text-xs text-muted">Not yet</span>}
+                {st === "verified" ? <BadgeCheck size={17} className="text-brand-400" /> : <span className="text-xs text-muted">Not yet</span>}
               </div>
             ))}
           </div>
           <div className="card p-5 text-sm space-y-2">
             <div className="section-title mb-2">
-              <Wallet size={18} className="text-brand-600" /> Rates and hours
+              <Wallet size={18} className="text-brand-400" /> Rates and hours
             </div>
             <div className="flex justify-between"><span className="text-muted">Per day</span><span className="font-medium">{money(w.daily_rate)}</span></div>
             <div className="flex justify-between"><span className="text-muted">Per hour</span><span className="font-medium">{money(w.hourly_rate)}</span></div>
@@ -203,11 +203,11 @@ export default function Passport() {
           {w.groups?.length > 0 && (
             <div className="card p-5">
               <div className="section-title mb-3">
-                <UsersRound size={18} className="text-brand-600" /> Groups
+                <UsersRound size={18} className="text-brand-400" /> Groups
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {w.groups.map((g: string) => (
-                  <span key={g} className="chip !text-xs bg-slate-100 text-slate-700">{g}</span>
+                  <span key={g} className="chip !text-xs bg-surface-3 text-slate-300">{g}</span>
                 ))}
               </div>
             </div>

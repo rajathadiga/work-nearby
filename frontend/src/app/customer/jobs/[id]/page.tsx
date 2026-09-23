@@ -90,8 +90,8 @@ export default function CustomerJob() {
                 <div className="flex flex-wrap gap-1.5 mb-1.5">
                   <JobStatusPill status={job.status} />
                   {job.urgent && <span className="chip !text-xs bg-rose-600 text-white"><Zap size={12} /> {t("urgent")}</span>}
-                  {job.recurring?.freq && <span className="chip !text-xs bg-violet-50 text-violet-700"><Repeat size={12} /> Every {job.recurring.day}</span>}
-                  {job.escrow && <span className="chip !text-xs bg-brand-50 text-brand-700"><ShieldCheck size={12} /> Secure payment</span>}
+                  {job.recurring?.freq && <span className="chip !text-xs bg-violet-500/10 text-violet-300"><Repeat size={12} /> Every {job.recurring.day}</span>}
+                  {job.escrow && <span className="chip !text-xs bg-brand-500/10 text-brand-300"><ShieldCheck size={12} /> Secure payment</span>}
                 </div>
                 <h1 className="text-xl sm:text-2xl font-bold tracking-tight">{job.title}</h1>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted mt-1.5">
@@ -106,7 +106,7 @@ export default function CustomerJob() {
               </div>
             </div>
             {job.flags?.length > 0 && (
-              <div className="mt-4 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800 flex gap-2">
+              <div className="mt-4 rounded-lg bg-amber-500/10 border border-amber-500/30 p-3 text-sm text-amber-300 flex gap-2">
                 <TriangleAlert size={16} className="shrink-0 mt-0.5" /> {job.flags.join(" · ")}
               </div>
             )}
@@ -117,7 +117,7 @@ export default function CustomerJob() {
                   <button className="btn-ghost !py-2 text-sm" onClick={() => act(`/jobs/${id}/rematch`, {}, "More workers alerted")}>
                     <RefreshCw size={15} /> Find more workers
                   </button>
-                  <button className="btn-ghost !py-2 text-sm text-rose-600" onClick={() => confirm("Cancel this job?") && act(`/jobs/${id}/cancel`, {}, "Job cancelled")}>
+                  <button className="btn-ghost !py-2 text-sm text-rose-400" onClick={() => confirm("Cancel this job?") && act(`/jobs/${id}/cancel`, {}, "Job cancelled")}>
                     <Ban size={15} /> {t("cancel")}
                   </button>
                 </>
@@ -126,8 +126,8 @@ export default function CustomerJob() {
           </div>
 
           {isNew && job.status === "open" && (
-            <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="card p-4 border-brand-200 bg-brand-50/60 flex gap-3">
-              <CircleCheck className="text-brand-600 shrink-0" />
+            <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="card p-4 border-brand-500/25 bg-brand-500/10 flex gap-3">
+              <CircleCheck className="text-brand-400 shrink-0" />
               <div>
                 <div className="font-semibold">Your job is live</div>
                 <div className="text-sm text-muted">
@@ -141,7 +141,7 @@ export default function CustomerJob() {
           {bookings.length > 0 && (
             <section className="space-y-3">
               <div className="section-title">
-                <Users size={18} className="text-brand-600" /> {t("status_assigned")} ({bookings.filter((b: any) => b.status !== "no_show").length}/{job.workers_required})
+                <Users size={18} className="text-brand-400" /> {t("status_assigned")} ({bookings.filter((b: any) => b.status !== "no_show").length}/{job.workers_required})
               </div>
               {bookings.map((b: any) => {
                 const idx = STEPS.indexOf(b.status);
@@ -150,7 +150,7 @@ export default function CustomerJob() {
                     <div className="flex items-center gap-3">
                       <Avatar name={b.worker.name} size={50} online={b.worker.available} />
                       <div className="flex-1 min-w-0">
-                        <a href={`/workers/${b.worker.id}`} className="font-semibold text-lg hover:text-brand-700">
+                        <a href={`/workers/${b.worker.id}`} className="font-semibold text-lg hover:text-brand-300">
                           {b.worker.name}
                         </a>
                         <div className="flex gap-2 items-center text-sm text-muted">
@@ -158,13 +158,13 @@ export default function CustomerJob() {
                         </div>
                       </div>
                       <BookingStatusPill status={b.status} />
-                      <button className="h-9 w-9 grid place-items-center rounded-lg border border-line text-rose-500 hover:bg-rose-50" onClick={() => act(`/favorites/${b.worker.id}`, {}, "Saved to My workers")} aria-label="save worker" title="Save worker">
+                      <button className="h-9 w-9 grid place-items-center rounded-lg border border-line text-rose-400 hover:bg-rose-500/10" onClick={() => act(`/favorites/${b.worker.id}`, {}, "Saved to My workers")} aria-label="save worker" title="Save worker">
                         <Heart size={17} />
                       </button>
                     </div>
 
                     {b.status === "on_the_way" && (
-                      <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-sm flex items-center gap-2 text-amber-800">
+                      <div className="rounded-lg bg-amber-500/10 border border-amber-500/30 px-3 py-2 text-sm flex items-center gap-2 text-amber-300">
                         <Bike size={16} /> On the way · arriving in about <b>{b.tracking.eta_min} min</b> ({b.tracking.distance_km} km)
                       </div>
                     )}
@@ -173,8 +173,8 @@ export default function CustomerJob() {
                       <div className="grid grid-cols-5 gap-2">
                         {STEPS.map((s, i) => (
                           <div key={s}>
-                            <div className={`h-1.5 rounded-full ${i <= idx ? "bg-brand-600" : "bg-slate-200"}`} />
-                            <div className={`text-[11px] mt-1.5 font-medium ${i === idx ? "text-brand-700" : "text-muted"}`}>{t("b_" + s).split(" – ")[0]}</div>
+                            <div className={`h-1.5 rounded-full ${i <= idx ? "bg-brand-600" : "bg-surface-3"}`} />
+                            <div className={`text-[11px] mt-1.5 font-medium ${i === idx ? "text-brand-300" : "text-muted"}`}>{t("b_" + s).split(" – ")[0]}</div>
                           </div>
                         ))}
                       </div>
@@ -228,7 +228,7 @@ export default function CustomerJob() {
                       )}
                       {["confirmed", "on_the_way"].includes(b.status) && (
                         <>
-                          <button className="btn-ghost !py-2 text-rose-600" onClick={() => confirm("Worker did not come? We will find a replacement.") && act(`/bookings/${b.id}/no-show`, {}, "Finding a replacement worker")}>
+                          <button className="btn-ghost !py-2 text-rose-400" onClick={() => confirm("Worker did not come? We will find a replacement.") && act(`/bookings/${b.id}/no-show`, {}, "Finding a replacement worker")}>
                             <Ban size={16} /> {t("no_show")}
                           </button>
                           <button className="btn-ghost !py-2 text-muted" onClick={() => confirm("Cancel this worker?") && act(`/bookings/${b.id}/cancel`, {}, "Booking cancelled")}>
@@ -243,15 +243,15 @@ export default function CustomerJob() {
                       )}
                     </div>
                     {b.payment?.status === "pending" && (
-                      <div className="text-sm text-amber-700 flex items-center gap-1.5"><Banknote size={15} /> Please pay {money(b.payment.worker_amount)} in cash to the worker</div>
+                      <div className="text-sm text-amber-300 flex items-center gap-1.5"><Banknote size={15} /> Please pay {money(b.payment.worker_amount)} in cash to the worker</div>
                     )}
                     {b.payment?.status === "paid" && (
-                      <div className="text-sm text-emerald-700 flex items-center gap-1.5">
+                      <div className="text-sm text-emerald-300 flex items-center gap-1.5">
                         <CircleCheck size={15} /> Paid {money(b.payment.amount)} via {b.payment.method.toUpperCase()} {b.payment.reference && `· Ref ${b.payment.reference}`}
                       </div>
                     )}
                     {b.dispute && (
-                      <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800 flex gap-2">
+                      <div className="rounded-lg bg-amber-500/10 border border-amber-500/30 p-3 text-sm text-amber-300 flex gap-2">
                         <Scale size={16} className="shrink-0 mt-0.5" /> Problem reported: {b.dispute.reason} — {b.dispute.status === "resolved" ? `Resolved: ${b.dispute.resolution}` : "our team is reviewing"}
                       </div>
                     )}
@@ -267,18 +267,18 @@ export default function CustomerJob() {
             <section className="space-y-3">
               <div className="flex items-center gap-2">
                 <div className="section-title flex-1">
-                  <Brain size={18} className="text-brand-600" /> {t("best_matches")}
+                  <Brain size={18} className="text-brand-400" /> {t("best_matches")}
                 </div>
                 <span className="text-sm text-muted">{matches.length} found</span>
               </div>
               {job.workers_required > 1 && groups.length > 0 && (
                 <div className="card p-4">
                   <div className="font-medium flex items-center gap-2 mb-2.5 text-sm">
-                    <Users size={16} className="text-brand-600" /> Need a team? Alert a whole worker group
+                    <Users size={16} className="text-brand-400" /> Need a team? Alert a whole worker group
                   </div>
                   <div className="flex gap-2 flex-wrap">
                     {groups.slice(0, 6).map((g) => (
-                      <button key={g.id} className="chip bg-white border border-line hover:border-brand-300" onClick={() => act(`/jobs/${id}/notify-group`, { group_id: g.id }, `Alerted ${g.size} workers in ${g.name}`)}>
+                      <button key={g.id} className="chip bg-surface border border-line hover:border-brand-500/40" onClick={() => act(`/jobs/${id}/notify-group`, { group_id: g.id }, `Alerted ${g.size} workers in ${g.name}`)}>
                         {g.name} · {g.size}
                       </button>
                     ))}
@@ -293,9 +293,9 @@ export default function CustomerJob() {
                       {t("hire")}
                     </button>
                     {m.status === "invited" ? (
-                      <span className="chip bg-sun-50 text-sun-600"><Mail size={13} /> Invited</span>
+                      <span className="chip bg-sun-500/10 text-sun-400"><Mail size={13} /> Invited</span>
                     ) : m.status === "notified" ? (
-                      <span className="chip bg-slate-100 text-muted"><Bell size={13} /> Alerted</span>
+                      <span className="chip bg-surface-3 text-muted"><Bell size={13} /> Alerted</span>
                     ) : (
                       <button className="btn-ghost !py-2" onClick={() => act(`/jobs/${id}/invite`, { worker_id: m.worker.id }, "Invite sent")}>
                         {t("invite")}
@@ -314,7 +314,7 @@ export default function CustomerJob() {
         {/* side panel */}
         <aside className="space-y-4 xl:sticky xl:top-24">
           <div className="card p-3">
-            <MapView center={[job.lat, job.lng]} height={320} fit markers={mapMarkers} line={tracking ? [[tracking.tracking.lat, tracking.tracking.lng], [job.lat, job.lng]] : undefined} circles={!tracking ? [{ lat: job.lat, lng: job.lng, radius: 3000, color: "#2f817a", opacity: 0.06 }] : []} />
+            <MapView center={[job.lat, job.lng]} height={320} fit markers={mapMarkers} line={tracking ? [[tracking.tracking.lat, tracking.tracking.lng], [job.lat, job.lng]] : undefined} circles={!tracking ? [{ lat: job.lat, lng: job.lng, radius: 3000, color: "#f97a2e", opacity: 0.06 }] : []} />
             <div className="flex gap-4 text-xs text-muted mt-2 px-1">
               {tracking ? (
                 <span className="flex items-center gap-1.5"><Clock size={13} /> Live location updates every few seconds</span>
@@ -333,7 +333,7 @@ export default function CustomerJob() {
               <ul className="space-y-2 text-sm">
                 {job.tasks.map((x: string) => (
                   <li key={x} className="flex gap-2">
-                    <Check size={16} className="text-brand-600 shrink-0 mt-0.5" /> {x}
+                    <Check size={16} className="text-brand-400 shrink-0 mt-0.5" /> {x}
                   </li>
                 ))}
               </ul>
@@ -347,13 +347,13 @@ export default function CustomerJob() {
         {detail && (
           <div className="space-y-4">
             <Breakdown parts={detail.breakdown} />
-            <div className="rounded-lg bg-brand-50/60 border border-brand-100 p-3 text-sm">
+            <div className="rounded-lg bg-brand-500/10 border border-brand-500/25 p-3 text-sm">
               Predicted chance to accept: <b>{Math.round(detail.accept_prob * 100)}%</b>
               <div className="text-xs text-muted mt-1">Learned from past accept/decline history. Final score = 85% weighted signals + 15% predicted acceptance.</div>
             </div>
             <ul className="text-sm space-y-1.5">
               {detail.reasons.map((r: string) => (
-                <li key={r} className="flex gap-2"><CircleCheck size={15} className="text-brand-600 mt-0.5 shrink-0" /> {clean(r)}</li>
+                <li key={r} className="flex gap-2"><CircleCheck size={15} className="text-brand-400 mt-0.5 shrink-0" /> {clean(r)}</li>
               ))}
             </ul>
             {detail.worker.reliability?.completion_rate !== null && (
@@ -363,7 +363,7 @@ export default function CustomerJob() {
                   ["On time", detail.worker.reliability.on_time_rate + "%"],
                   ["Repeat customers", detail.worker.repeat_customers],
                 ].map(([k, v]) => (
-                  <div key={k} className="rounded-lg bg-slate-50 border border-line p-2.5">
+                  <div key={k} className="rounded-lg bg-surface-2 border border-line p-2.5">
                     <div className="text-lg font-bold">{v}</div>
                     <div className="text-xs text-muted">{k}</div>
                   </div>
@@ -416,7 +416,7 @@ function PayModal({ b, job, user, onClose, onDone }: any) {
           <div className="label">Add a tip</div>
           <div className="flex gap-2">
             {[0, 20, 50, 100].map((x) => (
-              <button key={x} onClick={() => setTip(x)} className={`chip border ${tip === x ? "bg-brand-600 text-white border-brand-600" : "bg-white border-line"}`}>
+              <button key={x} onClick={() => setTip(x)} className={`chip border ${tip === x ? "bg-brand-600 text-white border-brand-600" : "bg-surface border-line"}`}>
                 {x ? `₹${x}` : "None"}
               </button>
             ))}
@@ -429,13 +429,13 @@ function PayModal({ b, job, user, onClose, onDone }: any) {
             ["cash", Banknote, t("cash")],
           ].map(([id, Icon, label]: any) => (
             <button key={id} onClick={() => setMethod(id)} className={`tile py-3 ${method === id ? "tile-on" : ""}`}>
-              <Icon size={22} className="text-brand-600" />
+              <Icon size={22} className="text-brand-400" />
               <span className="text-xs">{label}</span>
             </button>
           ))}
         </div>
         {method === "upi" && (
-          <a href={upiLink} className="block text-center text-sm font-medium text-brand-700 underline">
+          <a href={upiLink} className="block text-center text-sm font-medium text-brand-300 underline">
             Open UPI app (GPay / PhonePe / Paytm)
           </a>
         )}

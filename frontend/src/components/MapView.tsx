@@ -32,15 +32,15 @@ const GLYPH: Record<string, string> = {
   start: G('<circle cx="12" cy="12" r="4"/>'),
 };
 const COLOR: Record<string, string> = {
-  job: "#1f6b65",
-  urgent: "#be123c",
-  worker: "#059669",
-  worker_off: "#94a3b8",
-  home: "#334155",
-  vehicle: "#c2842b",
-  flag: "#334155",
-  start: "#2f817a",
-  dot: "#1f6b65",
+  job: "#f97a2e",
+  urgent: "#f43f5e",
+  worker: "#10b981",
+  worker_off: "#52525c",
+  home: "#717ef2",
+  vehicle: "#f5a524",
+  flag: "#717ef2",
+  start: "#10b981",
+  dot: "#f97a2e",
 };
 
 /** Leaflet + OpenStreetMap (no API key) with clean vector pins. */
@@ -86,7 +86,7 @@ export default function MapView({ center, zoom = 13, markers = [], circles = [],
     if (!L || !map || !layer) return;
     layer.clearLayers();
     circles.forEach((c) => L.circle([c.lat, c.lng], { radius: c.radius, color: c.color, weight: 0, fillOpacity: c.opacity ?? 0.2 }).addTo(layer));
-    if (line && line.length > 1) L.polyline(line, { color: "#1f6b65", weight: 4, opacity: 0.85, dashArray: "6 8" }).addTo(layer);
+    if (line && line.length > 1) L.polyline(line, { color: "#ff914d", weight: 3, opacity: 0.9, dashArray: "6 8" }).addTo(layer);
     const pts: [number, number][] = [];
     markers.forEach((mk) => {
       const kind = mk.kind || "job";
@@ -129,5 +129,5 @@ export default function MapView({ center, zoom = 13, markers = [], circles = [],
     return () => ro.disconnect();
   }, []);
 
-  return <div ref={el} className={`w-full rounded-xl overflow-hidden border border-line ${className}`} style={{ height }} />;
+  return <div ref={el} className={`w-full rounded-2xl overflow-hidden border border-line ${className}`} style={{ height }} />;
 }

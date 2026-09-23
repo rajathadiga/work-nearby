@@ -87,7 +87,7 @@ export default function Admin() {
       />
       <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
         {TABS.map((x) => (
-          <button key={x} onClick={() => setTab(x)} className={`chip shrink-0 !py-2 border ${tab === x ? "bg-ink text-white border-ink" : "bg-white border-line hover:border-brand-300"}`}>
+          <button key={x} onClick={() => setTab(x)} className={`chip shrink-0 !py-2 border ${tab === x ? "bg-ink text-paper border-ink" : "bg-surface border-line hover:border-brand-500/40"}`}>
             {x}
             {counts[x] ? <span className={`ml-1 rounded-full px-1.5 text-xs ${x === "SOS" ? "bg-rose-600 text-white" : "bg-sun-500 text-white"}`}>{counts[x]}</span> : null}
           </button>
@@ -98,39 +98,39 @@ export default function Admin() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Stat icon={Users} label="Users" value={o.users.toLocaleString()} sub={`${o.workers} workers • ${o.customers} customers`} />
-            <Stat icon={UserCheck} label="Available now" value={o.available_now} sub="workers online" tone="text-emerald-700" />
+            <Stat icon={UserCheck} label="Available now" value={o.available_now} sub="workers online" tone="text-emerald-300" />
             <Stat icon={ClipboardList} label="Jobs today" value={o.jobs_today} sub={`${o.completed_today} completed • ${o.cancelled_today} cancelled`} />
-            <Stat icon={Clock} label="Open jobs" value={o.open_jobs} sub="waiting for workers" tone="text-sun-600" />
+            <Stat icon={Clock} label="Open jobs" value={o.open_jobs} sub="waiting for workers" tone="text-sun-400" />
             <Stat icon={IndianRupee} label="GMV" value={money(o.gmv)} sub="paid through platform" />
-            <Stat icon={Wallet} label="Platform revenue" value={money(o.revenue)} sub="service fees" tone="text-brand-700" />
+            <Stat icon={Wallet} label="Platform revenue" value={money(o.revenue)} sub="service fees" tone="text-brand-300" />
             <Stat icon={Lock} label="Held in escrow" value={money(o.held_escrow)} />
             <Stat icon={Crown} label="Subscriptions" value={(o.subscriptions.pro || 0) + (o.subscriptions.homecare || 0)} sub={`${o.subscriptions.pro || 0} Pro • ${o.subscriptions.homecare || 0} HomeCare`} />
           </div>
           <div className="grid lg:grid-cols-2 gap-4">
             <div className="card p-4">
-              <h2 className="section-title mb-3"><ClipboardCheck size={18} className="text-brand-600" /> Jobs posted per day</h2>
+              <h2 className="section-title mb-3"><ClipboardCheck size={18} className="text-brand-400" /> Jobs posted per day</h2>
               <div className="h-56">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={o.series} margin={{ top: 8, right: 4, left: -20, bottom: 0 }}>
-                    <CartesianGrid vertical={false} stroke="#edf0f3" />
-                    <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#66706c" }} interval={4} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 11, fill: "#66706c" }} axisLine={false} tickLine={false} allowDecimals={false} />
-                    <Tooltip content={<ChartTip prefix="" />} cursor={{ fill: "rgba(31,107,101,.06)" }} />
-                    <Bar dataKey="jobs" fill="#1f6b65" radius={[4, 4, 0, 0]} maxBarSize={14} />
+                    <CartesianGrid vertical={false} stroke="#222228" />
+                    <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#8d8d99" }} interval={4} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 11, fill: "#8d8d99" }} axisLine={false} tickLine={false} allowDecimals={false} />
+                    <Tooltip content={<ChartTip prefix="" />} cursor={{ fill: "rgba(249,122,46,.08)" }} />
+                    <Bar dataKey="jobs" fill="#f97a2e" radius={[4, 4, 0, 0]} maxBarSize={14} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </div>
             <div className="card p-4">
-              <h2 className="section-title mb-3"><IndianRupee size={18} className="text-brand-600" /> GMV per day</h2>
+              <h2 className="section-title mb-3"><IndianRupee size={18} className="text-brand-400" /> GMV per day</h2>
               <div className="h-56">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={o.series} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
-                    <CartesianGrid vertical={false} stroke="#edf0f3" />
-                    <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#66706c" }} interval={4} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 11, fill: "#66706c" }} axisLine={false} tickLine={false} />
+                    <CartesianGrid vertical={false} stroke="#222228" />
+                    <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#8d8d99" }} interval={4} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 11, fill: "#8d8d99" }} axisLine={false} tickLine={false} />
                     <Tooltip content={<ChartTip />} />
-                    <Line type="monotone" dataKey="gmv" stroke="#1f6b65" strokeWidth={2} dot={false} activeDot={{ r: 5 }} />
+                    <Line type="monotone" dataKey="gmv" stroke="#f97a2e" strokeWidth={2} dot={false} activeDot={{ r: 5 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -138,12 +138,12 @@ export default function Admin() {
           </div>
           <div className="grid lg:grid-cols-2 gap-4">
             <div className="card p-4">
-              <h2 className="section-title mb-4"><FolderKanban size={18} className="text-brand-600" /> Jobs by category</h2>
+              <h2 className="section-title mb-4"><FolderKanban size={18} className="text-brand-400" /> Jobs by category</h2>
               <div className="space-y-2">
                 {o.categories.map((c: any) => (
                   <div key={c.category} className="flex items-center gap-2 text-sm">
                     <span className="w-28 font-bold capitalize">{c.category}</span>
-                    <span className="flex-1 h-3 rounded-full bg-slate-100 overflow-hidden">
+                    <span className="flex-1 h-3 rounded-full bg-surface-3 overflow-hidden">
                       <span className="block h-full rounded-full bg-brand-600" style={{ width: `${(c.jobs / o.categories[0].jobs) * 100}%` }} />
                     </span>
                     <span className="w-10 text-right font-semibold">{c.jobs}</span>
@@ -152,7 +152,7 @@ export default function Admin() {
               </div>
             </div>
             <div className="card p-4">
-              <h2 className="section-title mb-1"><Brain size={18} className="text-brand-600" /> Matching model (acceptance prediction)</h2>
+              <h2 className="section-title mb-1"><Brain size={18} className="text-brand-400" /> Matching model (acceptance prediction)</h2>
               <p className="text-sm text-muted font-semibold mb-3">
                 Logistic regression predicting P(worker accepts) – trained on {o.model.trained_on} past offers • accuracy {o.model.accuracy ? Math.round(o.model.accuracy * 100) + "%" : "–"}
               </p>
@@ -160,7 +160,7 @@ export default function Admin() {
                 {Object.entries(o.model.weights).map(([k, v]: any) => (
                   <div key={k} className="flex items-center gap-2 text-sm">
                     <span className="w-24 font-bold">{k}</span>
-                    <span className="flex-1 h-3 relative bg-slate-100 rounded-full">
+                    <span className="flex-1 h-3 relative bg-surface-3 rounded-full">
                       <span
                         className={`absolute top-0 h-3 rounded-full ${v >= 0 ? "bg-brand-600 left-1/2" : "bg-rose-400 right-1/2"}`}
                         style={{ width: `${Math.min(50, Math.abs(v) * 15)}%` }}
@@ -193,8 +193,8 @@ export default function Admin() {
               zoom={12}
               height="70vh"
               markers={[
-                ...mapData.workers.map((w: any) => ({ lat: w.lat, lng: w.lng, kind: "dot" as const, color: w.available ? "#059669" : "#94a3b8", size: 11, popup: w.name })),
-                ...mapData.jobs.map((j: any) => ({ lat: j.lat, lng: j.lng, kind: (j.urgent ? "urgent" : "job") as any, color: j.urgent ? "#be123c" : j.status === "open" ? "#c2842b" : "#0369a1", size: 24, popup: `#${j.id} ${j.title} (${j.status})` })),
+                ...mapData.workers.map((w: any) => ({ lat: w.lat, lng: w.lng, kind: "dot" as const, color: w.available ? "#10b981" : "#52525c", size: 11, popup: w.name })),
+                ...mapData.jobs.map((j: any) => ({ lat: j.lat, lng: j.lng, kind: (j.urgent ? "urgent" : "job") as any, color: j.urgent ? "#be123c" : j.status === "open" ? "#f5a524" : "#717ef2", size: 24, popup: `#${j.id} ${j.title} (${j.status})` })),
               ]}
               circles={mapData.jobs.filter((j: any) => j.status === "open").map((j: any) => ({ lat: j.lat, lng: j.lng, radius: 1200, color: "#c2842b", opacity: 0.1 }))}
             />
@@ -217,11 +217,11 @@ export default function Admin() {
                     Raised by {d.raised_by} • Customer {d.booking.customer.name} • Worker {d.booking.worker.name}
                   </div>
                 </div>
-                <span className={`chip ${d.status === "open" ? "bg-amber-100 text-amber-800" : "bg-green-100 text-green-700"}`}>{d.status}</span>
+                <span className={`chip ${d.status === "open" ? "bg-amber-500/15 text-amber-300" : "bg-green-500/15 text-green-300"}`}>{d.status}</span>
               </div>
-              <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 font-medium">“{d.reason}”</div>
+              <div className="rounded-lg bg-amber-500/10 border border-amber-500/30 p-3 font-medium">“{d.reason}”</div>
               <div className="grid sm:grid-cols-2 gap-2 text-sm">
-                <div className="rounded-lg bg-slate-50 border border-line p-3 space-y-1 font-semibold">
+                <div className="rounded-lg bg-surface-2 border border-line p-3 space-y-1 font-semibold">
                   <div className="font-semibold flex items-center gap-1.5"><FileText size={15} /> Evidence</div>
                   <div>
                     Status: <BookingStatusPill status={d.booking.status} />
@@ -238,7 +238,7 @@ export default function Admin() {
                     {!d.booking.before_photos.length && !d.booking.after_photos.length && <span className="text-muted">No photos</span>}
                   </div>
                 </div>
-                <div className="rounded-lg bg-slate-50 border border-line p-3 max-h-48 overflow-y-auto">
+                <div className="rounded-lg bg-surface-2 border border-line p-3 max-h-48 overflow-y-auto">
                   <div className="font-semibold mb-1 flex items-center gap-1.5"><MessageSquare size={15} /> Chat</div>
                   {d.chat.length === 0 && <div className="text-muted">No messages</div>}
                   {d.chat.map((c: any, i: number) => (
@@ -264,7 +264,7 @@ export default function Admin() {
                   </div>
                 </div>
               ) : (
-                <div className="text-sm font-bold text-green-700">Resolution: {d.resolution}</div>
+                <div className="text-sm font-bold text-green-300">Resolution: {d.resolution}</div>
               )}
             </div>
           ))}
@@ -273,7 +273,7 @@ export default function Admin() {
 
       {tab === "Verification" && (
         <div className="space-y-3">
-          <h2 className="section-title"><IdCard size={18} className="text-brand-600" /> Identity documents</h2>
+          <h2 className="section-title"><IdCard size={18} className="text-brand-400" /> Identity documents</h2>
           {q.verifications.length === 0 && <div className="card p-4 text-muted font-bold">Queue empty</div>}
           {q.verifications.map((v: any) => (
             <div key={v.user.id} className="card p-4 flex flex-wrap items-center gap-3">
@@ -300,7 +300,7 @@ export default function Admin() {
               )}
             </div>
           ))}
-          <h2 className="section-title pt-2"><Video size={18} className="text-brand-600" /> Skill videos</h2>
+          <h2 className="section-title pt-2"><Video size={18} className="text-brand-400" /> Skill videos</h2>
           {q.skill_verifications.length === 0 && <div className="card p-4 text-muted font-bold">Queue empty</div>}
           {q.skill_verifications.map((s: any) => (
             <div key={s.worker_id + s.skill} className="card p-4 flex flex-wrap items-center gap-3">
@@ -337,9 +337,9 @@ export default function Admin() {
                 <span className="font-semibold flex-1">
                   #{j.id} {j.title}
                 </span>
-                <span className={`chip ${j.fraud_score >= 0.8 ? "bg-rose-600 text-white" : "bg-amber-50 text-amber-800"}`}>risk {Math.round(j.fraud_score * 100)}%</span>
+                <span className={`chip ${j.fraud_score >= 0.8 ? "bg-rose-600 text-white" : "bg-amber-500/10 text-amber-300"}`}>risk {Math.round(j.fraud_score * 100)}%</span>
               </div>
-              <ul className="text-sm font-semibold text-rose-700 mt-1">
+              <ul className="text-sm font-semibold text-rose-300 mt-1">
                 {j.flags.map((f: string) => (
                   <li key={f} className="flex items-center gap-1.5"><TriangleAlert size={14} /> {f}</li>
                 ))}
@@ -364,7 +364,7 @@ export default function Admin() {
           {q.sos.length === 0 && <div className="card p-6 text-center text-muted font-bold">No SOS alerts</div>}
           {q.sos.map((s: any) => (
             <div key={s.id} className={`card p-4 flex items-center gap-3 ${s.status === "active" ? "ring-2 ring-rose-500" : ""}`}>
-              <Siren size={28} className="text-rose-600" />
+              <Siren size={28} className="text-rose-400" />
               <div className="flex-1">
                 <div className="font-semibold">
                   {s.user} • {s.phone}
@@ -372,7 +372,7 @@ export default function Admin() {
                 <div className="text-sm text-muted font-semibold">
                   Booking #{s.booking_id} • {new Date(s.created_at + "Z").toLocaleString()}
                 </div>
-                <a className="text-sm font-bold text-sky-700 underline" target="_blank" rel="noreferrer" href={`https://www.google.com/maps?q=${s.lat},${s.lng}`}>
+                <a className="text-sm font-bold text-sky-300 underline" target="_blank" rel="noreferrer" href={`https://www.google.com/maps?q=${s.lat},${s.lng}`}>
                   Open location
                 </a>
               </div>
@@ -394,7 +394,7 @@ export default function Admin() {
           {q.business.map((b: any) => (
             <div key={b.id} className="card p-4">
               <div className="font-semibold">
-                <Building2 size={16} className="inline text-brand-600 mr-1" /> {b.business_name} <span className="chip !text-xs bg-slate-100 ml-1">{b.business_type}</span>
+                <Building2 size={16} className="inline text-brand-400 mr-1" /> {b.business_name} <span className="chip !text-xs bg-surface-3 ml-1">{b.business_type}</span>
               </div>
               <div className="font-semibold">{b.need}</div>
               <div className="text-sm text-muted font-semibold">
@@ -412,7 +412,7 @@ export default function Admin() {
               <Avatar name={u.name} size={40} />
               <div className="flex-1 min-w-0">
                 <div className="font-bold truncate">
-                  {u.name} {u.blocked && <span className="chip !text-xs bg-red-100 text-rose-700">blocked</span>}
+                  {u.name} {u.blocked && <span className="chip !text-xs bg-red-500/15 text-rose-300">blocked</span>}
                 </div>
                 <div className="text-xs text-muted font-semibold">
                   {u.role} • {u.phone} • {u.area}

@@ -33,7 +33,7 @@ export default function Plans() {
               <ul className="mt-5 space-y-2.5 flex-1">
                 {p.perks.map((x) => (
                   <li key={x} className="flex gap-2.5 text-sm">
-                    <Check size={17} className="text-brand-600 shrink-0" /> {x}
+                    <Check size={17} className="text-brand-400 shrink-0" /> {x}
                   </li>
                 ))}
               </ul>

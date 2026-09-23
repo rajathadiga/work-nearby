@@ -74,7 +74,7 @@ export default function WhatsAppSim() {
             <div className="label">Try these messages</div>
             <div className="flex flex-wrap gap-2">
               {SAMPLES.map((s) => (
-                <button key={s} onClick={() => send(s)} className="chip bg-white border border-line hover:border-brand-300 text-left">
+                <button key={s} onClick={() => send(s)} className="chip bg-surface border border-line hover:border-brand-500/40 text-left">
                   {s}
                 </button>
               ))}
@@ -87,8 +87,8 @@ export default function WhatsAppSim() {
           <p className="text-xs text-muted">In production this connects to the WhatsApp Business API with the same bot logic.</p>
         </div>
 
-        <div className="order-1 lg:order-2 rounded-[2rem] overflow-hidden border-[10px] border-slate-800 shadow-xl bg-[#efeae2] max-w-[440px] w-full mx-auto">
-          <div className="bg-[#075e54] text-white px-4 py-3 flex items-center gap-3">
+        <div className="order-1 lg:order-2 rounded-[2rem] overflow-hidden border-[10px] border-[#1c1c21] shadow-2xl bg-[#0b141a] max-w-[440px] w-full mx-auto">
+          <div className="bg-[#202c33] text-white px-4 py-3 flex items-center gap-3">
             <span className="h-10 w-10 rounded-full bg-white/15 grid place-items-center">
               <Handshake size={20} />
             </span>
@@ -100,18 +100,18 @@ export default function WhatsAppSim() {
           <div className="h-[60vh] overflow-y-auto p-3 space-y-2">
             {msgs.map((m, i) => (
               <div key={i} className={`flex ${m.from === "me" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[85%] rounded-lg px-3 py-2 text-[14.5px] shadow-sm ${m.from === "me" ? "bg-[#d9fdd3]" : "bg-white"}`}>
+                <div className={`max-w-[85%] rounded-lg px-3 py-2 text-[14.5px] shadow-sm ${m.from === "me" ? "bg-[#005c4b] text-white" : "bg-[#202c33] text-[#e9edef]"}`}>
                   {fmt(m.text)}
-                  <div className="text-[10px] text-slate-500 text-right flex items-center justify-end gap-1">
-                    {m.time} {m.from === "me" && <CheckCheck size={12} className="text-sky-500" />}
+                  <div className="text-[10px] text-white/50 text-right flex items-center justify-end gap-1">
+                    {m.time} {m.from === "me" && <CheckCheck size={12} className="text-sky-400" />}
                   </div>
                 </div>
               </div>
             ))}
             <div ref={endRef} />
           </div>
-          <div className="flex items-center gap-2 p-2 bg-[#f0f0f0]">
-            <input className="flex-1 rounded-full px-4 py-2.5 bg-white outline-none text-sm" placeholder="Message" value={voice.interim || text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send(text)} />
+          <div className="flex items-center gap-2 p-2 bg-[#202c33]">
+            <input className="flex-1 rounded-full px-4 py-2.5 bg-[#2a3942] text-[#e9edef] placeholder:text-[#8696a0] outline-none text-sm" placeholder="Message" value={voice.interim || text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send(text)} />
             {text ? (
               <button onClick={() => send(text)} className="h-10 w-10 rounded-full bg-[#00a884] text-white grid place-items-center" aria-label="send">
                 <Send size={18} />

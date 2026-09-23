@@ -40,11 +40,11 @@ export default function Insights() {
         <div className="card p-5">
           <div className="flex flex-wrap items-center gap-3 mb-4">
             <div className="section-title flex-1">
-              <MapIcon size={18} className="text-brand-600" /> Where the work is (last 30 days)
+              <MapIcon size={18} className="text-brand-400" /> Where the work is (last 30 days)
             </div>
           </div>
           <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-3">
-            <button onClick={() => setFilter("")} className={`chip shrink-0 border ${!filter ? "bg-brand-600 text-white border-brand-600" : "bg-white border-line"}`}>
+            <button onClick={() => setFilter("")} className={`chip shrink-0 border ${!filter ? "bg-brand-600 text-white border-brand-600" : "bg-surface border-line"}`}>
               All
             </button>
             {meta?.categories
@@ -52,7 +52,7 @@ export default function Insights() {
               .map((c) => {
                 const I = catIconFor(c.id);
                 return (
-                  <button key={c.id} onClick={() => setFilter(c.id)} className={`chip shrink-0 border ${filter === c.id ? "bg-brand-600 text-white border-brand-600" : "bg-white border-line hover:border-brand-300"}`}>
+                  <button key={c.id} onClick={() => setFilter(c.id)} className={`chip shrink-0 border ${filter === c.id ? "bg-brand-600 text-white border-brand-600" : "bg-surface border-line hover:border-brand-500/40"}`}>
                     <I size={14} /> {catName(c)}
                   </button>
                 );
@@ -83,7 +83,7 @@ export default function Insights() {
                     {a.open_jobs} jobs · {a.available_workers} workers
                   </span>
                 </div>
-                <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                <div className="h-2 rounded-full bg-surface-3 overflow-hidden">
                   <div className="h-full rounded-full bg-rose-600/80" style={{ width: `${(a.open_jobs / maxW) * 100}%` }} />
                 </div>
               </div>
@@ -95,7 +95,7 @@ export default function Insights() {
       <div className="grid xl:grid-cols-2 gap-6 items-start">
         <div className="card">
           <div className="px-5 py-4 border-b border-line section-title">
-            <TrendingUp size={18} className="text-brand-600" /> Skills in demand near you
+            <TrendingUp size={18} className="text-brand-400" /> Skills in demand near you
           </div>
           <div className="divide-y divide-line">
             {ins.trends.map((x: any) => (
@@ -107,7 +107,7 @@ export default function Insights() {
                     {x.jobs} jobs in 2 weeks · {x.workers} workers · ~{money(x.avg_rate)}/{x.unit}
                   </div>
                 </div>
-                <span className={`chip !text-xs ${x.change_pct >= 0 ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"}`}>
+                <span className={`chip !text-xs ${x.change_pct >= 0 ? "bg-emerald-500/10 text-emerald-300" : "bg-rose-500/10 text-rose-300"}`}>
                   {x.change_pct >= 0 ? <TrendingUp size={13} /> : <TrendingDown size={13} />} {Math.abs(x.change_pct)}%
                 </span>
               </div>
@@ -131,7 +131,7 @@ export default function Insights() {
                     <div className="min-w-0">
                       <div className="font-medium">{s.name}</div>
                       <div className="text-xs text-muted">{s.why}</div>
-                      <div className="text-sm font-semibold text-brand-700 mt-0.5">
+                      <div className="text-sm font-semibold text-brand-300 mt-0.5">
                         ~{money(s.avg_rate)}/{s.unit}
                       </div>
                     </div>
@@ -143,12 +143,12 @@ export default function Insights() {
 
           <div className="card p-5">
             <div className="section-title mb-4">
-              <Rocket size={18} className="text-brand-600" /> Your growth path
+              <Rocket size={18} className="text-brand-400" /> Your growth path
             </div>
             <ol className="relative border-l-2 border-line ml-4 space-y-4">
               {ins.growth.map((g: any, i: number) => (
                 <li key={g.key} className="pl-6 relative">
-                  <span className={`absolute -left-[15px] top-0 h-7 w-7 rounded-full grid place-items-center text-xs font-semibold ${g.done ? "bg-brand-600 text-white" : "bg-white border-2 border-line text-muted"}`}>
+                  <span className={`absolute -left-[15px] top-0 h-7 w-7 rounded-full grid place-items-center text-xs font-semibold ${g.done ? "bg-brand-600 text-white" : "bg-surface border-2 border-line text-muted"}`}>
                     {g.done ? <Check size={14} /> : i + 1}
                   </span>
                   <span className={`font-medium ${g.done ? "" : "text-muted"}`}>{g.label}</span>
@@ -162,7 +162,7 @@ export default function Insights() {
       {demand && (
         <div className="card p-5">
           <div className="section-title mb-4">
-            <MapPinned size={18} className="text-brand-600" /> Local work intelligence
+            <MapPinned size={18} className="text-brand-400" /> Local work intelligence
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {Object.entries(demand.by_area)

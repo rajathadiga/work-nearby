@@ -16,12 +16,10 @@ type NavItem = { href: string; icon: any; label: string; badge?: number; primary
 export function Logo({ light = false }: { light?: boolean }) {
   return (
     <span className="flex items-center gap-2.5">
-      <span className={`grid place-items-center h-9 w-9 rounded-lg ${light ? "bg-white/15 text-white" : "bg-brand-600 text-white"}`}>
-        <Handshake size={20} strokeWidth={2} />
+      <span className="grid place-items-center h-8 w-8 rounded-[10px] bg-[#f2f2f5] text-[#0b0b0e] shadow-[0_0_18px_-2px_rgba(249,122,46,.55)]">
+        <Handshake size={18} strokeWidth={2.4} />
       </span>
-      <span className={`font-bold text-lg tracking-tight ${light ? "text-white" : "text-ink"}`}>
-        Kaam<span className={light ? "text-sun-200" : "text-brand-600"}>Near</span>
-      </span>
+      <span className={`font-display font-bold text-[19px] tracking-tight ${light ? "text-white" : "text-ink"}`}>kaamnear</span>
     </span>
   );
 }
@@ -29,12 +27,12 @@ export function Logo({ light = false }: { light?: boolean }) {
 function LangSwitch() {
   const { lang, setLang } = useApp();
   return (
-    <div className="flex rounded-lg bg-slate-100 p-0.5 text-sm font-semibold">
+    <div className="flex rounded-full bg-surface-2 border border-line p-0.5 text-sm font-semibold">
       {LANGS.map((l) => (
         <button
           key={l.id}
           onClick={() => setLang(l.id)}
-          className={`px-2.5 py-1 rounded-md transition ${lang === l.id ? "bg-white text-ink shadow-sm" : "text-muted hover:text-ink"}`}
+          className={`px-2.5 py-1 rounded-full transition ${lang === l.id ? "bg-surface-3 text-ink" : "text-muted hover:text-ink"}`}
           aria-label={l.label}
           title={l.label}
         >
@@ -92,7 +90,7 @@ export default function Shell({ children }: { children: ReactNode }) {
         setVoiceOn(!voiceOn);
         if (!voiceOn) say(t("app_tagline"));
       }}
-      className={`h-9 w-9 grid place-items-center rounded-lg border transition ${voiceOn ? "bg-brand-600 text-white border-brand-600" : "bg-white border-line text-muted hover:text-ink"}`}
+      className={`h-9 w-9 grid place-items-center rounded-full border transition ${voiceOn ? "bg-brand-600 text-white border-brand-600" : "bg-surface-2 border-line text-muted hover:text-ink"}`}
       title={t("read_aloud")}
       aria-label={t("read_aloud")}
     >
@@ -101,11 +99,11 @@ export default function Shell({ children }: { children: ReactNode }) {
   );
 
   const modeSwitch = user && role !== "admin" && (
-    <div className="grid grid-cols-2 rounded-lg bg-slate-100 p-0.5 text-sm font-semibold">
-      <Link href="/customer" className={`flex items-center justify-center gap-1.5 rounded-md py-1.5 px-2 ${!workerArea ? "bg-white shadow-sm text-brand-700" : "text-muted"}`}>
+    <div className="grid grid-cols-2 rounded-lg bg-surface-3 p-0.5 text-sm font-semibold">
+      <Link href="/customer" className={`flex items-center justify-center gap-1.5 rounded-md py-1.5 px-2 ${!workerArea ? "bg-surface-3 shadow-sm text-brand-300" : "text-muted"}`}>
         <BriefcaseBusiness size={15} /> Hire
       </Link>
-      <Link href="/worker" className={`flex items-center justify-center gap-1.5 rounded-md py-1.5 px-2 ${workerArea ? "bg-white shadow-sm text-brand-700" : "text-muted"}`}>
+      <Link href="/worker" className={`flex items-center justify-center gap-1.5 rounded-md py-1.5 px-2 ${workerArea ? "bg-surface-3 shadow-sm text-brand-300" : "text-muted"}`}>
         <HardHat size={15} /> Work
       </Link>
     </div>
@@ -115,7 +113,7 @@ export default function Shell({ children }: { children: ReactNode }) {
     <div className="min-h-screen flex">
       {/* desktop sidebar */}
       {user && (
-        <aside className="hidden lg:flex w-64 shrink-0 flex-col border-r border-line bg-white fixed inset-y-0 left-0 z-40">
+        <aside className="hidden lg:flex w-64 shrink-0 flex-col border-r border-line bg-surface fixed inset-y-0 left-0 z-40">
           <div className="h-16 flex items-center px-5 border-b border-line">
             <Link href={home}>
               <Logo />
@@ -134,7 +132,7 @@ export default function Shell({ children }: { children: ReactNode }) {
                 <Link
                   key={n.href}
                   href={n.href}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-[15px] font-medium transition ${active ? "bg-brand-50 text-brand-700" : "text-slate-600 hover:bg-slate-50 hover:text-ink"}`}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-[15px] font-medium transition ${active ? "bg-brand-500/10 text-brand-300" : "text-slate-300 hover:bg-surface-2 hover:text-ink"}`}
                 >
                   <Icon size={18} strokeWidth={active ? 2.2 : 1.8} />
                   <span className="flex-1 truncate">{n.label}</span>
@@ -154,7 +152,7 @@ export default function Shell({ children }: { children: ReactNode }) {
                 logout();
                 window.location.href = "/";
               }}
-              className="h-8 w-8 grid place-items-center rounded-lg text-muted hover:bg-slate-100 hover:text-ink"
+              className="h-8 w-8 grid place-items-center rounded-lg text-muted hover:bg-surface-3 hover:text-ink"
               title={t("logout")}
               aria-label={t("logout")}
             >
@@ -165,44 +163,47 @@ export default function Shell({ children }: { children: ReactNode }) {
       )}
 
       <div className={`flex-1 min-w-0 flex flex-col ${user ? "lg:pl-64" : ""}`}>
-        <header className="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-line">
+        <header className={`sticky top-0 z-30 backdrop-blur-xl ${user ? "bg-paper/75 border-b border-line" : "bg-paper/90 border-b border-white/[.05]"}`}>
           <div className="h-16 px-4 sm:px-6 lg:px-8 flex items-center gap-3">
             <Link href={home} className={user ? "lg:hidden" : ""}>
               <Logo />
             </Link>
             {!user && (
-              <nav className="hidden md:flex items-center gap-1 ml-6 text-sm font-medium text-muted">
-                <Link href="/whatsapp" className="px-3 py-2 rounded-lg hover:bg-slate-50 hover:text-ink">
-                  {t("whatsapp")}
-                </Link>
-                <Link href="/business" className="px-3 py-2 rounded-lg hover:bg-slate-50 hover:text-ink">
-                  {t("business")}
-                </Link>
+              <nav className="hidden md:flex items-center gap-7 ml-12 text-[15px] font-medium text-ink/85">
+                <Link href="/#features" className="hover:text-white">Features</Link>
+                <Link href="/whatsapp" className="hover:text-white">{t("whatsapp")}</Link>
+                <Link href="/business" className="hover:text-white">{t("business")}</Link>
+                <Link href="/plans" className="hover:text-white">Pricing</Link>
               </nav>
             )}
             <div className="flex-1" />
             <LangSwitch />
             {voiceBtn}
             {user ? (
-              <Link href="/notifications" className="relative h-9 w-9 grid place-items-center rounded-lg bg-white border border-line text-muted hover:text-ink" aria-label={t("alerts")}>
+              <Link href="/notifications" className="relative h-9 w-9 grid place-items-center rounded-full bg-surface-2 border border-line text-muted hover:text-ink" aria-label={t("alerts")}>
                 <Bell size={18} />
                 {unread > 0 && <span className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full bg-rose-600 text-white text-[11px] font-semibold grid place-items-center">{unread > 9 ? "9+" : unread}</span>}
               </Link>
             ) : (
-              <Link href="/login" className="btn-primary !py-2">
-                {t("login")}
-              </Link>
+              <>
+                <Link href="/login" className="btn-outline hidden sm:inline-flex">
+                  Sign in
+                </Link>
+                <Link href="/login?role=customer" className="btn-outline">
+                  Get started
+                </Link>
+              </>
             )}
           </div>
           {user && role !== "admin" && <div className="lg:hidden px-4 pb-3 max-w-xs">{modeSwitch}</div>}
         </header>
 
-        <main className={`flex-1 w-full px-4 sm:px-6 lg:px-8 py-5 lg:py-7 ${user ? "pb-28 lg:pb-10" : "pb-12"}`}>{children}</main>
+        <main className={path === "/" ? "flex-1 w-full" : `flex-1 w-full px-4 sm:px-6 lg:px-8 py-5 lg:py-7 ${user ? "pb-28 lg:pb-10" : "pb-12"}`}>{children}</main>
       </div>
 
       {/* mobile bottom nav */}
       {user && (
-        <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-line pb-[env(safe-area-inset-bottom)]">
+        <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-surface border-t border-line pb-[env(safe-area-inset-bottom)]">
           <div className="flex items-stretch justify-around px-1 h-16">
             {mobileNav.map((n) => {
               const Icon = n.icon;
@@ -213,11 +214,11 @@ export default function Shell({ children }: { children: ReactNode }) {
                     <span className="h-10 w-10 rounded-xl bg-brand-600 text-white grid place-items-center shadow-md">
                       <Icon size={22} strokeWidth={2.4} />
                     </span>
-                    <span className="text-[10.5px] font-semibold text-brand-700 truncate max-w-full px-1">{n.label}</span>
+                    <span className="text-[10.5px] font-semibold text-brand-300 truncate max-w-full px-1">{n.label}</span>
                   </Link>
                 );
               return (
-                <Link key={n.href} href={n.href} className={`relative flex flex-col items-center justify-center gap-1 flex-1 ${active ? "text-brand-700" : "text-muted"}`}>
+                <Link key={n.href} href={n.href} className={`relative flex flex-col items-center justify-center gap-1 flex-1 ${active ? "text-brand-300" : "text-muted"}`}>
                   <Icon size={21} strokeWidth={active ? 2.3 : 1.8} />
                   <span className="text-[10.5px] font-semibold truncate max-w-full px-1">{n.label}</span>
                   {!!n.badge && <span className="absolute top-1.5 right-[calc(50%-18px)] h-4 min-w-4 px-1 rounded-full bg-rose-600 text-white text-[10px] font-semibold grid place-items-center">{n.badge}</span>}
@@ -233,7 +234,7 @@ export default function Shell({ children }: { children: ReactNode }) {
         <AnimatePresence>
           {toasts.map((x) => {
             const Icon = x.kind === "error" ? CircleAlert : x.kind === "success" ? CircleCheck : Info;
-            const tone = x.kind === "error" ? "text-rose-600" : x.kind === "success" ? "text-brand-600" : "text-sky-600";
+            const tone = x.kind === "error" ? "text-rose-400" : x.kind === "success" ? "text-brand-400" : "text-sky-400";
             return (
               <motion.div
                 key={x.id}

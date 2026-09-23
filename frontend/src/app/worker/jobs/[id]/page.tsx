@@ -118,12 +118,12 @@ export default function WorkerJob() {
                 <div className="flex flex-wrap gap-1.5 mb-1.5">
                   {job.urgent && <span className="chip !text-xs bg-rose-600 text-white"><Zap size={12} /> {t("urgent")}</span>}
                   {b && <BookingStatusPill status={b.status} />}
-                  {job.recurring?.freq && <span className="chip !text-xs bg-violet-50 text-violet-700"><Repeat size={12} /> Every {job.recurring.day}</span>}
+                  {job.recurring?.freq && <span className="chip !text-xs bg-violet-500/10 text-violet-300"><Repeat size={12} /> Every {job.recurring.day}</span>}
                 </div>
                 <h1 className="text-xl sm:text-2xl font-bold tracking-tight">{job.title}</h1>
               </div>
               <div className="text-right shrink-0">
-                <div className="text-2xl font-bold text-brand-700">{money(job.budget)}</div>
+                <div className="text-2xl font-bold text-brand-300">{money(job.budget)}</div>
                 {job.workers_required > 1 && <div className="text-xs text-muted">per person</div>}
               </div>
             </div>
@@ -134,7 +134,7 @@ export default function WorkerJob() {
                 [Hourglass, durLabel(job.duration)],
                 [job.escrow ? ShieldCheck : Banknote, job.escrow ? "Secure online payment" : `Payment: ${job.payment_method.toUpperCase()}`],
               ].map(([Icon, txt]: any) => (
-                <div key={txt} className="rounded-lg bg-slate-50 border border-line px-3 py-2.5 flex items-center gap-2">
+                <div key={txt} className="rounded-lg bg-surface-2 border border-line px-3 py-2.5 flex items-center gap-2">
                   <Icon size={16} className="text-muted shrink-0" />
                   <span className="truncate">{txt}</span>
                 </div>
@@ -196,7 +196,7 @@ export default function WorkerJob() {
                     </div>
                   )}
                   {b.payment?.status === "held" && (
-                    <div className="text-brand-700 flex items-center justify-center gap-2">
+                    <div className="text-brand-300 flex items-center justify-center gap-2">
                       <ShieldCheck size={17} /> {money(b.payment.worker_amount)} is held safely — released when the customer confirms
                     </div>
                   )}
@@ -208,10 +208,10 @@ export default function WorkerJob() {
                 </div>
               )}
               {b.status === "paid" && (
-                <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-5 flex items-center gap-4">
+                <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-5 flex items-center gap-4">
                   <IconBadge icon={PartyPopper} size={52} tone="brand" />
                   <div>
-                    <div className="text-xl font-bold text-emerald-800">{money(b.payment?.worker_amount || b.amount)} received</div>
+                    <div className="text-xl font-bold text-emerald-300">{money(b.payment?.worker_amount || b.amount)} received</div>
                     {b.payment?.reference && <div className="text-sm text-muted">Reference {b.payment.reference}</div>}
                   </div>
                 </div>
@@ -239,7 +239,7 @@ export default function WorkerJob() {
               {chat && <Chat jobId={job.id} otherId={job.customer_id} otherName={job.customer.name} />}
               <div className="flex flex-wrap gap-2">
                 {["confirmed", "on_the_way"].includes(b.status) && (
-                  <button className="btn-ghost !py-2 text-sm text-rose-600" onClick={() => confirm("Cancel this job? It lowers your reliability score.") && api(`/bookings/${b.id}/cancel`, { body: {} }).then(load)}>
+                  <button className="btn-ghost !py-2 text-sm text-rose-400" onClick={() => confirm("Cancel this job? It lowers your reliability score.") && api(`/bookings/${b.id}/cancel`, { body: {} }).then(load)}>
                     <Ban size={15} /> {t("cancel")}
                   </button>
                 )}
@@ -250,7 +250,7 @@ export default function WorkerJob() {
                 )}
               </div>
               {b.dispute && (
-                <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800 flex gap-2">
+                <div className="rounded-lg bg-amber-500/10 border border-amber-500/30 p-3 text-sm text-amber-300 flex gap-2">
                   <Scale size={16} /> {b.dispute.reason} — {b.dispute.status}
                 </div>
               )}
@@ -264,7 +264,7 @@ export default function WorkerJob() {
                 <ul className="space-y-2 text-sm">
                   {job.tasks.map((x: string) => (
                     <li key={x} className="flex gap-2">
-                      <Check size={16} className="text-brand-600 mt-0.5 shrink-0" /> {x}
+                      <Check size={16} className="text-brand-400 mt-0.5 shrink-0" /> {x}
                     </li>
                   ))}
                 </ul>
@@ -278,11 +278,11 @@ export default function WorkerJob() {
               </div>
             )}
             {safety.length > 0 && (
-              <div className="card p-5 border-amber-200 bg-amber-50/60">
-                <div className="section-title text-amber-900 mb-2">
+              <div className="card p-5 border-amber-500/30 bg-amber-500/10">
+                <div className="section-title text-amber-300 mb-2">
                   <HardHat size={18} /> {t("safety_tip")}
                 </div>
-                <ul className="space-y-1.5 text-sm text-amber-900">
+                <ul className="space-y-1.5 text-sm text-amber-300">
                   {safety.map((s: string) => (
                     <li key={s}>{SAFETY[s]}</li>
                   ))}
@@ -319,12 +319,12 @@ export default function WorkerJob() {
               )}
             </div>
             <div className="grid grid-cols-2 gap-2 mt-4 text-center text-sm">
-              <div className="rounded-lg bg-slate-50 border border-line p-2.5">
+              <div className="rounded-lg bg-surface-2 border border-line p-2.5">
                 <div className="font-bold">{job.customer.customer.payments_completed}</div>
                 <div className="text-xs text-muted">Payments made</div>
               </div>
-              <div className="rounded-lg bg-slate-50 border border-line p-2.5">
-                <div className={`font-bold ${job.customer.customer.cancellations > 0 ? "text-amber-700" : ""}`}>{job.customer.customer.cancellations}</div>
+              <div className="rounded-lg bg-surface-2 border border-line p-2.5">
+                <div className={`font-bold ${job.customer.customer.cancellations > 0 ? "text-amber-300" : ""}`}>{job.customer.customer.cancellations}</div>
                 <div className="text-xs text-muted">Cancellations</div>
               </div>
             </div>
@@ -332,7 +332,7 @@ export default function WorkerJob() {
           {job.workers_required > 1 && (
             <div className="card p-5 text-sm">
               <div className="section-title mb-2">
-                <Users size={17} className="text-brand-600" /> Team job
+                <Users size={17} className="text-brand-400" /> Team job
               </div>
               <div className="text-muted">
                 {job.workers_required} workers needed · {job.slots_left} places left

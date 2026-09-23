@@ -19,7 +19,7 @@ function Section({ icon, title, children, right }: any) {
   return (
     <div className="card">
       <div className="px-5 py-4 border-b border-line flex items-center gap-2">
-        <span className="text-brand-600">{icon}</span>
+        <span className="text-brand-400">{icon}</span>
         <span className="font-semibold flex-1">{title}</span>
         {right}
       </div>
@@ -91,11 +91,11 @@ export default function WorkerProfile() {
 
   const statusChip = (s: string) =>
     s === "verified" ? (
-      <span className="chip !text-xs bg-emerald-50 text-emerald-700"><BadgeCheck size={13} /> Verified</span>
+      <span className="chip !text-xs bg-emerald-500/10 text-emerald-300"><BadgeCheck size={13} /> Verified</span>
     ) : s === "pending" ? (
-      <span className="chip !text-xs bg-amber-50 text-amber-700"><Clock size={13} /> Under review</span>
+      <span className="chip !text-xs bg-amber-500/10 text-amber-300"><Clock size={13} /> Under review</span>
     ) : s === "rejected" ? (
-      <span className="chip !text-xs bg-rose-50 text-rose-700">Try again</span>
+      <span className="chip !text-xs bg-rose-500/10 text-rose-300">Try again</span>
     ) : null;
 
 
@@ -149,7 +149,7 @@ export default function WorkerProfile() {
                     <SkillBadge skill={s.skill} size={38} />
                     <span className="flex-1 font-semibold">{sk ? sk[lang] || sk.en : s.skill}</span>
                     {statusChip(s.status)}
-                    <button className="h-8 w-8 rounded-lg text-muted hover:bg-rose-50 hover:text-rose-600 grid place-items-center" onClick={() => set("skills", form.skills.filter((_: any, j: number) => j !== i))} aria-label="remove skill">
+                    <button className="h-8 w-8 rounded-lg text-muted hover:bg-rose-500/10 hover:text-rose-400 grid place-items-center" onClick={() => set("skills", form.skills.filter((_: any, j: number) => j !== i))} aria-label="remove skill">
                       <Trash2 size={16} />
                     </button>
                   </div>
@@ -158,7 +158,7 @@ export default function WorkerProfile() {
                       <button
                         key={l.id}
                         onClick={() => set("skills", form.skills.map((x: any, j: number) => (j === i ? { ...x, level: l.id } : x)))}
-                        className={`rounded-lg py-2 text-xs font-medium border transition ${s.level === l.id ? "bg-brand-600 text-white border-brand-600" : "bg-white border-line hover:border-brand-300"}`}
+                        className={`rounded-lg py-2 text-xs font-medium border transition ${s.level === l.id ? "bg-brand-600 text-white border-brand-600" : "bg-surface border-line hover:border-brand-500/40"}`}
                       >
                         <div className="flex justify-center gap-0.5 mb-0.5">
                           {Array.from({ length: l.stars }).map((_, k) => (
@@ -171,7 +171,7 @@ export default function WorkerProfile() {
                   </div>
                   {!s.verified && s.status !== "pending" && (
                     <button
-                      className="mt-3 text-sm font-medium text-brand-700 flex items-center gap-1.5 hover:underline"
+                      className="mt-3 text-sm font-medium text-brand-300 flex items-center gap-1.5 hover:underline"
                       onClick={() => {
                         setVideoSkill(s.skill);
                         videoRef.current?.click();
@@ -230,7 +230,7 @@ export default function WorkerProfile() {
               <div className="label">
                 {t("radius")} — {form.radius_km} km
               </div>
-              <input type="range" min={2} max={30} value={form.radius_km} onChange={(e) => set("radius_km", Number(e.target.value))} className="w-full accent-[#1f6b65]" />
+              <input type="range" min={2} max={30} value={form.radius_km} onChange={(e) => set("radius_km", Number(e.target.value))} className="w-full accent-[#f97a2e]" />
             </div>
             <div>
               <div className="label">Days I work</div>
@@ -238,7 +238,7 @@ export default function WorkerProfile() {
                 {DAYS.map((d) => {
                   const on = form.available_days.includes(d);
                   return (
-                    <button key={d} onClick={() => set("available_days", on ? form.available_days.filter((x: string) => x !== d) : [...form.available_days, d])} className={`rounded-lg py-2.5 text-sm font-medium border ${on ? "bg-brand-600 text-white border-brand-600" : "bg-white border-line"}`}>
+                    <button key={d} onClick={() => set("available_days", on ? form.available_days.filter((x: string) => x !== d) : [...form.available_days, d])} className={`rounded-lg py-2.5 text-sm font-medium border ${on ? "bg-brand-600 text-white border-brand-600" : "bg-surface border-line"}`}>
                       {d}
                     </button>
                   );
@@ -269,9 +269,9 @@ export default function WorkerProfile() {
                 <Icon size={18} className="text-muted" />
                 <span className="flex-1 font-medium text-sm">{label}</span>
                 {st === "verified" || st === true ? (
-                  <span className="chip !text-xs bg-emerald-50 text-emerald-700"><Check size={13} /> Done</span>
+                  <span className="chip !text-xs bg-emerald-500/10 text-emerald-300"><Check size={13} /> Done</span>
                 ) : st === "pending" ? (
-                  <span className="chip !text-xs bg-amber-50 text-amber-700"><Clock size={13} /> Under review</span>
+                  <span className="chip !text-xs bg-amber-500/10 text-amber-300"><Clock size={13} /> Under review</span>
                 ) : (
                   <label className="btn-ghost !py-1.5 text-sm cursor-pointer">
                     Upload

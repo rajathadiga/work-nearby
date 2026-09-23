@@ -88,7 +88,7 @@ export default function CustomerHome() {
 
           <section>
             <div className="section-title mb-3">
-              <ClipboardList size={18} className="text-brand-600" /> {t("active_jobs")}
+              <ClipboardList size={18} className="text-brand-400" /> {t("active_jobs")}
             </div>
             {jobs === null ? (
               <Loading />
@@ -97,7 +97,7 @@ export default function CustomerHome() {
             ) : (
               <div className="grid lg:grid-cols-2 gap-3">
                 {active.map((j) => (
-                  <Link key={j.id} href={`/customer/jobs/${j.id}`} className="card p-4 flex items-start gap-3.5 hover:border-brand-300 transition">
+                  <Link key={j.id} href={`/customer/jobs/${j.id}`} className="card p-4 flex items-start gap-3.5 hover:border-brand-500/40 transition">
                     <SkillBadge skill={j.skills[0]} size={46} tone={j.urgent ? "rose" : "brand"} />
                     <div className="flex-1 min-w-0">
                       <div className="font-semibold truncate">{j.title}</div>
@@ -105,7 +105,7 @@ export default function CustomerHome() {
                         {prettyDate(j.date, t)} · {money(j.budget)}
                         {j.workers_required > 1 && ` × ${j.workers_required}`}
                         {j.recurring?.freq && (
-                          <span className="inline-flex items-center gap-1 ml-2 text-violet-700">
+                          <span className="inline-flex items-center gap-1 ml-2 text-violet-300">
                             <Repeat size={12} /> weekly
                           </span>
                         )}
@@ -118,7 +118,7 @@ export default function CustomerHome() {
                           </span>
                         )}
                         {j.bookings.map((b: any) => (
-                          <span key={b.id} className="chip !text-xs bg-slate-100 text-slate-700">
+                          <span key={b.id} className="chip !text-xs bg-surface-3 text-slate-300">
                             {b.worker_name.split(" ")[0]} · {t("b_" + b.status)}
                           </span>
                         ))}
@@ -135,7 +135,7 @@ export default function CustomerHome() {
         <aside className="space-y-6">
           <div className="card">
             <div className="px-5 py-4 border-b border-line section-title">
-              <Users size={18} className="text-brand-600" /> {t("recent_workers")}
+              <Users size={18} className="text-brand-400" /> {t("recent_workers")}
             </div>
             {favs.length === 0 ? (
               <div className="p-5 text-sm text-muted">Workers you save will appear here for quick re-booking.</div>
@@ -160,7 +160,7 @@ export default function CustomerHome() {
           </div>
 
           {user.subscription !== "homecare" && (
-            <Link href="/plans" className="card p-5 flex items-start gap-3 hover:border-sun-400 transition">
+            <Link href="/plans" className="card p-5 flex items-start gap-3 hover:border-sun-500/50 transition">
               <Crown size={22} className="text-sun-500 mt-0.5" />
               <div className="flex-1">
                 <div className="font-semibold">HomeCare Pass · ₹199/month</div>
@@ -173,11 +173,11 @@ export default function CustomerHome() {
           {past.length > 0 && (
             <div className="card">
               <div className="px-5 py-4 border-b border-line section-title">
-                <History size={18} className="text-brand-600" /> Past jobs
+                <History size={18} className="text-brand-400" /> Past jobs
               </div>
               <div className="divide-y divide-line">
                 {past.slice(0, 8).map((j) => (
-                  <Link key={j.id} href={`/customer/jobs/${j.id}`} className="px-5 py-3 flex items-center gap-3 hover:bg-slate-50">
+                  <Link key={j.id} href={`/customer/jobs/${j.id}`} className="px-5 py-3 flex items-center gap-3 hover:bg-surface-2">
                     <SkillBadge skill={j.skills[0]} size={32} tone="slate" />
                     <span className="flex-1 text-sm font-medium truncate">{j.title}</span>
                     <JobStatusPill status={j.status} />

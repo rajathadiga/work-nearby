@@ -34,7 +34,7 @@ export default function Track() {
   if (!d) return <div className="p-8 text-center text-muted">Loading…</div>;
   return (
     <div className="min-h-screen bg-paper">
-      <header className="h-16 bg-white border-b border-line px-4 sm:px-8 flex items-center">
+      <header className="h-16 bg-surface border-b border-line px-4 sm:px-8 flex items-center">
         <Logo />
         <span className="ml-3 text-sm text-muted">· Live safety tracking</span>
       </header>
@@ -42,7 +42,7 @@ export default function Track() {
         <div className="space-y-4">
           <div className="card p-5">
             <div className="text-2xl font-bold">{d.worker.name}</div>
-            <div className="text-brand-700 font-medium mt-1">{LABEL[d.status]}</div>
+            <div className="text-brand-300 font-medium mt-1">{LABEL[d.status]}</div>
             {d.status === "on_the_way" && (
               <div className="text-sm mt-1 flex items-center gap-1.5">
                 <Clock size={14} /> ETA {d.tracking.eta_min} min · {d.tracking.distance_km} km left

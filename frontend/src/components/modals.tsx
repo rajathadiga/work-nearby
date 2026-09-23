@@ -16,7 +16,7 @@ export function ReviewModal({ b, title, onClose, onDone, tags }: any) {
         <StarInput value={rating} onChange={setRating} />
         <div className="flex flex-wrap gap-2 justify-center">
           {tags.map((x: string) => (
-            <button key={x} onClick={() => setSel(sel.includes(x) ? sel.filter((y) => y !== x) : [...sel, x])} className={`chip ${sel.includes(x) ? "bg-brand-600 text-white" : "bg-slate-100 text-slate-700"}`}>
+            <button key={x} onClick={() => setSel(sel.includes(x) ? sel.filter((y) => y !== x) : [...sel, x])} className={`chip ${sel.includes(x) ? "bg-brand-600 text-white" : "bg-surface-3 text-slate-300"}`}>
               {x}
             </button>
           ))}
@@ -51,7 +51,7 @@ export function DisputeModal({ b, onClose, onDone }: any) {
       <div className="space-y-3">
         <div className="flex flex-wrap gap-2">
           {presets.map((p) => (
-            <button key={p} onClick={() => setReason(p)} className={`chip ${reason === p ? "bg-sun-500 text-white" : "bg-slate-100 text-slate-700"}`}>
+            <button key={p} onClick={() => setReason(p)} className={`chip ${reason === p ? "bg-sun-500 text-white" : "bg-surface-3 text-slate-300"}`}>
               {p}
             </button>
           ))}

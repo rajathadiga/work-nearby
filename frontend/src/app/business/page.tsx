@@ -44,7 +44,7 @@ export default function Business() {
         </div>
         {done ? (
           <div className="card p-10 text-center">
-            <CircleCheck size={44} className="text-brand-600 mx-auto" />
+            <CircleCheck size={44} className="text-brand-400 mx-auto" />
             <div className="text-xl font-semibold mt-3">Thank you</div>
             <div className="text-muted">Our team will call you within 24 hours.</div>
           </div>
@@ -55,7 +55,7 @@ export default function Business() {
               <div className="grid grid-cols-4 gap-2.5">
                 {TYPES.map(([id, Icon, label]) => (
                   <button key={id} onClick={() => set("business_type", id)} className={`tile py-3 ${f.business_type === id ? "tile-on" : ""}`}>
-                    <Icon size={22} className="text-brand-600" />
+                    <Icon size={22} className="text-brand-400" />
                     <span className="text-xs">{label}</span>
                   </button>
                 ))}

@@ -77,13 +77,13 @@ export function catIconFor(id?: string): LucideIcon {
 }
 
 const TONES: Record<string, string> = {
-  brand: "bg-brand-50 text-brand-700 ring-brand-100",
-  amber: "bg-amber-50 text-amber-700 ring-amber-100",
-  slate: "bg-slate-100 text-slate-600 ring-slate-200",
-  sky: "bg-sky-50 text-sky-700 ring-sky-100",
-  rose: "bg-rose-50 text-rose-700 ring-rose-100",
-  violet: "bg-violet-50 text-violet-700 ring-violet-100",
-  white: "bg-white/15 text-white ring-white/20",
+  brand: "bg-brand-500/10 text-brand-300 ring-brand-500/20",
+  amber: "bg-amber-400/10 text-amber-300 ring-amber-400/20",
+  slate: "bg-white/[.04] text-slate-300 ring-white/10",
+  sky: "bg-sun-500/10 text-sun-400 ring-sun-500/20",
+  rose: "bg-rose-500/10 text-rose-300 ring-rose-500/25",
+  violet: "bg-violet-500/10 text-violet-300 ring-violet-500/20",
+  white: "bg-white/10 text-white ring-white/15",
 };
 
 /** Square icon tile used everywhere instead of emojis. */
