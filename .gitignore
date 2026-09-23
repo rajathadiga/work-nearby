@@ -1,0 +1,20 @@
+# Python
+backend/.venv/
+__pycache__/
+*.pyc
+backend/kaamnear.db
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/next-env.d.ts
+*.tsbuildinfo
+
+# Env / OS
+.env
+.env.local
+.DS_Store
+Thumbs.db
