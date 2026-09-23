@@ -128,7 +128,7 @@ export default function Passport() {
                     <span className="font-medium flex-1">{r.by}</span>
                     <span className="flex">
                       {Array.from({ length: 5 }).map((_, k) => (
-                        <Star key={k} size={14} className={k < r.rating ? "fill-amber-400 text-amber-400" : "text-[#3a3a44]"} />
+                        <Star key={k} size={14} className={k < r.rating ? "fill-amber-400 text-amber-400" : "text-track"} />
                       ))}
                     </span>
                     <span className="text-xs text-muted">{r.date}</span>

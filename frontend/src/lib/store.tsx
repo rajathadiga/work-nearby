@@ -7,6 +7,7 @@ import { speak } from "./speech";
 export type Skill = { id: string; cat: string; icon: string; en: string; kn: string; hi: string; unit: string; rate: number; related: string[] };
 export type Category = { id: string; icon: string; en: string; kn: string; hi: string };
 export type Meta = { categories: Category[]; skills: Skill[]; places: { name: string; lat: number; lng: number }[]; safety_critical: string[]; llm_enabled: boolean; demo_otp: string };
+export type Theme = "dark" | "light";
 export type Toast = { id: number; title: string; body?: string; link?: string; kind?: string };
 
 type Ctx = {
@@ -30,6 +31,8 @@ type Ctx = {
   voiceOn: boolean;
   setVoiceOn: (v: boolean) => void;
   say: (text: string) => void;
+  theme: Theme;
+  setTheme: (t: Theme) => void;
 };
 
 const AppCtx = createContext<Ctx | null>(null);
@@ -43,12 +46,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [voiceOn, setVoiceOnState] = useState(false);
   const seenIds = useRef<Set<number> | null>(null);
+  const [theme, setThemeState] = useState<Theme>("dark");
 
   useEffect(() => {
     try {
       const l = localStorage.getItem("kn_lang") as Lang | null;
       if (l) setLangState(l);
       setVoiceOnState(localStorage.getItem("kn_voice") === "1");
+      if (localStorage.getItem("kn_theme") === "light") setThemeState("light");
     } catch {}
     api<Meta>("/meta").then(setMeta).catch(() => {});
     if (getToken()) {
@@ -76,6 +81,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     },
     []
   );
+
+  const setTheme = useCallback((t: Theme) => {
+    setThemeState(t);
+    document.documentElement.dataset.theme = t;
+    try {
+      localStorage.setItem("kn_theme", t);
+    } catch {}
+  }, []);
 
   const setVoiceOn = useCallback((v: boolean) => {
     setVoiceOnState(v);
@@ -156,7 +169,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   return (
     <AppCtx.Provider
-      value={{ user, loading, lang, setLang, t, meta, skillName, skillIcon, catName, login, logout, refreshUser, unread, refreshNotifications, toasts, toast, dismissToast, voiceOn, setVoiceOn, say }}
+      value={{ user, loading, lang, setLang, t, meta, skillName, skillIcon, catName, login, logout, refreshUser, unread, refreshNotifications, toasts, toast, dismissToast, voiceOn, setVoiceOn, say, theme, setTheme }}
     >
       {children}
     </AppCtx.Provider>

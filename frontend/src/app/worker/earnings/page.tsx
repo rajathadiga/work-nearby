@@ -10,7 +10,7 @@ import { useRequireUser, Loading, PageTitle, money, BookingStatusPill, prettyDat
 
 export default function Earnings() {
   const user = useRequireUser("worker");
-  const { t } = useApp();
+  const { t, theme } = useApp();
   const [e, setE] = useState<any>(null);
   const [bookings, setBookings] = useState<any[]>([]);
 
@@ -40,7 +40,7 @@ export default function Earnings() {
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={e.series} margin={{ top: 8, right: 4, left: -12, bottom: 0 }}>
-                <CartesianGrid vertical={false} stroke="#222228" />
+                <CartesianGrid vertical={false} stroke={theme === "light" ? "#e9e9ef" : "#222228"} />
                 <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#8d8d99" }} interval={3} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: "#8d8d99" }} axisLine={false} tickLine={false} />
                 <Tooltip content={<ChartTip />} cursor={{ fill: "rgba(249,122,46,.08)" }} />

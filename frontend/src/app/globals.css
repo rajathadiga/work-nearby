@@ -27,6 +27,7 @@
   --color-line: #26262d;
   --color-ink: #ededf2;
   --color-muted: #8d8d99;
+  --color-track: #34343c;
   --font-sans: var(--font-inter), var(--font-kannada), var(--font-devanagari), system-ui, sans-serif;
   --font-display: var(--font-display-face), var(--font-inter), var(--font-kannada), var(--font-devanagari), system-ui, sans-serif;
   --font-weight-black: 700;
@@ -36,6 +37,97 @@
 html {
   color-scheme: dark;
 }
+
+/* ───────── theme variables ───────── */
+[data-theme="dark"] {
+  --color-paper: #08080a;
+  --color-surface: #111114;
+  --color-surface-2: #17171b;
+  --color-surface-3: #1f1f25;
+  --color-line: #26262d;
+  --color-ink: #ededf2;
+  --color-muted: #8d8d99;
+  --color-track: #34343c;
+  color-scheme: dark;
+  color: var(--color-ink);
+}
+[data-theme="light"] {
+  --color-paper: #f5f5f7;
+  --color-surface: #ffffff;
+  --color-surface-2: #f5f5f8;
+  --color-surface-3: #ececf1;
+  --color-line: #e3e3ea;
+  --color-ink: #131318;
+  --color-muted: #676773;
+  --color-track: #d3d5dc;
+  color-scheme: light;
+  color: var(--color-ink);
+}
+[data-theme="light"] .card:not([data-theme="dark"] *) {
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 1px rgba(16, 24, 40, 0.03);
+}
+[data-theme="light"] .btn-outline:not([data-theme="dark"] *) {
+  border-color: #cfd0d8;
+}
+[data-theme="light"] .btn-outline:hover:not([data-theme="dark"] *) {
+  background: rgba(0, 0, 0, 0.03);
+}
+[data-theme="light"] .kn-tiles:not([data-theme="dark"] *) {
+  filter: saturate(0.5) brightness(1.02);
+}
+[data-theme="light"] .leaflet-container:not([data-theme="dark"] *) {
+  background: #eef0f3 !important;
+}
+[data-theme="light"] .leaflet-popup-content-wrapper:not([data-theme="dark"] *), [data-theme="light"] .leaflet-popup-tip:not([data-theme="dark"] *), [data-theme="light"] .leaflet-bar a:not([data-theme="dark"] *) {
+  background: #fff !important;
+  color: #131318 !important;
+  border-color: #e3e3ea !important;
+}
+[data-theme="light"] .leaflet-control-attribution:not([data-theme="dark"] *) {
+  background: rgba(255, 255, 255, 0.8) !important;
+}
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #d3d5dc;
+  border-color: #f5f5f7;
+}
+[data-theme="light"] ::selection {
+  background: rgba(249, 122, 46, 0.25);
+}
+/* readable accents on light surfaces */
+[data-theme="light"] .text-emerald-300, [data-theme="light"] .hover\:text-emerald-300:hover:not([data-theme="dark"] *) { color: #047857; }
+[data-theme="light"] .text-emerald-400:not([data-theme="dark"] *) { color: #059669; }
+[data-theme="light"] .text-amber-300:not([data-theme="dark"] *), [data-theme="light"] .hover\:text-amber-300:hover:not([data-theme="dark"] *) { color: #b45309; }
+[data-theme="light"] .text-amber-400:not([data-theme="dark"] *) { color: #d97706; }
+[data-theme="light"] .text-rose-300:not([data-theme="dark"] *), [data-theme="light"] .hover\:text-rose-300:hover:not([data-theme="dark"] *) { color: #be123c; }
+[data-theme="light"] .text-rose-400:not([data-theme="dark"] *) { color: #e11d48; }
+[data-theme="light"] .text-sky-300:not([data-theme="dark"] *), [data-theme="light"] .hover\:text-sky-300:hover:not([data-theme="dark"] *) { color: #0369a1; }
+[data-theme="light"] .text-sky-400:not([data-theme="dark"] *) { color: #0284c7; }
+[data-theme="light"] .text-violet-300:not([data-theme="dark"] *), [data-theme="light"] .hover\:text-violet-300:hover:not([data-theme="dark"] *) { color: #6d28d9; }
+[data-theme="light"] .text-violet-400:not([data-theme="dark"] *) { color: #7c3aed; }
+[data-theme="light"] .text-orange-300:not([data-theme="dark"] *), [data-theme="light"] .hover\:text-orange-300:hover:not([data-theme="dark"] *) { color: #c2410c; }
+[data-theme="light"] .text-orange-400:not([data-theme="dark"] *) { color: #ea580c; }
+[data-theme="light"] .text-green-300:not([data-theme="dark"] *), [data-theme="light"] .hover\:text-green-300:hover:not([data-theme="dark"] *) { color: #15803d; }
+[data-theme="light"] .text-green-400:not([data-theme="dark"] *) { color: #16a34a; }
+[data-theme="light"] .text-red-300:not([data-theme="dark"] *), [data-theme="light"] .hover\:text-red-300:hover:not([data-theme="dark"] *) { color: #b91c1c; }
+[data-theme="light"] .text-red-400:not([data-theme="dark"] *) { color: #dc2626; }
+[data-theme="light"] .text-brand-300:not([data-theme="dark"] *), [data-theme="light"] .hover\:text-brand-300:hover:not([data-theme="dark"] *) { color: #b24a0f; }
+[data-theme="light"] .text-brand-400:not([data-theme="dark"] *) { color: #d35d14; }
+[data-theme="light"] .text-sun-300:not([data-theme="dark"] *), [data-theme="light"] .hover\:text-sun-300:hover:not([data-theme="dark"] *) { color: #4b57c9; }
+[data-theme="light"] .text-sun-400:not([data-theme="dark"] *) { color: #5b67d6; }
+[data-theme="light"] .text-slate-300:not([data-theme="dark"] *), [data-theme="light"] .hover\:text-slate-300:hover:not([data-theme="dark"] *) { color: #475569; }
+[data-theme="light"] .text-slate-400:not([data-theme="dark"] *) { color: #64748b; }
+/* avatar tones per theme */
+.kn-avatar {
+  background: linear-gradient(145deg, hsl(var(--h) 32% 24%), hsl(var(--h) 30% 14%));
+  color: hsl(var(--h) 70% 82%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+[data-theme="light"] .kn-avatar:not([data-theme="dark"] *) {
+  background: hsl(var(--h) 45% 92%);
+  color: hsl(var(--h) 40% 30%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
 html,
 body {
   background: var(--color-paper);
@@ -153,7 +245,7 @@ h2,
   z-index: 0;
   background: #0f1013 !important;
 }
-.kn-tiles {
+[data-theme="dark"] .kn-tiles {
   filter: invert(1) hue-rotate(185deg) brightness(0.82) contrast(0.92) saturate(0.35);
 }
 .leaflet-popup-content-wrapper,
@@ -182,7 +274,7 @@ h2,
   display: grid;
   place-items: center;
   border-radius: 9999px;
-  border: 2px solid #0b0b0e;
+  border: 2px solid var(--color-paper);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), 0 4px 14px rgba(0, 0, 0, 0.6);
   color: #fff;
 }
@@ -192,7 +284,7 @@ h2,
 }
 .map-dot {
   border-radius: 9999px;
-  border: 2px solid #0b0b0e;
+  border: 2px solid var(--color-paper);
   box-shadow: 0 0 8px currentColor;
 }
 
@@ -234,4 +326,9 @@ h2,
 }
 ::-webkit-scrollbar-track {
   background: transparent;
+}
+[data-theme="light"] .kn-logo-mark:not([data-theme="dark"] *) {
+  background: #131318;
+  color: #fff;
+  box-shadow: 0 0 14px -2px rgba(249, 122, 46, 0.45);
 }

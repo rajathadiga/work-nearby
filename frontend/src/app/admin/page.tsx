@@ -25,7 +25,7 @@ function Stat({ label, value, sub, tone = "", icon: Icon }: { label: string; val
 
 export default function Admin() {
   const user = useRequireUser("admin");
-  const { toast, logout } = useApp();
+  const { toast, logout, theme } = useApp();
   const [tab, setTab] = useState("Overview");
   const [o, setO] = useState<any>(null);
   const [q, setQ] = useState<any>(null);
@@ -112,7 +112,7 @@ export default function Admin() {
               <div className="h-56">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={o.series} margin={{ top: 8, right: 4, left: -20, bottom: 0 }}>
-                    <CartesianGrid vertical={false} stroke="#222228" />
+                    <CartesianGrid vertical={false} stroke={theme === "light" ? "#e9e9ef" : "#222228"} />
                     <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#8d8d99" }} interval={4} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fontSize: 11, fill: "#8d8d99" }} axisLine={false} tickLine={false} allowDecimals={false} />
                     <Tooltip content={<ChartTip prefix="" />} cursor={{ fill: "rgba(249,122,46,.08)" }} />
@@ -126,7 +126,7 @@ export default function Admin() {
               <div className="h-56">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={o.series} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
-                    <CartesianGrid vertical={false} stroke="#222228" />
+                    <CartesianGrid vertical={false} stroke={theme === "light" ? "#e9e9ef" : "#222228"} />
                     <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#8d8d99" }} interval={4} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fontSize: 11, fill: "#8d8d99" }} axisLine={false} tickLine={false} />
                     <Tooltip content={<ChartTip />} />

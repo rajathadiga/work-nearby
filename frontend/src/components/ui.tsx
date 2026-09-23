@@ -32,11 +32,11 @@ export function Avatar({ name, size = 48, online }: { name: string; size?: numbe
   const hue = [...(name || "x")].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
   return (
     <span className="relative inline-block shrink-0" style={{ width: size, height: size }}>
-      <span className="grid place-items-center rounded-full font-semibold w-full h-full" style={{ background: `linear-gradient(145deg, hsl(${hue} 32% 24%), hsl(${hue} 30% 14%))`, color: `hsl(${hue} 70% 82%)`, boxShadow: "inset 0 0 0 1px rgba(255,255,255,.08)", fontSize: size * 0.36 }}>
+      <span className="kn-avatar grid place-items-center rounded-full font-semibold w-full h-full" style={{ ["--h" as any]: hue, fontSize: size * 0.36 }}>
         {initials}
       </span>
       {online !== undefined && (
-        <span className={`absolute bottom-0 right-0 rounded-full border-2 border-paper ${online ? "bg-emerald-500" : "bg-[#34343c]"}`} style={{ width: size * 0.28, height: size * 0.28 }} />
+        <span className={`absolute bottom-0 right-0 rounded-full border-2 border-paper ${online ? "bg-emerald-500" : "bg-track"}`} style={{ width: size * 0.28, height: size * 0.28 }} />
       )}
     </span>
   );
@@ -59,7 +59,7 @@ export function StarInput({ value, onChange }: { value: number; onChange: (v: nu
       <div className="flex justify-center gap-1">
         {[1, 2, 3, 4, 5].map((i) => (
           <button key={i} onClick={() => onChange(i)} className="p-1.5 rounded-lg hover:bg-surface-2" aria-label={`${i} stars`}>
-            <Star size={36} className={value >= i ? "fill-amber-400 text-amber-400" : "text-[#3a3a44]"} />
+            <Star size={36} className={value >= i ? "fill-amber-400 text-amber-400" : "text-track"} />
           </button>
         ))}
       </div>
@@ -91,11 +91,11 @@ export function LevelBadge({ level }: { level: string }) {
 export function ScoreRing({ score, size = 52 }: { score: number; size?: number }) {
   const r = size / 2 - 4;
   const c = 2 * Math.PI * r;
-  const color = score >= 80 ? "#34d399" : score >= 60 ? "#fbbf24" : "#fb7185";
+  const color = score >= 80 ? "#10b981" : score >= 60 ? "#f59e0b" : "#f43f5e";
   return (
     <span className="relative inline-grid place-items-center shrink-0" style={{ width: size, height: size }} title="Match score">
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} stroke="#26262d" strokeWidth="4" fill="none" />
+        <circle cx={size / 2} cy={size / 2} r={r} stroke="var(--color-line)" style={{ stroke: "var(--color-line)" }} strokeWidth="4" fill="none" />
         <circle cx={size / 2} cy={size / 2} r={r} stroke={color} strokeWidth="4" fill="none" strokeDasharray={c} strokeDashoffset={c * (1 - Math.min(score, 100) / 100)} strokeLinecap="round" />
       </svg>
       <span className="absolute text-[13px] font-bold" style={{ color }}>

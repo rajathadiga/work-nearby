@@ -142,7 +142,7 @@ export default function Login() {
           </div>
           <div className="input !text-2xl font-semibold tracking-widest text-center h-16 flex items-center justify-center">
             <span className="text-muted mr-2">+91</span>
-            {phone || <span className="text-[#3a3a44]">98765 43210</span>}
+            {phone || <span className="text-track">98765 43210</span>}
           </div>
           <Keypad onKey={(k) => setPhone((p) => (k === "del" ? p.slice(0, -1) : p.length < 10 ? p + k : p))} />
           <button className="btn-primary btn-lg w-full" disabled={phone.length !== 10 || busy} onClick={sendOtp}>

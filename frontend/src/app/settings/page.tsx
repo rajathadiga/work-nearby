@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Settings as SettingsIcon, Globe, Volume2, UserRound, IdCard, ScanFace, Check, Clock, Crown, Building2, MessageCircle, HardHat, LogOut, LifeBuoy, Save, ChevronRight } from "lucide-react";
+import { Settings as SettingsIcon, Globe, Volume2, UserRound, IdCard, ScanFace, Check, Clock, Crown, Building2, MessageCircle, HardHat, LogOut, LifeBuoy, Save, ChevronRight, Sun, Moon } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { api, uploadFile } from "@/lib/api";
 import { LANGS } from "@/lib/i18n";
@@ -9,7 +9,7 @@ import { useRequireUser, Loading, PageTitle, Stars, Avatar } from "@/components/
 
 export default function Settings() {
   const user = useRequireUser();
-  const { t, lang, setLang, voiceOn, setVoiceOn, logout, refreshUser, toast, meta } = useApp();
+  const { t, lang, setLang, voiceOn, setVoiceOn, logout, refreshUser, toast, meta, theme, setTheme } = useApp();
   const [name, setName] = useState("");
   const [area, setArea] = useState("");
   const [trusted, setTrusted] = useState({ name: "", phone: "" });
@@ -90,10 +90,23 @@ export default function Settings() {
                 </button>
               ))}
             </div>
+            <div>
+              <div className="label">Appearance</div>
+              <div className="grid grid-cols-2 gap-3 max-w-lg">
+                {([
+                  ["dark", Moon, "Dark"],
+                  ["light", Sun, "Light"],
+                ] as const).map(([id, Icon, label]) => (
+                  <button key={id} onClick={() => setTheme(id)} className={`tile py-3 !flex-row ${theme === id ? "tile-on" : ""}`}>
+                    <Icon size={18} /> {label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <button onClick={() => setVoiceOn(!voiceOn)} className="w-full max-w-lg flex items-center gap-3 rounded-xl border border-line p-3.5 hover:bg-surface-2">
               <Volume2 size={20} className="text-brand-400" />
               <span className="flex-1 text-left font-medium">Read new alerts aloud automatically</span>
-              <span className={`h-6 w-11 rounded-full p-0.5 transition ${voiceOn ? "bg-brand-600" : "bg-[#34343c]"}`}>
+              <span className={`h-6 w-11 rounded-full p-0.5 transition ${voiceOn ? "bg-brand-600" : "bg-track"}`}>
                 <span className={`block h-5 w-5 rounded-full bg-[#fff] shadow transition ${voiceOn ? "translate-x-5" : ""}`} />
               </span>
             </button>

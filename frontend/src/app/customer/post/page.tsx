@@ -401,7 +401,7 @@ export default function PostJob() {
                     <span className="block font-medium">{t("repeat_weekly")}</span>
                     <span className="text-sm text-muted">Every {weekday} — the same worker is invited automatically</span>
                   </span>
-                  <span className={`h-6 w-11 rounded-full p-0.5 transition ${recurring ? "bg-violet-600" : "bg-[#34343c]"}`}>
+                  <span className={`h-6 w-11 rounded-full p-0.5 transition ${recurring ? "bg-violet-600" : "bg-track"}`}>
                     <span className={`block h-5 w-5 rounded-full bg-[#fff] shadow transition ${recurring ? "translate-x-5" : ""}`} />
                   </span>
                 </button>

@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Bell, Plus, UsersRound, UserRound, Wallet, TrendingUp, Volume2, VolumeX, ShieldCheck, X, LayoutDashboard, MessageCircle, Building2, Crown, Settings,
-  Route, IdCard, LogOut, Handshake, CircleCheck, CircleAlert, Info, BriefcaseBusiness, HardHat,
+  Route, IdCard, LogOut, Handshake, Sun, Moon, CircleCheck, CircleAlert, Info, BriefcaseBusiness, HardHat,
 } from "lucide-react";
 import { ReactNode } from "react";
 import { useApp } from "@/lib/store";
@@ -16,7 +16,7 @@ type NavItem = { href: string; icon: any; label: string; badge?: number; primary
 export function Logo({ light = false }: { light?: boolean }) {
   return (
     <span className="flex items-center gap-2.5">
-      <span className="grid place-items-center h-8 w-8 rounded-[10px] bg-[#f2f2f5] text-[#0b0b0e] shadow-[0_0_18px_-2px_rgba(249,122,46,.55)]">
+      <span className="kn-logo-mark grid place-items-center h-8 w-8 rounded-[10px] bg-[#f2f2f5] text-[#0b0b0e] shadow-[0_0_18px_-2px_rgba(249,122,46,.55)]">
         <Handshake size={18} strokeWidth={2.4} />
       </span>
       <span className={`font-display font-bold text-[19px] tracking-tight ${light ? "text-white" : "text-ink"}`}>kaamnear</span>
@@ -44,7 +44,7 @@ function LangSwitch() {
 }
 
 export default function Shell({ children }: { children: ReactNode }) {
-  const { user, t, unread, toasts, dismissToast, voiceOn, setVoiceOn, say, logout } = useApp();
+  const { user, loading, t, unread, toasts, dismissToast, voiceOn, setVoiceOn, say, logout, theme, setTheme } = useApp();
   const path = usePathname();
   const router = useRouter();
   if (path.startsWith("/track/")) return <>{children}</>;
@@ -98,6 +98,17 @@ export default function Shell({ children }: { children: ReactNode }) {
     </button>
   );
 
+  const themeBtn = path !== "/" && (
+    <button
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className="h-9 w-9 grid place-items-center rounded-full border bg-surface-2 border-line text-muted hover:text-ink transition"
+      title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+    >
+      {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
+    </button>
+  );
+
   const modeSwitch = user && role !== "admin" && (
     <div className="grid grid-cols-2 rounded-lg bg-surface-3 p-0.5 text-sm font-semibold">
       <Link href="/customer" className={`flex items-center justify-center gap-1.5 rounded-md py-1.5 px-2 ${!workerArea ? "bg-surface-3 shadow-sm text-brand-300" : "text-muted"}`}>
@@ -110,7 +121,7 @@ export default function Shell({ children }: { children: ReactNode }) {
   );
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-paper text-ink" data-theme={path === "/" ? "dark" : undefined}>
       {/* desktop sidebar */}
       {user && (
         <aside className="hidden lg:flex w-64 shrink-0 flex-col border-r border-line bg-surface fixed inset-y-0 left-0 z-40">
@@ -168,7 +179,7 @@ export default function Shell({ children }: { children: ReactNode }) {
             <Link href={home} className={user ? "lg:hidden" : ""}>
               <Logo />
             </Link>
-            {!user && (
+            {!user && !loading && (
               <nav className="hidden md:flex items-center gap-7 ml-12 text-[15px] font-medium text-ink/85">
                 <Link href="/#features" className="hover:text-white">Features</Link>
                 <Link href="/whatsapp" className="hover:text-white">{t("whatsapp")}</Link>
@@ -178,13 +189,14 @@ export default function Shell({ children }: { children: ReactNode }) {
             )}
             <div className="flex-1" />
             <LangSwitch />
+            {themeBtn}
             {voiceBtn}
             {user ? (
               <Link href="/notifications" className="relative h-9 w-9 grid place-items-center rounded-full bg-surface-2 border border-line text-muted hover:text-ink" aria-label={t("alerts")}>
                 <Bell size={18} />
                 {unread > 0 && <span className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full bg-rose-600 text-white text-[11px] font-semibold grid place-items-center">{unread > 9 ? "9+" : unread}</span>}
               </Link>
-            ) : (
+            ) : loading ? null : (
               <>
                 <Link href="/login" className="btn-outline hidden sm:inline-flex">
                   Sign in

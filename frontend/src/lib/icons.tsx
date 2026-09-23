@@ -79,7 +79,7 @@ export function catIconFor(id?: string): LucideIcon {
 const TONES: Record<string, string> = {
   brand: "bg-brand-500/10 text-brand-300 ring-brand-500/20",
   amber: "bg-amber-400/10 text-amber-300 ring-amber-400/20",
-  slate: "bg-white/[.04] text-slate-300 ring-white/10",
+  slate: "bg-surface-3 text-slate-300 ring-line",
   sky: "bg-sun-500/10 text-sun-400 ring-sun-500/20",
   rose: "bg-rose-500/10 text-rose-300 ring-rose-500/25",
   violet: "bg-violet-500/10 text-violet-300 ring-violet-500/20",
